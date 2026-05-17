@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@arc-agent-pay/shared": "*",
+    "@tanstack/react-query": "^5.100.10",
     "dotenv": "^16.6.1",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "viem": "^2.21.0"
+    "viem": "^2.21.0",
+    "wagmi": "^3.6.15"
   },
   "devDependencies": {
     "@types/node": "^22.7.0",

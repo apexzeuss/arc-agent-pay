@@ -1,5 +1,6 @@
-import { getBalances } from "./actions";
+import { getAgentBalance } from "./actions";
 import { SpendButton } from "./SpendButton";
+import { UserPanel } from "./UserPanel";
 import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +10,7 @@ function short(addr: string) {
 }
 
 export default async function Page() {
-  const balances = await getBalances();
+  const agent = await getAgentBalance();
 
   return (
     <main>
@@ -20,25 +21,15 @@ export default async function Page() {
         <div className="card">
           <div className="label">AI Agent</div>
           <div className="balance">
-            {balances.agentUsdc}<span className="unit">USDC</span>
+            {agent.usdc}<span className="unit">USDC</span>
           </div>
           <div className="addr">
-            <a href={`${ARC_TESTNET_EXPLORER}/address/${balances.agentAddress}`} target="_blank" rel="noreferrer">
-              {short(balances.agentAddress)} ↗
+            <a href={`${ARC_TESTNET_EXPLORER}/address/${agent.address}`} target="_blank" rel="noreferrer">
+              {short(agent.address)} ↗
             </a>
           </div>
         </div>
-        <div className="card">
-          <div className="label">Your Wallet</div>
-          <div className="balance">
-            {balances.userUsdc}<span className="unit">USDC</span>
-          </div>
-          <div className="addr">
-            <a href={`${ARC_TESTNET_EXPLORER}/address/${balances.userAddress}`} target="_blank" rel="noreferrer">
-              {short(balances.userAddress)} ↗
-            </a>
-          </div>
-        </div>
+        <UserPanel />
       </div>
 
       <div className="action">

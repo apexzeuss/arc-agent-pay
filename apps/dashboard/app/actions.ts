@@ -33,38 +33,16 @@ function requireConfig() {
 
 const publicClient = createPublicClient({ chain: arcTestnet, transport: http() });
 
-export type Balances = {
-  agentAddress: string;
-  userAddress: string;
-  agentUsdc: string;
-  userUsdc: string;
-};
-
-export async function getBalances(): Promise<Balances> {
-  const { agentPk, userAddress } = requireConfig();
+export async function getAgentBalance(): Promise<{ address: string; usdc: string }> {
+  const { agentPk } = requireConfig();
   const agent = privateKeyToAccount(agentPk);
-
-  const [agentBal, userBal] = await Promise.all([
-    publicClient.readContract({
-      address: USDC_ADDRESS_ARC_TESTNET,
-      abi: erc20Abi,
-      functionName: "balanceOf",
-      args: [agent.address],
-    }),
-    publicClient.readContract({
-      address: USDC_ADDRESS_ARC_TESTNET,
-      abi: erc20Abi,
-      functionName: "balanceOf",
-      args: [userAddress],
-    }),
-  ]);
-
-  return {
-    agentAddress: agent.address,
-    userAddress,
-    agentUsdc: formatUnits(agentBal, USDC_DECIMALS),
-    userUsdc: formatUnits(userBal, USDC_DECIMALS),
-  };
+  const bal = await publicClient.readContract({
+    address: USDC_ADDRESS_ARC_TESTNET,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [agent.address],
+  });
+  return { address: agent.address, usdc: formatUnits(bal, USDC_DECIMALS) };
 }
 
 export type SpendResult = { ok: true; txHash: string } | { ok: false; error: string };
