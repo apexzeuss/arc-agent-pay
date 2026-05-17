@@ -8,7 +8,8 @@
     "apps/*"
   ],
   "scripts": {
-    "hello": "npm run hello -w @arc-agent-pay/shared"
+    "hello": "npm run hello -w @arc-agent-pay/shared",
+    "provision": "npm run provision -w @arc-agent-pay/agent-runtime"
   },
   "engines": {
     "node": ">=22"
