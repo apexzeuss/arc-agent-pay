@@ -22,20 +22,22 @@ export function SpendButton({ amount }: { amount: string }) {
   return (
     <>
       <button onClick={go} disabled={pending}>
-        {pending ? "Submitting…" : `Send ${amount} USDC from agent → your wallet`}
+        {pending ? "Stamping the ledger…" : `Debit Agent · Credit Counterparty · ${amount} USDC`}
       </button>
       {result?.ok && (
         <div className="status success">
-          <div className="label">Confirmed</div>
-          <a href={`${ARC_TESTNET_EXPLORER}/tx/${result.txHash}`} target="_blank" rel="noreferrer">
-            {result.txHash}
-          </a>
+          <span className="label">Entered</span>
+          <div>
+            <a href={`${ARC_TESTNET_EXPLORER}/tx/${result.txHash}`} target="_blank" rel="noreferrer">
+              {result.txHash}
+            </a>
+          </div>
         </div>
       )}
       {result && !result.ok && (
         <div className="status error">
-          <div className="label">Failed</div>
-          {result.error}
+          <span className="label">Rejected</span>
+          <div>{result.error}</div>
         </div>
       )}
     </>

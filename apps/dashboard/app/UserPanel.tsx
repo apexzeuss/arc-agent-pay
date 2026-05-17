@@ -31,23 +31,20 @@ export function UserPanel() {
   });
 
   if (!isConnected) {
-    const metaMask = connectors.find((c) => c.id === "injected" || c.name.toLowerCase().includes("metamask")) ?? connectors[0];
+    const wallet = connectors.find((c) => c.id === "injected" || c.name.toLowerCase().includes("metamask")) ?? connectors[0];
     return (
-      <div className="card">
-        <div className="label">Your Wallet</div>
-        <div className="balance" style={{ color: "var(--muted)", fontSize: 16, fontWeight: 400 }}>
-          Not connected
+      <div className="card user">
+        <div className="label">The Counterparty</div>
+        <div className="balance" style={{ fontStyle: "italic", fontSize: 18, fontWeight: 300, color: "var(--ink-mute)" }}>
+          — awaiting signature —
         </div>
-        {metaMask ? (
-          <button
-            onClick={() => connect({ connector: metaMask })}
-            disabled={connecting}
-            style={{ marginTop: 16 }}
-          >
-            {connecting ? "Connecting…" : "Connect MetaMask"}
+        <div className="notice">No wallet connected. Sign in to enter the ledger as a counterparty.</div>
+        {wallet ? (
+          <button className="ghost" onClick={() => connect({ connector: wallet })} disabled={connecting}>
+            {connecting ? "Connecting…" : "Connect wallet"}
           </button>
         ) : (
-          <div className="addr" style={{ marginTop: 12 }}>No wallet detected. Install MetaMask first.</div>
+          <div className="notice">No wallet extension detected. Install MetaMask to continue.</div>
         )}
       </div>
     );
@@ -55,17 +52,11 @@ export function UserPanel() {
 
   if (onWrongChain) {
     return (
-      <div className="card">
-        <div className="label">Your Wallet</div>
-        <div className="balance" style={{ color: "var(--error)", fontSize: 16, fontWeight: 400 }}>
-          Wrong network
-        </div>
-        <div className="addr" style={{ marginTop: 8 }}>You're on {chain?.name ?? "an unknown network"}. Switch to Arc Testnet.</div>
-        <button
-          onClick={() => switchChain({ chainId: arcTestnet.id })}
-          disabled={switching}
-          style={{ marginTop: 16 }}
-        >
+      <div className="card user">
+        <div className="label">The Counterparty</div>
+        <div className="balance" style={{ color: "var(--error)", fontSize: 18, fontWeight: 300 }}>wrong network</div>
+        <div className="notice">Connected to {chain?.name ?? "unknown chain"}. The ledger settles on Arc Testnet only.</div>
+        <button className="ghost" onClick={() => switchChain({ chainId: arcTestnet.id })} disabled={switching}>
           {switching ? "Switching…" : "Switch to Arc Testnet"}
         </button>
       </div>
@@ -73,22 +64,17 @@ export function UserPanel() {
   }
 
   return (
-    <div className="card">
-      <div className="label">Your Wallet</div>
+    <div className="card user">
+      <div className="label">The Counterparty</div>
       <div className="balance">
-        {loadingBalance ? "…" : formatUnits(balance ?? 0n, USDC_DECIMALS)}
+        {loadingBalance ? "—" : formatUnits(balance ?? 0n, USDC_DECIMALS)}
         <span className="unit">USDC</span>
       </div>
-      <div className="addr" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="addr">
         <a href={`${ARC_TESTNET_EXPLORER}/address/${address}`} target="_blank" rel="noreferrer">
           {short(address!)} ↗
         </a>
-        <button
-          onClick={() => disconnect()}
-          style={{ width: "auto", padding: "4px 10px", fontSize: 12, background: "transparent", border: "1px solid var(--border)", color: "var(--muted)" }}
-        >
-          Disconnect
-        </button>
+        <button className="tiny" onClick={() => disconnect()}>Sign out</button>
       </div>
     </div>
   );
