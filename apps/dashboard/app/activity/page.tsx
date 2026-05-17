@@ -1,5 +1,6 @@
 import { getAgentActivity } from "../actions";
 import { ActivityFeed } from "../components/ActivityFeed";
+import { AutoRefresh } from "../components/AutoRefresh";
 import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ export default async function ActivityPage() {
 
   return (
     <main className="prose">
+      <AutoRefresh intervalMs={15_000} />
       <div className="watermark" aria-hidden />
 
       <div className="meta">

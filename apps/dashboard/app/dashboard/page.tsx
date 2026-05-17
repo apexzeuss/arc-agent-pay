@@ -4,6 +4,7 @@ import { UserPanel } from "../UserPanel";
 import { StatusStrip } from "../components/StatusStrip";
 import { ActivityFeed } from "../components/ActivityFeed";
 import { PolicySummary } from "../components/PolicySummary";
+import { AutoRefresh } from "../components/AutoRefresh";
 import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +29,7 @@ export default async function DashboardPage() {
 
   return (
     <main>
+      <AutoRefresh intervalMs={12_000} />
       <div className="watermark" aria-hidden />
 
       <div className="meta">

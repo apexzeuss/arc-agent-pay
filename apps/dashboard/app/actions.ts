@@ -17,6 +17,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import {
   arcTestnet,
+  DEFAULT_POLICY,
   USDC_ADDRESS_ARC_TESTNET,
   USDC_DECIMALS,
 } from "@arc-agent-pay/shared";
@@ -114,21 +115,39 @@ export async function getAgentActivity(limit = 10): Promise<{
   return { agentAddress: agent.address, entries };
 }
 
-export type SpendResult = { ok: true; txHash: string } | { ok: false; error: string };
+export type SpendResult =
+  | { ok: true; txHash: string }
+  | { ok: false; error: string; rejectedByPolicy?: boolean };
 
-export async function spendFromAgent(amountUsdc: string): Promise<SpendResult> {
+export async function spendFromAgent(
+  amountUsdc: string,
+  recipient?: `0x${string}`,
+): Promise<SpendResult> {
   try {
     const { agentPk, userAddress } = requireConfig();
+    const to = recipient ?? userAddress;
+
+    // Policy gate — enforced in code today, planned to move on-chain.
+    // Per-tx cap is the only one we enforce server-side for now; the
+    // others (daily cap, cooldown, allowlist) are displayed-only.
+    const capValue = parseUnits(DEFAULT_POLICY.perTxCapUsdc, USDC_DECIMALS);
+    const value = parseUnits(amountUsdc, USDC_DECIMALS);
+    if (value > capValue) {
+      return {
+        ok: false,
+        rejectedByPolicy: true,
+        error: `Rejected by policy — per-tx ceiling is ${DEFAULT_POLICY.perTxCapUsdc} USDC. Requested ${amountUsdc} USDC.`,
+      };
+    }
+
     const agent = privateKeyToAccount(agentPk);
     const walletClient = createWalletClient({ account: agent, chain: arcTestnet, transport: http() });
-
-    const value = parseUnits(amountUsdc, USDC_DECIMALS);
 
     const hash = await walletClient.writeContract({
       address: USDC_ADDRESS_ARC_TESTNET,
       abi: erc20Abi,
       functionName: "transfer",
-      args: [userAddress, value],
+      args: [to, value],
       maxFeePerGas: 22_000_000_000n + parseGwei("2"),
       maxPriorityFeePerGas: parseGwei("2"),
     });

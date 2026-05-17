@@ -490,96 +490,56 @@ footer {
    Landing page
    ============================================================ */
 main.landing {
-  min-height: calc(100vh - 56px);
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 64px 28px;
+  padding: 32px 28px;
   max-width: 880px;
 }
+/* Landing page is intentionally bare — sentence, nothing else.
+   Suppress nav, ruled lines, footer; sentence itself is the link. */
+body:has(main.landing) .nav { display: none; }
+body:has(main.landing)::after { display: none; }
 
-.landing-mark {
-  display: flex;
-  gap: 8px;
-  color: var(--agent);
-  font-size: 26px;
-  letter-spacing: -0.5em;
-  margin-bottom: 56px;
-  opacity: 0;
-  animation: rise 700ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+.lede-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
 }
-.landing-mark span {
-  display: inline-block;
-  animation: spin-in 900ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+.lede-link::after {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  width: 24px;
+  height: 1px;
+  background: var(--agent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1), width 420ms;
 }
-.landing-mark span:nth-child(1) { animation-delay: 120ms; }
-.landing-mark span:nth-child(2) { animation-delay: 200ms; }
-.landing-mark span:nth-child(3) { animation-delay: 280ms; }
-.landing-mark span:nth-child(4) { animation-delay: 360ms; }
-@keyframes spin-in {
-  from { opacity: 0; transform: rotate(-60deg) scale(0.6); }
-  to   { opacity: 1; transform: rotate(0) scale(1); }
-}
+.lede-link:hover::after { transform: scaleX(1); width: 64px; }
 
 .lede {
   font-family: var(--display);
   font-style: italic;
   font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 0;
   font-weight: 300;
-  font-size: clamp(28px, 5vw, 52px);
-  line-height: 1.18;
-  letter-spacing: -0.022em;
-  max-width: 18ch;
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 1.16;
+  letter-spacing: -0.024em;
+  max-width: 16ch;
   color: var(--ink);
-  margin: 0 0 56px;
+  margin: 0;
+  text-align: left;
 }
 .lede .word {
   display: inline-block;
   opacity: 0;
   animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
   margin-right: 0.04em;
-}
-
-.enter {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink);
-  text-decoration: none;
-  padding: 14px 28px;
-  border: 1px solid var(--ink);
-  background: transparent;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-  animation: rise 700ms 1700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-  transition: color 180ms;
-}
-.enter::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--ink);
-  transform: translateX(-101%);
-  transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  z-index: -1;
-}
-.enter:hover { color: var(--paper); }
-.enter:hover::before { transform: translateX(0); }
-
-.landing-foot {
-  margin-top: auto;
-  padding-top: 64px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  opacity: 0;
-  animation: rise 700ms 2000ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 
 /* ============================================================
@@ -998,6 +958,102 @@ main.prose { padding-left: max(32px, calc((100vw - 820px) / 2)); padding-right: 
   background: color-mix(in srgb, var(--paper-edge) 60%, white 40%);
   padding: 1px 6px;
   border: 1px solid var(--rule);
+}
+
+/* ============================================================
+   Try It / Scenarios page
+   ============================================================ */
+.scenarios {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+}
+.scenario {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--rule);
+  opacity: 0;
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.scenario:first-child { border-top: 1px solid var(--rule); }
+.scenario-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100, "WONK" 1;
+  font-size: 40px;
+  font-weight: 200;
+  color: var(--ink-mute);
+  line-height: 1;
+  text-align: right;
+  border-right: 1px solid var(--rule);
+  padding-right: 18px;
+}
+.scenario-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 14, "SOFT" 100, "WONK" 0;
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.scenario-blurb {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin-bottom: 16px;
+}
+.scenario-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--body);
+  font-variant-numeric: tabular-nums;
+  font-size: 32px;
+  font-weight: 200;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
+}
+.scenario-amount .unit {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ink-mute);
+}
+.over-cap {
+  display: inline-block;
+  margin-left: 4px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--agent);
+  color: var(--agent);
+}
+.scenario-note {
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-bottom: 18px;
+  font-style: italic;
+}
+.scenario-runner button {
+  width: auto;
+  padding: 12px 22px;
+  font-size: 11px;
+}
+
+.status.policy-reject {
+  border-color: var(--agent);
+  background: color-mix(in srgb, var(--agent) 4%, var(--paper) 96%);
+}
+.status.policy-reject .label {
+  color: var(--agent);
+  border-color: var(--agent);
 }
 
 @media (prefers-reduced-motion: reduce) {

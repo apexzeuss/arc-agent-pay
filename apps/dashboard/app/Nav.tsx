@@ -7,6 +7,7 @@ import { BlockTicker } from "./BlockTicker";
 const TABS = [
   { href: "/dashboard", label: "Ledger" },
   { href: "/activity", label: "Activity" },
+  { href: "/try", label: "Try It" },
   { href: "/policy", label: "Policy" },
   { href: "/plug-in", label: "Plug In" },
   { href: "/about", label: "About" },
