@@ -10,6 +10,8 @@
   },
   "scripts": {
     "provision": "tsx scripts/provision-agent.ts",
+    "spend": "tsx scripts/agent-spend.ts",
+    "simple-agent": "tsx scripts/simple-agent.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "hello": "npm run hello -w @arc-agent-pay/shared",
-    "provision": "npm run provision -w @arc-agent-pay/agent-runtime"
+    "provision": "npm run provision -w @arc-agent-pay/agent-runtime",
+    "spend": "npm run spend -w @arc-agent-pay/agent-runtime",
+    "simple-agent": "npm run simple-agent -w @arc-agent-pay/agent-runtime"
   },
   "engines": {
     "node": ">=22"
