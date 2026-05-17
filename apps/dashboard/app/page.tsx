@@ -1,65 +1,33 @@
-import { getAgentBalance } from "./actions";
-import { SpendButton } from "./SpendButton";
-import { UserPanel } from "./UserPanel";
-import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
+const LEDE =
+  "A working ledger where AI principals hold stablecoin and settle, in under a second, on Arc.";
 
-export const dynamic = "force-dynamic";
-
-function short(addr: string) {
-  return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
-}
-
-const ISSUE = "№ 0001 · ARC TESTNET";
-
-export default async function Page() {
-  const agent = await getAgentBalance();
-  const today = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).replace(/,/g, "");
-
+export default function Landing() {
+  const words = LEDE.split(" ");
   return (
-    <main>
-      <div className="watermark" aria-hidden />
-
-      <div className="meta">
-        <span>Ledger {ISSUE}</span>
-        <span className="stamp">Entered · {today}</span>
+    <main className="landing">
+      <div className="landing-mark" aria-hidden>
+        <span>◜</span>
+        <span>◝</span>
+        <span>◟</span>
+        <span>◞</span>
       </div>
 
-      <h1>
-        Agent <span className="amp">&amp;</span> Counterparty
-      </h1>
-      <p className="subtitle">
-        <span className="pip">●</span>&nbsp;&nbsp;AI principal · USDC settlement · sub-second clearance
+      <p className="lede">
+        {words.map((w, i) => (
+          <span key={i} className="word" style={{ animationDelay: `${260 + i * 80}ms` }}>
+            {w}
+            {i < words.length - 1 ? " " : ""}
+          </span>
+        ))}
       </p>
 
-      <div className="grid">
-        <div className="card agent">
-          <div className="label">The Agent</div>
-          <div className="balance">
-            {agent.usdc}<span className="unit">USDC</span>
-          </div>
-          <div className="addr">
-            <a href={`${ARC_TESTNET_EXPLORER}/address/${agent.address}`} target="_blank" rel="noreferrer">
-              {short(agent.address)} ↗
-            </a>
-            <span>principal</span>
-          </div>
-        </div>
-        <UserPanel />
-      </div>
+      <a href="/dashboard" className="enter">
+        Enter the ledger&nbsp;&nbsp;→
+      </a>
 
-      <div className="action">
-        <h2>Issue payment</h2>
-        <SpendButton amount="0.5" />
+      <div className="landing-foot">
+        № 0001 · Arc Testnet · Chain 5042002
       </div>
-
-      <footer>
-        <span>arc-agent-pay · ledger v0.1</span>
-        <span>chain · 5042002</span>
-      </footer>
     </main>
   );
 }

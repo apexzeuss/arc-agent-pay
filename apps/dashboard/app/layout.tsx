@@ -26,11 +26,16 @@ export const metadata: Metadata = {
   description: "AI agents transacting USDC on Arc testnet",
 };
 
+import { Nav } from "./Nav";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${publicSans.variable} ${cutive.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Nav />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -350,6 +350,211 @@ footer {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ============================================================
+   Page transition wrapper (re-runs on every navigation)
+   ============================================================ */
+.page-enter { animation: pageFade 520ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes pageFade {
+  from { opacity: 0; filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+/* ============================================================
+   Top navigation — persistent across pages
+   ============================================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px max(32px, calc((100vw - 820px) / 2));
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand-mark {
+  color: var(--agent);
+  font-size: 14px;
+  letter-spacing: -0.4em;
+  margin-right: 6px;
+}
+.tabs {
+  display: flex;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tab {
+  position: relative;
+  display: block;
+  padding: 8px 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  transition: color 160ms;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--ink); }
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 18px; right: 18px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--agent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.tab.active::after { transform: scaleX(1); }
+.tab:hover::after  { transform: scaleX(0.4); background: var(--rule); }
+.tab.active:hover::after { transform: scaleX(1); background: var(--agent); }
+
+/* ============================================================
+   Landing page
+   ============================================================ */
+main.landing {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 28px;
+  max-width: 880px;
+}
+
+.landing-mark {
+  display: flex;
+  gap: 8px;
+  color: var(--agent);
+  font-size: 26px;
+  letter-spacing: -0.5em;
+  margin-bottom: 56px;
+  opacity: 0;
+  animation: rise 700ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.landing-mark span {
+  display: inline-block;
+  animation: spin-in 900ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+.landing-mark span:nth-child(1) { animation-delay: 120ms; }
+.landing-mark span:nth-child(2) { animation-delay: 200ms; }
+.landing-mark span:nth-child(3) { animation-delay: 280ms; }
+.landing-mark span:nth-child(4) { animation-delay: 360ms; }
+@keyframes spin-in {
+  from { opacity: 0; transform: rotate(-60deg) scale(0.6); }
+  to   { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+.lede {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 0;
+  font-weight: 300;
+  font-size: clamp(28px, 5vw, 52px);
+  line-height: 1.18;
+  letter-spacing: -0.022em;
+  max-width: 18ch;
+  color: var(--ink);
+  margin: 0 0 56px;
+}
+.lede .word {
+  display: inline-block;
+  opacity: 0;
+  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  margin-right: 0.04em;
+}
+
+.enter {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 14px 28px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: rise 700ms 1700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  transition: color 180ms;
+}
+.enter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: translateX(-101%);
+  transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: -1;
+}
+.enter:hover { color: var(--paper); }
+.enter:hover::before { transform: translateX(0); }
+
+.landing-foot {
+  margin-top: auto;
+  padding-top: 64px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  opacity: 0;
+  animation: rise 700ms 2000ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* ============================================================
+   Prose page (About)
+   ============================================================ */
+main.prose { max-width: 720px; }
+.prose-body {
+  margin-top: 28px;
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  opacity: 0;
+  animation: rise 700ms 380ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.prose-body h2 {
+  margin: 36px 0 10px;
+}
+.prose-body p { margin: 0 0 16px; }
+.prose-body em {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 14, "SOFT" 100;
+  font-weight: 500;
+  color: var(--agent-ink);
+  font-size: 1.04em;
+}
+.prose-body a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--agent);
+}
+.prose-body a:hover { color: var(--agent); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
