@@ -1,0 +1,16 @@
+{
+  "name": "arc-agent-pay",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Agentic payments infrastructure on Circle's Arc L1 — AI agents transact USDC with on-chain spending policies.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "hello": "npm run hello -w @arc-agent-pay/shared"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
