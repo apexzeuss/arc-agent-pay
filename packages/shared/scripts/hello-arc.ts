@@ -1,4 +1,6 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 import {
   createPublicClient,
   http,
@@ -6,6 +8,12 @@ import {
   isAddress,
   erc20Abi,
 } from "viem";
+
+// Load .env from the workspace root (three levels up from this script),
+// regardless of where the command was invoked from.
+loadEnv({
+  path: resolve(dirname(fileURLToPath(import.meta.url)), "../../../.env"),
+});
 import {
   arcTestnet,
   USDC_ADDRESS_ARC_TESTNET,
