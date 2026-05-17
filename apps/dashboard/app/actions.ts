@@ -7,6 +7,7 @@ import {
   createWalletClient,
   http,
   formatUnits,
+  parseAbiItem,
   parseUnits,
   parseGwei,
   erc20Abi,
@@ -43,6 +44,74 @@ export async function getAgentBalance(): Promise<{ address: string; usdc: string
     args: [agent.address],
   });
   return { address: agent.address, usdc: formatUnits(bal, USDC_DECIMALS) };
+}
+
+const TRANSFER_EVENT = parseAbiItem(
+  "event Transfer(address indexed from, address indexed to, uint256 value)",
+);
+
+export type ActivityEntry = {
+  hash: `0x${string}`;
+  blockNumber: string;
+  to: `0x${string}`;
+  amountFormatted: string;
+  timestamp: number;
+};
+
+// Reads USDC Transfer events FROM the agent. Arc's RPC caps getLogs at
+// 10k blocks per call. We chunk a wider window (default 4 calls = 40k
+// blocks ≈ 90 min of agent history) sequentially and combine results.
+const LOG_CHUNK = 10_000n;
+const LOG_CHUNKS = 4;
+
+export async function getAgentActivity(limit = 10): Promise<{
+  agentAddress: `0x${string}`;
+  entries: ActivityEntry[];
+}> {
+  const { agentPk } = requireConfig();
+  const agent = privateKeyToAccount(agentPk);
+  const latest = await publicClient.getBlockNumber();
+
+  const ranges: Array<[bigint, bigint]> = [];
+  let toBlock = latest;
+  for (let i = 0; i < LOG_CHUNKS; i++) {
+    const fromBlock = toBlock > LOG_CHUNK ? toBlock - LOG_CHUNK + 1n : 0n;
+    ranges.push([fromBlock, toBlock]);
+    if (fromBlock === 0n) break;
+    toBlock = fromBlock - 1n;
+  }
+
+  const chunkResults = await Promise.all(
+    ranges.map(([from, to]) =>
+      publicClient.getLogs({
+        address: USDC_ADDRESS_ARC_TESTNET,
+        event: TRANSFER_EVENT,
+        args: { from: agent.address },
+        fromBlock: from,
+        toBlock: to,
+      }),
+    ),
+  );
+  const logs = chunkResults.flat();
+
+  const sorted = [...logs]
+    .sort((a, b) => Number(b.blockNumber - a.blockNumber))
+    .slice(0, limit);
+
+  const entries = await Promise.all(
+    sorted.map(async (log) => {
+      const block = await publicClient.getBlock({ blockNumber: log.blockNumber });
+      return {
+        hash: log.transactionHash,
+        blockNumber: log.blockNumber.toString(),
+        to: (log.args.to ?? "0x0") as `0x${string}`,
+        amountFormatted: formatUnits(log.args.value ?? 0n, USDC_DECIMALS),
+        timestamp: Number(block.timestamp),
+      };
+    }),
+  );
+
+  return { agentAddress: agent.address, entries };
 }
 
 export type SpendResult = { ok: true; txHash: string } | { ok: false; error: string };

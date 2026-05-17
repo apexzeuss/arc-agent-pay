@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BlockTicker } from "./BlockTicker";
 
 const TABS = [
   { href: "/dashboard", label: "Ledger" },
+  { href: "/activity", label: "Activity" },
+  { href: "/policy", label: "Policy" },
+  { href: "/plug-in", label: "Plug In" },
   { href: "/about", label: "About" },
 ];
 
@@ -14,9 +18,11 @@ export function Nav() {
   return (
     <nav className="nav">
       <Link href="/" className="brand">
+        <span className="agent-pulse" aria-hidden />
         <span className="brand-mark">◜◝</span>
         <span>arc-agent-pay</span>
       </Link>
+
       <ul className="tabs">
         {TABS.map((t) => {
           const active = pathname === t.href || (t.href === "/dashboard" && pathname.startsWith("/dashboard"));
@@ -33,6 +39,10 @@ export function Nav() {
           );
         })}
       </ul>
+
+      <div className="nav-right">
+        <BlockTicker />
+      </div>
     </nav>
   );
 }
