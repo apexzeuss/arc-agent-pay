@@ -7,6 +7,7 @@ import { ActivityFeed } from "./components/ActivityFeed";
 import { Footer } from "./components/Footer";
 import { HeroSeal } from "./components/HeroSeal";
 import { Reveal } from "./components/Reveal";
+import { Spotlight } from "./components/Spotlight";
 import { CopyButton } from "./CopyButton";
 import { ScenarioRunner } from "./try/ScenarioRunner";
 
@@ -47,12 +48,19 @@ export default async function Landing() {
 
   return (
     <main className="scroller">
+      <Spotlight />
+
       {/* ============================================================
           HERO
           ============================================================ */}
       <section id="hero" className="snap-section section-hero">
+        <span className="chapter-watermark" aria-hidden>00</span>
         <div className="section-inner section-hero-grid">
           <div className="hero-text">
+            <div className="hero-eyebrow">
+              <span className="hero-eyebrow-rule" aria-hidden />
+              <span>Volume I · Edition 0001</span>
+            </div>
             <h1 className="hero-headline">
               {LEDE_LINES.map((l, i) => (
                 <span
@@ -64,6 +72,20 @@ export default async function Landing() {
                 </span>
               ))}
             </h1>
+            <div className="hero-meta">
+              <div className="hero-meta-item">
+                <div className="hero-meta-label">Now holding</div>
+                <div className="hero-meta-value">{agent.usdc}<span className="unit">USDC</span></div>
+              </div>
+              <div className="hero-meta-item">
+                <div className="hero-meta-label">Settles in</div>
+                <div className="hero-meta-value">&lt; 1<span className="unit">sec</span></div>
+              </div>
+              <div className="hero-meta-item">
+                <div className="hero-meta-label">Gas paid in</div>
+                <div className="hero-meta-value">USDC</div>
+              </div>
+            </div>
             <a href="#ledger" className="hero-enter">
               <span>Begin the ledger</span>
               <span className="hero-enter-arrow" aria-hidden>↓</span>
@@ -84,6 +106,7 @@ export default async function Landing() {
           01 · LEDGER
           ============================================================ */}
       <section id="ledger" className="snap-section">
+        <span className="chapter-watermark" aria-hidden>01</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 01</div>
@@ -121,9 +144,10 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          02 · ACTIVITY
+          02 · ACTIVITY  (dark)
           ============================================================ */}
-      <section id="activity" className="snap-section section-activity">
+      <section id="activity" className="snap-section section-activity dark">
+        <span className="chapter-watermark" aria-hidden>02</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 02</div>
@@ -148,6 +172,7 @@ export default async function Landing() {
           03 · TRY IT
           ============================================================ */}
       <section id="try" className="snap-section">
+        <span className="chapter-watermark" aria-hidden>03</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 03</div>
@@ -177,9 +202,10 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          04 · POLICY
+          04 · POLICY  (dark)
           ============================================================ */}
-      <section id="policy" className="snap-section">
+      <section id="policy" className="snap-section dark">
+        <span className="chapter-watermark" aria-hidden>04</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 04</div>
@@ -236,6 +262,7 @@ export default async function Landing() {
           05 · PLUG IN
           ============================================================ */}
       <section id="plug-in" className="snap-section">
+        <span className="chapter-watermark" aria-hidden>05</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 05</div>
@@ -271,9 +298,10 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          06 · ABOUT
+          06 · ABOUT  (dark)
           ============================================================ */}
-      <section id="about" className="snap-section section-about">
+      <section id="about" className="snap-section section-about dark">
+        <span className="chapter-watermark" aria-hidden>06</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 06</div>
