@@ -490,14 +490,247 @@ footer {
    Landing page
    ============================================================ */
 /* ============================================================
-   Landing: editorial hero + bento tile grid
+   Snap-scroll landing — single-page experience with tab sections
+   ============================================================ */
+html:has(main.scroller) {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+body:has(main.scroller)::after { opacity: 0.10; }
+
+main.scroller {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-margin-top: 64px;
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  padding: 96px 0 80px;
+  position: relative;
+  border-bottom: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
+}
+.snap-section:last-child { border-bottom: 0; }
+
+.section-inner {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 max(32px, calc((100vw - 1100px) / 2));
+}
+
+.section-head { margin-bottom: 40px; }
+.section-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--agent);
+  margin-bottom: 14px;
+}
+.section-h {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 0;
+  font-size: clamp(36px, 5.5vw, 76px);
+  letter-spacing: -0.028em;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 14px;
+  max-width: 22ch;
+}
+.section-h .amp {
+  color: var(--agent);
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+}
+.section-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+/* ============================================================
+   Reveal — scroll-triggered fade + rise
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 900ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.section-hero {
+  align-items: center;
+}
+.section-hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.hero-text { max-width: 18ch; }
+
+.hero-seal-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-seal {
+  width: clamp(260px, 36vw, 440px);
+  aspect-ratio: 1;
+  position: relative;
+}
+.hero-seal svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.seal-rotate {
+  transform-origin: 120px 120px;
+  animation: seal-spin 60s linear infinite;
+}
+@keyframes seal-spin { to { transform: rotate(360deg); } }
+.seal-breath {
+  transform-origin: 120px 120px;
+  animation: seal-breath 4s ease-in-out infinite;
+}
+@keyframes seal-breath {
+  0%, 100% { transform: scale(1); opacity: 0.92; }
+  50%      { transform: scale(1.04); opacity: 1; }
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  opacity: 0;
+  animation: rise 700ms 2200ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.scroll-hint-mark {
+  font-size: 14px;
+  color: var(--agent);
+  animation: hint-bob 1.8s ease-in-out infinite;
+}
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+.scroll-hint:hover .scroll-hint-mark { color: var(--ink); }
+
+/* ============================================================
+   One-page Ledger section overrides
+   ============================================================ */
+.ledger-grid.one-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.ledger-grid.one-page .card.agent { border-right: 0; }
+.ledger-action {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 560px;
+}
+.ledger-action-h {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 12px;
+}
+
+/* ============================================================
+   One-page Policy rules — make them tile-style (2 cols)
+   ============================================================ */
+.rules.one-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.rules.one-page .rule {
+  border: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--paper) 78%, white 22%);
+  padding: 22px 24px;
+  grid-template-columns: 44px 1fr;
+}
+.rules.one-page .rule:first-child { border-top: 1px solid var(--rule); }
+.rules.one-page .rule-num { font-size: 32px; padding-right: 14px; }
+
+/* ============================================================
+   About prose (on-page)
+   ============================================================ */
+.about-prose {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 28, "SOFT" 70;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--ink);
+  max-width: 28ch;
+  letter-spacing: -0.012em;
+}
+.about-prose em {
+  font-variation-settings: "opsz" 28, "SOFT" 100, "WONK" 1;
+  color: var(--agent);
+  font-weight: 500;
+}
+.about-prose p { margin: 0 0 22px; }
+.about-prose p:last-child { margin-bottom: 0; color: var(--ink-mute); font-size: 18px; }
+
+/* ============================================================
+   Plug-in section foot link
+   ============================================================ */
+.plug-in-foot {
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+}
+.plug-in-foot a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--agent);
+  text-decoration: none;
+}
+.plug-in-foot a:hover { color: var(--agent); }
+
+/* ============================================================
+   Older landing-next/bento — kept for back-compat, unused now
    ============================================================ */
 main.landing-next {
   max-width: 1240px;
   padding: 48px max(28px, calc((100vw - 1240px) / 2)) 72px;
   min-height: 100vh;
 }
-body:has(main.landing-next)::after { opacity: 0.12; }
 
 /* Hero --------------------------------------------------- */
 .hero {
@@ -934,12 +1167,18 @@ body:has(main.landing-next)::after { opacity: 0.12; }
   .bento { grid-template-columns: repeat(2, 1fr); }
   .span-2 { grid-column: span 2; }
   .hero::after { display: none; }
+  .section-hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero-seal-wrap { justify-content: flex-start; }
+  .ledger-grid.one-page { grid-template-columns: 1fr; }
+  .rules.one-page { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   main.landing-next { padding: 24px 18px 48px; }
   .hero { padding: 24px 0 48px; margin-bottom: 32px; }
   .bento { grid-template-columns: 1fr; gap: 10px; }
   .span-2 { grid-column: span 1; }
+  .snap-section { padding: 64px 0 56px; min-height: 100vh; }
+  .hero-seal { width: clamp(180px, 60vw, 280px); }
 }
 
 .lede {

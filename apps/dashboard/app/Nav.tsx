@@ -2,19 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BlockTicker } from "./BlockTicker";
+import { useActiveSection } from "./components/ScrollSpy";
 
 const TABS = [
-  { href: "/dashboard", label: "Ledger" },
-  { href: "/activity", label: "Activity" },
-  { href: "/try", label: "Try It" },
-  { href: "/policy", label: "Policy" },
-  { href: "/plug-in", label: "Plug In" },
-  { href: "/about", label: "About" },
+  { id: "ledger", label: "Ledger" },
+  { id: "activity", label: "Activity" },
+  { id: "try", label: "Try It" },
+  { id: "policy", label: "Policy" },
+  { id: "plug-in", label: "Plug In" },
+  { id: "about", label: "About" },
 ];
+
+const SECTION_IDS = ["hero", ...TABS.map((t) => t.id)];
 
 export function Nav() {
   const pathname = usePathname();
+  const isLanding = pathname === "/";
+  const active = useActiveSection(isLanding ? SECTION_IDS : []);
 
   return (
     <nav className="nav">
@@ -26,13 +30,14 @@ export function Nav() {
 
       <ul className="tabs">
         {TABS.map((t) => {
-          const active = pathname === t.href || (t.href === "/dashboard" && pathname.startsWith("/dashboard"));
+          const href = isLanding ? `#${t.id}` : `/#${t.id}`;
+          const isActive = isLanding && active === t.id;
           return (
-            <li key={t.href}>
+            <li key={t.id}>
               <Link
-                href={t.href}
-                className={`tab ${active ? "active" : ""}`}
-                aria-current={active ? "page" : undefined}
+                href={href}
+                className={`tab ${isActive ? "active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
               >
                 {t.label}
               </Link>
@@ -41,9 +46,7 @@ export function Nav() {
         })}
       </ul>
 
-      <div className="nav-right">
-        <BlockTicker />
-      </div>
+      <div className="nav-right" />
     </nav>
   );
 }
