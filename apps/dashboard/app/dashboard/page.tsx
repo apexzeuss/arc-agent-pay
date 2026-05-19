@@ -5,6 +5,8 @@ import { StatusStrip } from "../components/StatusStrip";
 import { ActivityFeed } from "../components/ActivityFeed";
 import { PolicySummary } from "../components/PolicySummary";
 import { AutoRefresh } from "../components/AutoRefresh";
+import { LiveBadge } from "../components/LiveBadge";
+import { Footer } from "../components/Footer";
 import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 
 export const dynamic = "force-dynamic";
@@ -48,7 +50,10 @@ export default async function DashboardPage() {
 
       <div className="ledger-grid">
         <section className="ledger-col">
-          <h2>Recent activity</h2>
+          <h2>
+            Recent activity
+            <LiveBadge intervalMs={12_000} />
+          </h2>
           <ActivityFeed entries={activity.entries} emptyText="No payments yet. Issue one on the right to populate the ledger." />
           {activity.entries.length > 0 && (
             <a className="see-all" href="/activity">See full activity log →</a>
@@ -80,10 +85,7 @@ export default async function DashboardPage() {
 
       <PolicySummary compact />
 
-      <footer>
-        <span>arc-agent-pay · ledger v0.1</span>
-        <span>chain · 5042002</span>
-      </footer>
+      <Footer left="arc-agent-pay · ledger" right="chain · 5042002" />
     </main>
   );
 }

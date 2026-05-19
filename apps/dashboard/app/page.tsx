@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAgentBalance, getAgentActivity } from "./actions";
 import { DEFAULT_POLICY } from "@arc-agent-pay/shared";
+import { Footer } from "./components/Footer";
 
 export const dynamic = "force-dynamic";
 
@@ -118,10 +119,7 @@ export default async function Landing() {
         </Link>
       </section>
 
-      <footer className="landing-foot">
-        <span>arc-agent-pay · v0.1</span>
-        <span>chain · 5042002 · USDC native gas</span>
-      </footer>
+      <Footer />
     </main>
   );
 }

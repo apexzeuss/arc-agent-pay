@@ -1,4 +1,5 @@
 import { ScenarioRunner } from "./ScenarioRunner";
+import { Footer } from "../components/Footer";
 
 type Scenario = {
   id: string;
@@ -69,10 +70,7 @@ export default function TryPage() {
         ))}
       </ol>
 
-      <footer>
-        <span>arc-agent-pay · scenarios v0.1</span>
-        <span>policy enforced in code · article I</span>
-      </footer>
+      <Footer left="arc-agent-pay · scenarios" right="policy enforced · article I" />
     </main>
   );
 }

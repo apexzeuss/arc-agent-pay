@@ -1,4 +1,5 @@
 import { DEFAULT_POLICY } from "@arc-agent-pay/shared";
+import { Footer } from "../components/Footer";
 
 export default function PolicyPage() {
   const p = DEFAULT_POLICY;
@@ -77,10 +78,7 @@ export default function PolicyPage() {
         </p>
       </div>
 
-      <footer>
-        <span>arc-agent-pay · constitution v0.1</span>
-        <span>amendment process: redeploy</span>
-      </footer>
+      <Footer left="arc-agent-pay · constitution" right="amendment process · redeploy" />
     </main>
   );
 }

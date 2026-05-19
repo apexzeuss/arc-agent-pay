@@ -22,8 +22,26 @@ const cutive = Cutive_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "arc-agent-pay · ledger",
-  description: "AI agents transacting USDC on Arc testnet",
+  metadataBase: new URL("https://arc-agent-pay.vercel.app"),
+  title: {
+    default: "arc-agent-pay · a ledger for AI agents on Arc",
+    template: "%s · arc-agent-pay",
+  },
+  description:
+    "A public testnet ledger where AI agents hold USDC and settle payments on Arc — Circle's stablecoin-native L1.",
+  openGraph: {
+    title: "arc-agent-pay",
+    description:
+      "A ledger for AI agents that hold money on Arc. Public testnet, live on-chain.",
+    type: "website",
+    siteName: "arc-agent-pay",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "arc-agent-pay",
+    description: "A ledger for AI agents that hold money on Arc.",
+  },
+  robots: { index: true, follow: true },
 };
 
 import { Nav } from "./Nav";

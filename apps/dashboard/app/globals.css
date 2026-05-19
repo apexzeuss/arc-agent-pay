@@ -741,6 +741,179 @@ body:has(main.landing-next)::after { opacity: 0.12; }
   margin: 18px 0 -4px;
 }
 
+/* ============================================================
+   LiveBadge — pulses once per refresh interval, lives inside h2
+   ============================================================ */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 14px;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--success) 35%, var(--rule));
+  background: color-mix(in srgb, var(--success) 8%, var(--paper) 92%);
+  vertical-align: middle;
+}
+.live-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: live-blip 1200ms ease-out;
+}
+@keyframes live-blip {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 60%, transparent); transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { box-shadow: 0 0 0 8px transparent; transform: scale(1); }
+}
+
+/* ============================================================
+   Skeleton loading states
+   ============================================================ */
+.skel {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--paper-edge) 50%, transparent) 0%,
+    color-mix(in srgb, var(--paper-edge) 25%, transparent) 50%,
+    color-mix(in srgb, var(--paper-edge) 50%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 2px;
+}
+.skel-strip {
+  height: 86px;
+  margin: 24px 0 36px;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--paper-edge) 50%, transparent) 0%,
+    color-mix(in srgb, var(--paper-edge) 25%, transparent) 50%,
+    color-mix(in srgb, var(--paper-edge) 50%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border: 1px solid var(--rule);
+}
+.skel-line {
+  height: 18px;
+  margin: 10px 0;
+  max-width: 90%;
+}
+.skel-line:nth-child(odd) { max-width: 70%; }
+.skel-card {
+  height: 160px;
+  margin-bottom: 12px;
+  border: 1px solid var(--rule);
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   Wrong-network actions (UserPanel)
+   ============================================================ */
+.user-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   Watermark — hide on prose pages when they get tight; on dashboard
+   keep it but shrink/offset so it doesn't crash into content
+   ============================================================ */
+.watermark {
+  pointer-events: none;
+}
+@media (max-width: 1180px) {
+  .watermark { width: 380px; height: 380px; right: -200px; top: -80px; opacity: 0.28; }
+}
+@media (max-width: 880px) {
+  .watermark { display: none; }
+}
+
+/* ============================================================
+   Stronger mobile coverage for all major pages
+   ============================================================ */
+@media (max-width: 720px) {
+  /* Nav: stack brand row + tabs row */
+  .nav {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 10px;
+    padding: 12px 18px;
+  }
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .tab { padding: 6px 12px; font-size: 10px; }
+  .tab::after { left: 12px; right: 12px; }
+  .nav-right { justify-self: start; }
+  .ticker { font-size: 9.5px; padding: 4px 8px; }
+
+  /* Headlines tighter on small screens */
+  h1 {
+    font-size: clamp(38px, 11vw, 56px) !important;
+  }
+  .hero-headline { font-size: clamp(44px, 13vw, 84px) !important; }
+
+  /* Status strip: 2 cols × 2 rows */
+  .status-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ss-cell {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .ss-cell:nth-child(even) { border-right: 0; }
+  .ss-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .ss-cell.ss-right { text-align: left; }
+
+  /* Ledger grid: single column on mobile */
+  .ledger-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* Activity entries: number cell narrower */
+  .entry { grid-template-columns: 44px 1fr; gap: 10px; }
+  .entry-num { padding-right: 8px; }
+
+  /* Try-it scenarios: tighter */
+  .scenario { grid-template-columns: 48px 1fr; gap: 14px; padding: 24px 0; }
+  .scenario-num { font-size: 30px; padding-right: 12px; }
+  .scenario-amount { font-size: 26px; }
+
+  /* Policy rules: tighter */
+  .rule { grid-template-columns: 48px 1fr; gap: 16px; padding: 20px 0; }
+  .rule-num { font-size: 32px; padding-right: 12px; }
+  .rule-value { font-size: 22px; }
+
+  /* Policy strip: stack */
+  .policy-strip { font-size: 9.5px; gap: 6px; }
+
+  /* Snippet pre on Plug In: smaller font */
+  .snippet pre { font-size: 11px; padding: 14px; }
+
+  /* Footer: stack */
+  footer {
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+}
+
 /* Foot --------------------------------------------------- */
 .landing-foot {
   margin-top: 64px;

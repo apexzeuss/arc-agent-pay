@@ -1,6 +1,8 @@
 import { getAgentActivity } from "../actions";
 import { ActivityFeed } from "../components/ActivityFeed";
 import { AutoRefresh } from "../components/AutoRefresh";
+import { LiveBadge } from "../components/LiveBadge";
+import { Footer } from "../components/Footer";
 import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 
 export const dynamic = "force-dynamic";
@@ -46,13 +48,13 @@ export default async function ActivityPage() {
         </div>
       </div>
 
-      <h2>Recent entries</h2>
+      <h2>
+        Recent entries
+        <LiveBadge intervalMs={15_000} />
+      </h2>
       <ActivityFeed entries={entries} emptyText="The agent has made no transactions in the recent window. Issue a payment from the Ledger to populate this log." />
 
-      <footer>
-        <span>arc-agent-pay · activity log</span>
-        <span>refresh to update</span>
-      </footer>
+      <Footer left="arc-agent-pay · activity log" right="auto-refresh · 15s" />
     </main>
   );
 }

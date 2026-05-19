@@ -1,4 +1,5 @@
 import { CopyButton } from "../CopyButton";
+import { Footer } from "../components/Footer";
 
 const MCP_URL = "https://arc-agent-pay.vercel.app/mcp";
 
@@ -92,10 +93,7 @@ export default function PlugInPage() {
         </p>
       </div>
 
-      <footer>
-        <span>arc-agent-pay · mcp v0.1</span>
-        <span>protocol: model context protocol</span>
-      </footer>
+      <Footer left="arc-agent-pay · mcp" right="protocol · model context protocol" />
     </main>
   );
 }

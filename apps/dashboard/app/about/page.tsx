@@ -1,3 +1,5 @@
+import { Footer } from "../components/Footer";
+
 export default function AboutPage() {
   return (
     <main className="prose">
@@ -35,10 +37,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <footer>
-        <span>arc-agent-pay · ledger v0.1</span>
-        <span>2026</span>
-      </footer>
+      <Footer right="2026 · public testnet" />
     </main>
   );
 }
