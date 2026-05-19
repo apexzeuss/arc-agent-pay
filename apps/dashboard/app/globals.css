@@ -636,8 +636,8 @@ main.scroller {
   font-weight: 300;
   font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 0;
   font-size: clamp(40px, 6vw, 84px);
-  letter-spacing: -0.028em;
-  line-height: 1.0;
+  letter-spacing: -0.022em;
+  line-height: 1.06;
   color: var(--ink);
   margin: 0 0 18px;
   max-width: 20ch;
@@ -1012,17 +1012,18 @@ main.landing-next {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 6px; /* small explicit gap so descenders never touch next-line caps */
   font-family: var(--display);
   font-style: italic;
   font-weight: 300;
   font-variation-settings: "opsz" 144, "SOFT" 40, "WONK" 0;
   font-size: clamp(56px, 11vw, 168px);
-  line-height: 0.92;
-  letter-spacing: -0.045em;
+  line-height: 1.04; /* loose enough to clear g/y/p descenders */
+  letter-spacing: -0.028em; /* less aggressive — letters don't kiss */
   color: var(--ink);
   max-width: 10ch;
 }
+.hero-line { display: block; padding-block: 0.04em 0.02em; }
 .hero-line.is-accent {
   font-variation-settings: "opsz" 144, "SOFT" 95, "WONK" 1;
   font-weight: 400;
