@@ -11,7 +11,7 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
         The ledger <span className="amp">stalled</span>
       </h1>
       <p className="subtitle">
-        <span className="pip">●</span>&nbsp;&nbsp;Arc RPC didn&apos;t respond — usually transient
+        <span className="pip">●</span>&nbsp;&nbsp;Arc RPC didn&apos;t respond, usually transient
       </p>
       <div className="status error" style={{ maxWidth: 520 }}>
         <span className="label">Detail</span>

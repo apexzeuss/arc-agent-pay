@@ -10,6 +10,7 @@
   },
   "scripts": {
     "hello": "tsx scripts/hello-arc.ts",
+    "traders": "tsx scripts/show-traders.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

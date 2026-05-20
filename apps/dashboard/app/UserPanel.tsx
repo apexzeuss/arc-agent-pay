@@ -94,7 +94,7 @@ export function UserPanel() {
       <div className="card user">
         <div className="label">The Counterparty</div>
         <div className="balance" style={{ fontStyle: "italic", fontSize: 18, fontWeight: 300, color: "var(--ink-mute)" }}>
-          — awaiting signature —
+          awaiting signature
         </div>
         <div className="notice">No wallet connected. Sign in to enter the ledger as a counterparty.</div>
         {wallet ? (

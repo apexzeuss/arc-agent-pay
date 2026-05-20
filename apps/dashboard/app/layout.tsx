@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s · arc-agent-pay",
   },
   description:
-    "A public testnet ledger where AI agents hold USDC and settle payments on Arc — Circle's stablecoin-native L1.",
+    "A public testnet ledger where AI agents hold USDC and settle payments on Arc, Circle's stablecoin-native L1.",
   openGraph: {
     title: "arc-agent-pay",
     description:
@@ -45,12 +45,16 @@ export const metadata: Metadata = {
 };
 
 import { Nav } from "./Nav";
+import { IntroCurtain } from "./components/IntroCurtain";
+import { ScrollProgress } from "./components/ScrollProgress";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${publicSans.variable} ${cutive.variable}`}>
       <body>
         <Providers>
+          <IntroCurtain />
+          <ScrollProgress />
           <Nav />
           {children}
         </Providers>

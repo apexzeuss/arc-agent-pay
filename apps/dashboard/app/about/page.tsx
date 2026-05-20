@@ -18,7 +18,7 @@ export default function AboutPage() {
       <section className="prose-body">
         <h2>The premise</h2>
         <p>
-          Most crypto products are built for traders. This one is built for <em>agents</em> — software that holds money and spends it on someone&apos;s behalf, under rules the human sets.
+          Most crypto products are built for traders. This one is built for <em>agents</em>: software that holds money and spends it on someone&apos;s behalf, under rules the human sets.
         </p>
 
         <h2>Why Arc</h2>
@@ -33,7 +33,7 @@ export default function AboutPage() {
 
         <h2>Status</h2>
         <p>
-          Public testnet demo. Source on request. The dashboard you see is the first of several views — <span style={{ color: "var(--ink-mute)" }}>policy engine, agent activity, MCP endpoint coming next.</span>
+          Public testnet demo. Source on request. The dashboard you see is the first of several views. <span style={{ color: "var(--ink-mute)" }}>Policy engine, agent activity, and the MCP endpoint are coming next.</span>
         </p>
       </section>
 

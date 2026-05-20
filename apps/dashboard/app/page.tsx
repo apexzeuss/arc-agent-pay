@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { getAgentBalance, getAgentActivity } from "./actions";
-import { DEFAULT_POLICY, ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
+import { DEFAULT_POLICY, ARC_TESTNET_EXPLORER, seededTraderSource } from "@arc-agent-pay/shared";
+import { CopyDesk } from "./copy/CopyDesk";
+import { SendForm } from "./send/SendForm";
 import { SpendButton } from "./SpendButton";
+import { BatchPay } from "./BatchPay";
+import { KillSwitch } from "./KillSwitch";
 import { UserPanel } from "./UserPanel";
 import { ActivityFeed } from "./components/ActivityFeed";
 import { Footer } from "./components/Footer";
-import { HeroSeal } from "./components/HeroSeal";
 import { Reveal } from "./components/Reveal";
 import { Spotlight } from "./components/Spotlight";
 import { CopyButton } from "./CopyButton";
@@ -17,17 +20,10 @@ function short(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
-const LEDE_LINES = [
-  { text: "A ledger", accent: false },
-  { text: "for AI agents", accent: true },
-  { text: "that hold money", accent: false },
-  { text: "on Arc.", accent: false },
-];
-
 const SCENARIOS = [
-  { id: "tip",  title: "Tip the writer",       amount: "0.10", blurb: "Under the per-tx ceiling — agent fires immediately." },
-  { id: "inv",  title: "Pay a vendor invoice", amount: "0.50", blurb: "Still under the ceiling — agent fires." },
-  { id: "sub",  title: "Subscribe at $2.00",   amount: "2.00", blurb: "Above the cap. Rejected by Article I.", overCap: true },
+  { id: "tip",  title: "Tip the writer",       amount: "0.25", blurb: "Well under the per-tx ceiling, so the agent fires immediately." },
+  { id: "inv",  title: "Pay a vendor invoice", amount: "3.00", blurb: "Still under the 5 USDC ceiling, so the agent fires." },
+  { id: "sub",  title: "Buy a year of SaaS",   amount: "7.50", blurb: "Above the 5 USDC per-tx limit, so it's rejected automatically.", overCap: true },
 ];
 
 const MCP_URL = "https://arc-agent-pay.vercel.app/mcp";
@@ -40,38 +36,73 @@ const CLAUDE_CFG = `{
   }
 }`;
 
+const TICKER: { label: string; key?: boolean }[] = [
+  { label: "agentic payments", key: true },
+  { label: "usdc native" },
+  { label: "copy-trading intelligence", key: true },
+  { label: "sub-second clearance" },
+  { label: "no volatile gas", key: true },
+  { label: "policy-gated" },
+  { label: "arc l1", key: true },
+  { label: "settled in usdc" },
+];
+
 export default async function Landing() {
-  const [agent, activity] = await Promise.all([
+  const [agent, activity, traders] = await Promise.all([
     getAgentBalance().catch(() => ({ usdc: "—", address: "" })),
     getAgentActivity(8).catch(() => ({ entries: [], agentAddress: "" })),
+    seededTraderSource().getTraders(),
   ]);
+
+  const initialTraders = traders.map((t) => ({
+    id: t.id,
+    label: t.label,
+    address: t.address,
+    bio: t.bio,
+    asset: t.recentTrades[0]?.asset ?? "—",
+    returns: t.recentTrades.map((x) => x.returnPct),
+  }));
 
   return (
     <main className="scroller">
       <Spotlight />
+
+      {/* Market ticker at the very top of the page */}
+      <div className="page-ticker" aria-hidden>
+        <div className="page-ticker-track">
+          {[0, 1].map((copy) => (
+            <div className="page-ticker-row" key={copy}>
+              {TICKER.map((t, i) => (
+                <span key={i}>
+                  <span className={t.key ? "t-key" : undefined}>{t.label}</span>
+                  <span className="t-sep">/</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ============================================================
           HERO
           ============================================================ */}
       <section id="hero" className="snap-section section-hero">
         <span className="chapter-watermark" aria-hidden>00</span>
-        <div className="section-inner section-hero-grid">
+        <div className="section-inner section-hero-stack">
           <div className="hero-text">
             <div className="hero-eyebrow">
               <span className="hero-eyebrow-rule" aria-hidden />
               <span>Volume I · Edition 0001</span>
             </div>
-            <h1 className="hero-headline">
-              {LEDE_LINES.map((l, i) => (
-                <span
-                  key={i}
-                  className={`hero-line ${l.accent ? "is-accent" : ""}`}
-                  style={{ animationDelay: `${260 + i * 140}ms` }}
-                >
-                  {l.text}
-                </span>
-              ))}
+            <h1 className="hero-lede">
+              <span className="hero-lede-line" style={{ animationDelay: "260ms" }}>
+                A ledger for <span className="lede-accent">AI&nbsp;agents</span> that hold money
+              </span>
+              <span className="hero-lede-line" style={{ animationDelay: "420ms" }}>
+                on Arc.
+              </span>
             </h1>
+
             <div className="hero-meta">
               <div className="hero-meta-item">
                 <div className="hero-meta-label">Now holding</div>
@@ -90,9 +121,6 @@ export default async function Landing() {
               <span>Begin the ledger</span>
               <span className="hero-enter-arrow" aria-hidden>↓</span>
             </a>
-          </div>
-          <div className="hero-seal-wrap">
-            <HeroSeal />
           </div>
         </div>
 
@@ -137,8 +165,12 @@ export default async function Landing() {
           </div>
 
           <Reveal delay={360} className="ledger-action">
-            <h3 className="ledger-action-h">Issue a payment</h3>
+            <div className="ledger-action-top">
+              <h3 className="ledger-action-h">Issue a payment</h3>
+              <KillSwitch />
+            </div>
             <SpendButton amount="0.5" />
+            <BatchPay />
           </Reveal>
         </div>
       </section>
@@ -179,7 +211,7 @@ export default async function Landing() {
             <h2 className="section-h">
               Three things the agent <span className="amp">might</span> be asked to pay
             </h2>
-            <p className="section-sub">Real on-chain payments · the third should be rejected by Article I</p>
+            <p className="section-sub">Real on-chain payments · the third is rejected for exceeding the per-tx limit</p>
           </Reveal>
 
           <ol className="scenarios">
@@ -217,7 +249,7 @@ export default async function Landing() {
 
           <ol className="rules one-page">
             <Reveal as="li" className="rule" delay={200}>
-              <div className="rule-num">I</div>
+              <div className="rule-num">01</div>
               <div className="rule-body">
                 <div className="rule-title">Per-transaction ceiling</div>
                 <div className="rule-value">{DEFAULT_POLICY.perTxCapUsdc} <span className="unit">USDC</span></div>
@@ -225,7 +257,7 @@ export default async function Landing() {
               </div>
             </Reveal>
             <Reveal as="li" className="rule" delay={300}>
-              <div className="rule-num">II</div>
+              <div className="rule-num">02</div>
               <div className="rule-body">
                 <div className="rule-title">Daily disbursement cap</div>
                 <div className="rule-value">{DEFAULT_POLICY.dailyCapUsdc} <span className="unit">USDC&nbsp;/&nbsp;24h</span></div>
@@ -233,7 +265,7 @@ export default async function Landing() {
               </div>
             </Reveal>
             <Reveal as="li" className="rule" delay={400}>
-              <div className="rule-num">III</div>
+              <div className="rule-num">03</div>
               <div className="rule-body">
                 <div className="rule-title">Cooldown between payments</div>
                 <div className="rule-value">{DEFAULT_POLICY.cooldownSeconds}<span className="unit">&nbsp;sec</span></div>
@@ -241,7 +273,7 @@ export default async function Landing() {
               </div>
             </Reveal>
             <Reveal as="li" className="rule" delay={500}>
-              <div className="rule-num">IV</div>
+              <div className="rule-num">04</div>
               <div className="rule-body">
                 <div className="rule-title">Recipient allowlist</div>
                 <div className="rule-value">
@@ -298,13 +330,51 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          06 · ABOUT  (dark)
+          06 · COPY DESK  (the product)
           ============================================================ */}
-      <section id="about" className="snap-section section-about dark">
+      <section id="copy" className="snap-section">
         <span className="chapter-watermark" aria-hidden>06</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 06</div>
+            <h2 className="section-h">
+              Copy <span className="amp">&amp;</span> protect
+            </h2>
+            <p className="section-sub">AI scores traders, weights the book, and pulls the ones whose edge breaks</p>
+          </Reveal>
+          <Reveal delay={160}>
+            <CopyDesk initialTraders={initialTraders} embedded />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          07 · SEND
+          ============================================================ */}
+      <section id="send" className="snap-section">
+        <span className="chapter-watermark" aria-hidden>07</span>
+        <div className="section-inner">
+          <Reveal className="section-head">
+            <div className="section-num">№ 07</div>
+            <h2 className="section-h">
+              Send from <span className="amp">your</span> wallet
+            </h2>
+            <p className="section-sub">Your wallet · your funds · pick a network, a token, and a destination</p>
+          </Reveal>
+          <Reveal delay={160}>
+            <SendForm />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          08 · ABOUT  (dark)
+          ============================================================ */}
+      <section id="about" className="snap-section section-about dark">
+        <span className="chapter-watermark" aria-hidden>08</span>
+        <div className="section-inner">
+          <Reveal className="section-head">
+            <div className="section-num">№ 08</div>
             <h2 className="section-h">
               Why this, <span className="amp">why now</span>
             </h2>
@@ -312,7 +382,7 @@ export default async function Landing() {
 
           <Reveal delay={200} className="about-prose">
             <p>
-              Most crypto products are built for traders. This one is built for <em>agents</em> — software that holds money
+              Most crypto products are built for traders. This one is built for <em>agents</em>: software that holds money
               and spends it on someone&apos;s behalf, under rules the human sets.
             </p>
             <p>
@@ -329,6 +399,7 @@ export default async function Landing() {
           </Reveal>
         </div>
       </section>
+
     </main>
   );
 }

@@ -36,7 +36,7 @@ export function ScenarioRunner({ amount, id }: { amount: string; id: string }) {
       )}
       {result && !result.ok && result.rejectedByPolicy && (
         <div className="status policy-reject">
-          <span className="label">Rejected by Article I</span>
+          <span className="label">{result.rule ?? "Rejected by policy"}</span>
           <div>{result.error}</div>
         </div>
       )}

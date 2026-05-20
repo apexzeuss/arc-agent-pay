@@ -9,8 +9,8 @@ export default function PolicyPage() {
       <div className="watermark" aria-hidden />
 
       <div className="meta">
-        <span>Constitution</span>
-        <span className="stamp">Article I · in force</span>
+        <span>Policy</span>
+        <span className="stamp">enforced · in force</span>
       </div>
 
       <h1>
@@ -47,7 +47,7 @@ export default function PolicyPage() {
             <div className="rule-title">Cooldown between payments</div>
             <div className="rule-value">{p.cooldownSeconds}<span className="unit">&nbsp;sec</span></div>
             <div className="rule-note">
-              Minimum interval between successive outbound transactions. Currently zero — agent fires on demand.
+              Minimum interval between successive outbound transactions. Currently zero, so the agent fires on demand.
             </div>
           </div>
         </li>

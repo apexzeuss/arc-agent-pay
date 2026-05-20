@@ -16,14 +16,14 @@ const SCENARIOS: Scenario[] = [
     title: "Tip the writer",
     blurb: "A small thank-you for something the agent read.",
     amount: "0.10",
-    note: "Under the per-tx ceiling — agent fires immediately.",
+    note: "Under the per-tx ceiling, so the agent fires immediately.",
   },
   {
     id: "invoice",
     title: "Pay a vendor invoice",
     blurb: "Settle a service the agent consumed.",
     amount: "0.50",
-    note: "Still under the ceiling — agent fires.",
+    note: "Still under the ceiling, so the agent fires.",
   },
   {
     id: "subscription",
@@ -70,7 +70,7 @@ export default function TryPage() {
         ))}
       </ol>
 
-      <Footer left="arc-agent-pay · scenarios" right="policy enforced · article I" />
+      <Footer left="arc-agent-pay · scenarios" right="policy enforced" />
     </main>
   );
 }
