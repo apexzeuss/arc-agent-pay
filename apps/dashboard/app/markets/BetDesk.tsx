@@ -83,6 +83,9 @@ export function BetDesk() {
                 )}
 
                 <div className="desk-rationale">{r.rationale}</div>
+                <a className="bet-act" href={r.url} target="_blank" rel="noreferrer">
+                  {betting ? `Bet ${r.side} on Polymarket ↗` : "View on Polymarket ↗"}
+                </a>
               </div>
             );
           })}

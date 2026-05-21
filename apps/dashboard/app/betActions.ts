@@ -26,6 +26,7 @@ export type BetRow = {
   rationale: string;
   weight: number;
   volumeUsd: number;
+  url: string;
 };
 
 export type BetAnalysis = {
@@ -39,6 +40,7 @@ export async function analyzeMarketsAction(): Promise<BetAnalysis> {
   const markets = await polymarketSource().getMarkets();
   const result = await analyzeMarkets(markets);
   const volById = new Map(markets.map((m) => [m.id, m.volumeUsd]));
+  const urlById = new Map(markets.map((m) => [m.id, m.url]));
 
   const rows: BetRow[] = result.picks.map((p) => ({
     id: p.id,
@@ -51,6 +53,7 @@ export async function analyzeMarketsAction(): Promise<BetAnalysis> {
     rationale: p.rationale,
     weight: p.weight,
     volumeUsd: volById.get(p.id) ?? 0,
+    url: urlById.get(p.id) ?? "https://polymarket.com",
   }));
   // Bets first (by weight), then skips.
   rows.sort((a, b) => b.weight - a.weight || b.conviction - a.conviction);

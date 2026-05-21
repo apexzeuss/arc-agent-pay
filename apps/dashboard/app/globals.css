@@ -2928,3 +2928,10 @@ body { padding-bottom: 34px; }
 .bet-stake-row { display: flex; align-items: center; gap: 10px; }
 .bet-stake-row .desk-weight-track { flex: 1; }
 .bet-stake-label { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); white-space: nowrap; }
+
+/* "Act on it" link on each bet card */
+.bet-act {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.03em;
+  color: var(--agent); text-decoration: none; margin-top: auto; padding-top: 4px;
+}
+.bet-act:hover { text-decoration: underline; }

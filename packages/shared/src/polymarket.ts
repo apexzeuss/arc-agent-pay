@@ -11,6 +11,7 @@ export type PredictionMarket = {
   noPrice: number; // 0..1
   volumeUsd: number;
   endDate?: string;
+  url: string; // public Polymarket page — where a user (or builder-fee attribution) acts
 };
 
 export interface MarketSource {
@@ -75,6 +76,7 @@ export function polymarketSource(opts?: {
           noPrice,
           volumeUsd: Number(m.volumeNum ?? m.volume ?? 0),
           endDate: m.endDate ? String(m.endDate) : undefined,
+          url: m.slug ? `https://polymarket.com/event/${m.slug}` : "https://polymarket.com",
         });
       }
       // Shuffle the eligible pool so each run surfaces a different mix of
