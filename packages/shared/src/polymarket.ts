@@ -76,9 +76,16 @@ export function polymarketSource(opts?: {
           volumeUsd: Number(m.volumeNum ?? m.volume ?? 0),
           endDate: m.endDate ? String(m.endDate) : undefined,
         });
-        if (out.length >= limit) break;
       }
-      return out;
+      // Shuffle the eligible pool so each run surfaces a different mix of
+      // markets, rather than always the same top-by-volume handful.
+      for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = out[i]!;
+        out[i] = out[j]!;
+        out[j] = tmp;
+      }
+      return out.slice(0, limit);
     },
   };
 }

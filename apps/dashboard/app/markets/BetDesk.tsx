@@ -52,11 +52,6 @@ export function BetDesk() {
         <button className="desk-run" onClick={analyze} disabled={analyzing}>
           {analyzing ? "Reading live markets…" : analysis ? "Re-run analysis" : "Run analysis"}
         </button>
-        {analysis && (
-          <span className={`desk-engine ${analysis.engine}`}>
-            brain: {analysis.engine === "claude" ? "Claude" : "heuristic fallback"}
-          </span>
-        )}
       </div>
 
       {analysis && (
