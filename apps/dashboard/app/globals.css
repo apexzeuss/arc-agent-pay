@@ -1,21 +1,21 @@
 :root {
-  /* Modern dark "markets terminal" — cool near-black + hairlines + vivid YES/NO */
-  --paper:       #0b0e14;   /* page background */
-  --paper-tint:  #131926;   /* cards / panels */
-  --paper-edge:  #1d2636;
+  /* Cotton · Electric Blue · Moonless Night — clean light palette */
+  --paper:       #f4f3f1;   /* Cotton — page background */
+  --paper-tint:  #ffffff;   /* white cards / panels */
+  --paper-edge:  #e7e5e1;
 
-  --ink:         #e7ecf3;   /* primary text */
-  --ink-2:       #aeb8c8;
-  --ink-mute:    #6b7787;   /* muted text */
-  --rule:        #222b3a;   /* hairline borders */
+  --ink:         #2d2d2d;   /* Moonless Night — primary text */
+  --ink-2:       #4d4d4d;
+  --ink-mute:    #777777;   /* muted but readable */
+  --rule:        #e0ded9;   /* hairline borders */
 
-  --agent:       #ff4d6d;   /* brand accent + NO / down (vivid pink-red) */
-  --agent-ink:   #ff7d96;   /* lighter accent for text on dark */
-  --user:        #4aa8ff;   /* secondary accent (blue) */
-  --user-ink:    #8cc6ff;
+  --agent:       #3171c6;   /* Electric Blue — brand / primary accent */
+  --agent-ink:   #255aa3;   /* darker blue for hovers / borders */
+  --user:        #3171c6;   /* secondary = same blue family */
+  --user-ink:    #255aa3;
 
-  --success:     #19d292;   /* YES / up (vivid green) */
-  --error:       #ff4d6d;
+  --success:     #1a9d6e;   /* YES / up (green) */
+  --error:       #d64545;   /* NO / down / error (red) */
 
   /* Type stacks (vars are wired via next/font in layout.tsx) */
   --display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
@@ -746,11 +746,15 @@ main.scroller {
    Dark section theme — overrides palette tokens within scope
    ============================================================ */
 .snap-section.dark {
-  /* Subtly deeper panel for rhythm, same cool family as the rest. */
-  background: #070a10;
-  --paper: #070a10;
-  --paper-tint: #101622;
-  --paper-edge: #1a2230;
+  /* Moonless Night sections for rhythm against the Cotton background. */
+  background: #2d2d2d;
+  --paper: #2d2d2d;
+  --paper-tint: #383838;
+  --paper-edge: #454545;
+  --ink: #f4f3f1;
+  --ink-2: #cfcdc9;
+  --ink-mute: #a8a6a2;
+  --rule: #454545;
   color: var(--ink);
   z-index: 1;
 }
@@ -3005,3 +3009,25 @@ body { padding-bottom: 34px; }
 /* Rebalance heading bold */
 .desk-rebalance h2 { font-weight: 800; letter-spacing: -0.02em; }
 .desk-engine.claude { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, var(--rule)); }
+
+/* ─── Light palette fixes ───────────────────────────────────────── */
+/* Negative meaning = red (brand accent is now Electric Blue). */
+.bet-side.bet-no { background: var(--error); box-shadow: 0 0 18px color-mix(in srgb, var(--error) 32%, transparent); }
+.desk-pulled { color: var(--error); }
+.desk-legend-pull { color: var(--error); }
+.desk-leg.err { border-left-color: var(--error); }
+.desk-loss { color: var(--error); }
+
+/* Emphasis word (e.g. "real") — no italic "bend", just a clean blue accent. */
+.amp {
+  font-family: var(--body) !important;
+  font-style: normal !important;
+  font-weight: 800;
+  color: var(--agent);
+}
+
+/* Aurora: subtle tint on a light background, not a heavy glow. */
+.aurora { opacity: 0.14; filter: blur(100px); }
+.aurora.a3 { opacity: 0.1; }
+.hero-grain { background: radial-gradient(120% 100% at 50% 0%, transparent 65%, rgba(0,0,0,0.05) 100%); }
+.hero-lede .lede-accent { text-shadow: none; }
