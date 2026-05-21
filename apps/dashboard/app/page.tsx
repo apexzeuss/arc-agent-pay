@@ -88,22 +88,30 @@ export default async function Landing() {
           HERO
           ============================================================ */}
       <section id="hero" className="snap-section section-hero">
-        <span className="chapter-watermark" aria-hidden>00</span>
+        <div className="hero-aurora" aria-hidden>
+          <span className="aurora a1" />
+          <span className="aurora a2" />
+          <span className="aurora a3" />
+        </div>
+        <div className="hero-grain" aria-hidden />
         <div className="section-inner section-hero-stack">
           <div className="hero-text">
             <div className="hero-eyebrow">
-              <span className="hero-eyebrow-rule" aria-hidden />
-              <span>Volume I · Edition 0001</span>
+              <span className="hero-eyebrow-dot" aria-hidden />
+              <span>Autonomous · live prediction markets · settled on Arc</span>
             </div>
             <h1 className="hero-lede">
-              <span className="hero-lede-line" style={{ animationDelay: "260ms" }}>
-                An AI that finds <span className="lede-accent">mispriced&nbsp;bets</span>
+              <span className="hero-lede-line" style={{ animationDelay: "240ms" }}>
+                Bet where the crowd
               </span>
-              <span className="hero-lede-line" style={{ animationDelay: "420ms" }}>
-                settled on Arc.
+              <span className="hero-lede-line" style={{ animationDelay: "400ms" }}>
+                is <span className="lede-accent">wrong.</span>
               </span>
             </h1>
-
+            <p className="hero-sub">
+              An autonomous AI reads live prediction markets, finds the ones the crowd has mispriced, and places its
+              bets, settled in USDC on Arc.
+            </p>
             <div className="hero-meta">
               <div className="hero-meta-item">
                 <div className="hero-meta-label">Now holding</div>
@@ -114,12 +122,12 @@ export default async function Landing() {
                 <div className="hero-meta-value">&lt; 1<span className="unit">sec</span></div>
               </div>
               <div className="hero-meta-item">
-                <div className="hero-meta-label">Gas paid in</div>
-                <div className="hero-meta-value">USDC</div>
+                <div className="hero-meta-label">Live markets from</div>
+                <div className="hero-meta-value">Polymarket</div>
               </div>
             </div>
-            <a href="#ledger" className="hero-enter">
-              <span>Begin the ledger</span>
+            <a href="#markets" className="hero-enter">
+              <span>Watch it read the markets</span>
               <span className="hero-enter-arrow" aria-hidden>↓</span>
             </a>
           </div>

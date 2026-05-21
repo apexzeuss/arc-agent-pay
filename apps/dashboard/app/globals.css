@@ -1549,15 +1549,14 @@ main.landing-next {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(4px, 0.8vh, 12px);
+  gap: 0;
   font-family: var(--display);
-  font-style: italic;
-  font-weight: 300;
-  font-variation-settings: "opsz" 144, "SOFT" 40, "WONK" 0;
-  /* Width-based so the long first line always fits on one line (two-line hero). */
-  font-size: clamp(28px, 4.2vw, 60px);
-  line-height: 1.12;
-  letter-spacing: -0.024em;
+  font-style: normal;
+  font-weight: 800;
+  /* Big, bold, modern. */
+  font-size: clamp(44px, 8vw, 104px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
   color: var(--ink);
   text-align: center;
 }
@@ -2931,3 +2930,38 @@ body { padding-bottom: 34px; }
   color: var(--agent); text-decoration: none; margin-top: auto; padding-top: 4px;
 }
 .bet-act:hover { text-decoration: underline; }
+
+/* ─── Bold hero: living aurora + big type ───────────────────────── */
+.hero-aurora { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+.aurora {
+  position: absolute; width: 60vw; height: 60vw; max-width: 880px; max-height: 880px;
+  border-radius: 50%; filter: blur(90px); opacity: 0.45; will-change: transform;
+}
+.aurora.a1 { background: radial-gradient(circle, var(--agent) 0%, transparent 65%); top: -15%; left: -8%; animation: drift1 22s ease-in-out infinite; }
+.aurora.a2 { background: radial-gradient(circle, #7c5cff 0%, transparent 65%); top: -5%; right: -12%; animation: drift2 27s ease-in-out infinite; }
+.aurora.a3 { background: radial-gradient(circle, var(--success) 0%, transparent 70%); bottom: -28%; left: 22%; opacity: 0.28; animation: drift3 32s ease-in-out infinite; }
+@keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(7vw,5vh) scale(1.12); } }
+@keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6vw,7vh) scale(1.06); } }
+@keyframes drift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(4vw,-5vh); } }
+.hero-grain {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 0%, transparent 45%, rgba(0,0,0,0.55) 100%);
+}
+
+.hero-eyebrow-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--success);
+  box-shadow: 0 0 12px var(--success); animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+.hero-lede .lede-accent {
+  color: var(--agent); font-weight: 800; font-style: normal; font-variation-settings: normal;
+  text-shadow: 0 0 40px color-mix(in srgb, var(--agent) 45%, transparent);
+}
+.hero-sub {
+  max-width: 56ch; margin: 22px auto 0;
+  font-size: clamp(15px, 1.5vw, 19px); line-height: 1.55; color: var(--ink-2); text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora { animation: none; }
+}
