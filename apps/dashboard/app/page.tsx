@@ -97,10 +97,10 @@ export default async function Landing() {
             </div>
             <h1 className="hero-lede">
               <span className="hero-lede-line" style={{ animationDelay: "260ms" }}>
-                A ledger for <span className="lede-accent">AI&nbsp;agents</span> that hold money
+                An AI that finds <span className="lede-accent">mispriced&nbsp;bets</span>
               </span>
               <span className="hero-lede-line" style={{ animationDelay: "420ms" }}>
-                on Arc.
+                settled on Arc.
               </span>
             </h1>
 

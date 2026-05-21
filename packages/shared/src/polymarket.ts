@@ -48,7 +48,7 @@ export function polymarketSource(opts?: {
     async getMarkets() {
       // Pull the most-traded open markets, then keep binary YES/NO ones whose
       // price is genuinely uncertain — those are where an edge can exist.
-      const url = `${GAMMA}?closed=false&active=true&order=volumeNum&ascending=false&limit=120`;
+      const url = `${GAMMA}?closed=false&active=true&order=volumeNum&ascending=false&limit=500`;
       const res = await fetch(url, { headers: { Accept: "application/json" } });
       if (!res.ok) throw new Error(`Polymarket Gamma API ${res.status}: ${await res.text()}`);
 
