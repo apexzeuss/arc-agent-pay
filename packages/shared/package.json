@@ -11,6 +11,7 @@
   "scripts": {
     "hello": "tsx scripts/hello-arc.ts",
     "traders": "tsx scripts/show-traders.ts",
+    "markets": "tsx scripts/show-markets.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
