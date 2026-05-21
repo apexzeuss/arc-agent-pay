@@ -2965,3 +2965,43 @@ body { padding-bottom: 34px; }
 @media (prefers-reduced-motion: reduce) {
   .aurora { animation: none; }
 }
+
+/* ─── Premium polish: carry the hero's energy through the page ───── */
+.section-num { color: var(--agent); letter-spacing: 0.22em; }
+.section-h { font-weight: 800; letter-spacing: -0.03em; }
+
+/* Cards — soft depth, rounded, hover lift */
+.desk-trader {
+  border-radius: 14px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--paper-tint) 94%, transparent), var(--paper));
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.desk-trader:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ink) 16%, var(--rule));
+  box-shadow: 0 14px 44px rgba(0,0,0,.4);
+}
+.desk-trader.is-active { border-color: color-mix(in srgb, var(--success) 42%, var(--rule)); }
+.desk-trader.is-degraded { opacity: 0.62; }
+
+/* Primary buttons — gradient + glow */
+.desk-run {
+  border-radius: 10px; border: 0;
+  background: linear-gradient(180deg, var(--agent), color-mix(in srgb, var(--agent) 78%, #000));
+  color: #fff;
+  box-shadow: 0 6px 26px color-mix(in srgb, var(--agent) 38%, transparent);
+}
+.desk-run:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+
+/* YES/NO badges — glow */
+.bet-side { border-radius: 6px; font-weight: 600; }
+.bet-side.bet-yes { box-shadow: 0 0 18px color-mix(in srgb, var(--success) 38%, transparent); }
+.bet-side.bet-no  { box-shadow: 0 0 18px color-mix(in srgb, var(--agent) 38%, transparent); }
+
+/* Weight bars — gradient on rounded track */
+.desk-weight-track { background: var(--paper-edge); border-radius: 999px; height: 8px; }
+.desk-weight-fill  { background: linear-gradient(90deg, var(--success), var(--user)); border-radius: 999px; }
+
+/* Rebalance heading bold */
+.desk-rebalance h2 { font-weight: 800; letter-spacing: -0.02em; }
+.desk-engine.claude { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, var(--rule)); }
