@@ -14,6 +14,7 @@
     "simple-agent": "tsx scripts/simple-agent.ts",
     "score": "tsx scripts/score-traders.ts",
     "analyze-markets": "tsx scripts/analyze-markets.ts",
+    "settle-bets": "tsx scripts/settle-bets.ts",
     "policy": "tsx scripts/policy-check.ts",
     "rebalance": "tsx scripts/rebalance.ts",
     "typecheck": "tsc --noEmit"
