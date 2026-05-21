@@ -8,14 +8,15 @@ import { NavWallet } from "./NavWallet";
 
 // Primary bar — the product + the things people actually come to do.
 const PRIMARY = [
-  { id: "copy", label: "Copy Desk", accent: true },
+  { id: "markets", label: "Bet Desk", accent: true },
   { id: "ledger", label: "Ledger" },
   { id: "activity", label: "Activity" },
-  { id: "try", label: "Try It" },
+  { id: "copy", label: "Copy Desk" },
 ];
 
 // Secondary bar — supporting context, kept visible but de-emphasized.
 const SECONDARY = [
+  { id: "try", label: "Try It" },
   { id: "policy", label: "Policy" },
   { id: "plug-in", label: "Plug In" },
   { id: "send", label: "Send" },

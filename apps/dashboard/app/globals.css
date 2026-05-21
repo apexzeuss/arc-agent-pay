@@ -2903,3 +2903,21 @@ body { padding-bottom: 34px; }
   font-weight: 400;
   font-variation-settings: "opsz" 144, "SOFT" 90, "WONK" 1;
 }
+
+/* ─── Bet Desk (Polymarket) ─────────────────────────────────────── */
+.bet-question { font-family: var(--display); font-size: 18px; line-height: 1.25; flex: 1; padding-right: 10px; }
+.bet-side {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 2px; align-self: flex-start; white-space: nowrap;
+}
+.bet-side.bet-yes { color: var(--paper); background: var(--success); }
+.bet-side.bet-no { color: var(--paper); background: var(--agent); }
+.bet-side.bet-skip { color: var(--ink-mute); border: 1px solid var(--rule); background: transparent; }
+.bet-prob {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 12px; color: var(--ink-mute);
+}
+.bet-prob strong { color: var(--ink); }
+.bet-prob-arrow { color: var(--rule); }
+.bet-edge { color: var(--user); margin-left: auto; }
+.bet-leg-q { flex: 1; min-width: 0; color: var(--ink-mute); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAgentBalance, getAgentActivity } from "./actions";
 import { DEFAULT_POLICY, ARC_TESTNET_EXPLORER, seededTraderSource } from "@arc-agent-pay/shared";
 import { CopyDesk } from "./copy/CopyDesk";
+import { BetDesk } from "./markets/BetDesk";
 import { SendForm } from "./send/SendForm";
 import { SpendButton } from "./SpendButton";
 import { BatchPay } from "./BatchPay";
@@ -124,10 +125,31 @@ export default async function Landing() {
           </div>
         </div>
 
-        <a href="#ledger" className="scroll-hint" aria-label="Scroll for more">
+        <a href="#markets" className="scroll-hint" aria-label="Scroll for more">
           <span className="scroll-hint-mark" aria-hidden>↓</span>
           <span className="scroll-hint-label">Scroll · or click a tab</span>
         </a>
+      </section>
+
+      {/* ============================================================
+          ★ BET DESK — the headline: AI bets real Polymarket markets
+          ============================================================ */}
+      <section id="markets" className="snap-section">
+        <span className="chapter-watermark" aria-hidden>★</span>
+        <div className="section-inner">
+          <Reveal className="section-head">
+            <div className="section-num">LIVE</div>
+            <h2 className="section-h">
+              An AI that bets <span className="amp">real</span> prediction markets
+            </h2>
+            <p className="section-sub">
+              Reads live Polymarket markets · finds the mispriced ones · settles its bets in USDC on Arc
+            </p>
+          </Reveal>
+          <Reveal delay={160}>
+            <BetDesk />
+          </Reveal>
+        </div>
       </section>
 
       {/* ============================================================
