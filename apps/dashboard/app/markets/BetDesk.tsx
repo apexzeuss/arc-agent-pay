@@ -41,16 +41,11 @@ export function BetDesk() {
     <div className="desk">
       <div className="desk-explain">
         <p>
-          This agent reads <strong>real, live markets from Polymarket</strong> and decides which bets have an edge.
-          Press <strong>Run analysis</strong>: for each market the AI estimates the true probability, compares it to
-          the market&apos;s price, and bets <strong>YES</strong> or <strong>NO</strong> only where it thinks the
-          market is mispriced (otherwise it <strong>skips</strong>). Stakes settle in USDC on Arc.
+          <strong>Polymarket</strong> is a site where people bet on whether real-world things will happen, and the
+          price shows the crowd&apos;s odds. Press <strong>Run analysis</strong>: your AI reads real, live markets and,
+          for each one, decides whether the crowd is wrong. When it disagrees enough it bets <strong>YES</strong> or{" "}
+          <strong>NO</strong>; when it agrees, it skips. The bets settle in USDC on Arc.
         </p>
-        <ul className="desk-legend">
-          <li><span className="desk-legend-key">Market</span> the crowd&apos;s YES price (implied odds)</li>
-          <li><span className="desk-legend-key">AI</span> the model&apos;s own probability estimate</li>
-          <li><span className="desk-legend-key">Edge</span> how mispriced the AI thinks it is</li>
-        </ul>
       </div>
 
       <div className="desk-controls">
@@ -75,24 +70,24 @@ export function BetDesk() {
                   <span className={`bet-side bet-${r.side.toLowerCase()}`}>{r.side}</span>
                 </div>
 
-                <div className="bet-prob">
-                  <span>market <strong>{pct(r.marketProb)}</strong></span>
-                  <span className="bet-prob-arrow">→</span>
-                  <span>AI <strong>{pct(r.modelProb)}</strong></span>
-                  {betting && <span className="bet-edge">edge {Math.round(r.edge * 100)} pts</span>}
-                </div>
+                <p className="bet-plain">
+                  The crowd says <strong>{pct(r.marketProb)}</strong>. Your AI thinks{" "}
+                  <strong>{pct(r.modelProb)}</strong>
+                  {betting
+                    ? `, so it's betting ${r.side}.`
+                    : ", about the same, so it skips this one."}
+                </p>
 
                 {betting && (
-                  <div className="desk-weight-row">
+                  <div className="bet-stake-row">
                     <div className="desk-weight-track">
                       <div className="desk-weight-fill" style={{ width: pct(r.weight) }} />
                     </div>
-                    <div className="desk-weight-pct">{pct(r.weight)}</div>
+                    <div className="bet-stake-label">{pct(r.weight)} of the money</div>
                   </div>
                 )}
 
                 <div className="desk-rationale">{r.rationale}</div>
-                <div className="desk-asset">vol ${Math.round(r.volumeUsd).toLocaleString()}{betting ? ` · conviction ${r.conviction}` : ""}</div>
               </div>
             );
           })}

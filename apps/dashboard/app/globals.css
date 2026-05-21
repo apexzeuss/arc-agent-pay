@@ -2921,3 +2921,10 @@ body { padding-bottom: 34px; }
 .bet-prob-arrow { color: var(--rule); }
 .bet-edge { color: var(--user); margin-left: auto; }
 .bet-leg-q { flex: 1; min-width: 0; color: var(--ink-mute); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Plain-English bet card */
+.bet-plain { font-size: 14px; line-height: 1.5; color: var(--ink); margin: 2px 0 4px; }
+.bet-plain strong { color: var(--agent-ink); }
+.bet-stake-row { display: flex; align-items: center; gap: 10px; }
+.bet-stake-row .desk-weight-track { flex: 1; }
+.bet-stake-label { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); white-space: nowrap; }
