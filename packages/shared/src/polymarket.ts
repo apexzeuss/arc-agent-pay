@@ -40,7 +40,7 @@ export function polymarketSource(opts?: {
   minYes?: number; // skip near-certain markets (boring to analyze)
   maxYes?: number;
 }): MarketSource {
-  const limit = opts?.limit ?? 8;
+  const limit = opts?.limit ?? 18;
   const minYes = opts?.minYes ?? 0.1;
   const maxYes = opts?.maxYes ?? 0.9;
 

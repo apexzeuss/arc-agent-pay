@@ -1,26 +1,26 @@
 :root {
-  /* Vintage financial ledger palette — warm paper + sumi ink + vermillion */
-  --paper:       #ece2cd;
-  --paper-tint:  #e3d6ba;
-  --paper-edge:  #d6c5a3;
+  /* Modern dark "markets terminal" — cool near-black + hairlines + vivid YES/NO */
+  --paper:       #0b0e14;   /* page background */
+  --paper-tint:  #131926;   /* cards / panels */
+  --paper-edge:  #1d2636;
 
-  --ink:         #16100c;
-  --ink-2:       #3f3022;
-  --ink-mute:    #786243;
-  --rule:        #b09c79;
+  --ink:         #e7ecf3;   /* primary text */
+  --ink-2:       #aeb8c8;
+  --ink-mute:    #6b7787;   /* muted text */
+  --rule:        #222b3a;   /* hairline borders */
 
-  --agent:       #b53221;   /* vermillion — the AI agent's color */
-  --agent-ink:   #7a1c10;
-  --user:        #234a3e;   /* deep ink-teal — the human's color */
-  --user-ink:    #122922;
+  --agent:       #ff4d6d;   /* brand accent + NO / down (vivid pink-red) */
+  --agent-ink:   #ff7d96;   /* lighter accent for text on dark */
+  --user:        #4aa8ff;   /* secondary accent (blue) */
+  --user-ink:    #8cc6ff;
 
-  --success:     #4a6b3f;
-  --error:       #b53221;
+  --success:     #19d292;   /* YES / up (vivid green) */
+  --error:       #ff4d6d;
 
   /* Type stacks (vars are wired via next/font in layout.tsx) */
-  --display: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --body:    var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --mono:    var(--font-mono), "Courier New", monospace;
+  --mono:    var(--font-mono), ui-monospace, "SF Mono", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -746,15 +746,11 @@ main.scroller {
    Dark section theme — overrides palette tokens within scope
    ============================================================ */
 .snap-section.dark {
-  background: #0e0a08;
-  --paper: #0e0a08;
-  --paper-tint: #1a1410;
-  --paper-edge: #2a1f18;
-  --ink: #f1e7d2;
-  --ink-2: #c9b890;
-  --ink-mute: #7c6c54;
-  --rule: #3a2f24;
-  --success: #7fb37f;
+  /* Subtly deeper panel for rhythm, same cool family as the rest. */
+  background: #070a10;
+  --paper: #070a10;
+  --paper-tint: #101622;
+  --paper-edge: #1a2230;
   color: var(--ink);
   z-index: 1;
 }
