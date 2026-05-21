@@ -18,7 +18,7 @@
   --error:       #d64545;   /* NO / down / error (red) */
 
   /* Type stacks (vars are wired via next/font in layout.tsx) */
-  --display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --display: var(--font-display), var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --body:    var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --mono:    var(--font-mono), ui-monospace, "SF Mono", monospace;
 }
@@ -3031,3 +3031,9 @@ body { padding-bottom: 34px; }
 .aurora.a3 { opacity: 0.1; }
 .hero-grain { background: radial-gradient(120% 100% at 50% 0%, transparent 65%, rgba(0,0,0,0.05) 100%); }
 .hero-lede .lede-accent { text-shadow: none; }
+
+/* ─── No italics anywhere visible (per request) ─────────────────── */
+.hero-meta-value, .hero-sub, .hero-eyebrow, .subtitle,
+.section-sub, .desk-rationale, .bet-plain, .balance, .amp, .lede-accent {
+  font-style: normal !important;
+}

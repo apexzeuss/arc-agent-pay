@@ -102,10 +102,10 @@ export default async function Landing() {
             </div>
             <h1 className="hero-lede">
               <span className="hero-lede-line" style={{ animationDelay: "240ms" }}>
-                Bet where the crowd
+                An AI agent that trades
               </span>
               <span className="hero-lede-line" style={{ animationDelay: "400ms" }}>
-                is <span className="lede-accent">wrong.</span>
+                <span className="lede-accent">prediction markets.</span>
               </span>
             </h1>
             <p className="hero-sub">
@@ -133,10 +133,6 @@ export default async function Landing() {
           </div>
         </div>
 
-        <a href="#markets" className="scroll-hint" aria-label="Scroll for more">
-          <span className="scroll-hint-mark" aria-hidden>↓</span>
-          <span className="scroll-hint-label">Scroll · or click a tab</span>
-        </a>
       </section>
 
       {/* ============================================================

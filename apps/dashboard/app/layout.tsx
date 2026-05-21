@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, Public_Sans, Cutive_Mono } from "next/font/google";
+import { Space_Grotesk, Public_Sans, Cutive_Mono } from "next/font/google";
 import { Providers } from "./Providers";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const display = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
-  axes: ["SOFT", "WONK", "opsz"],
   display: "swap",
 });
 const publicSans = Public_Sans({
@@ -50,7 +49,7 @@ import { ScrollProgress } from "./components/ScrollProgress";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${publicSans.variable} ${cutive.variable}`}>
+    <html lang="en" className={`${display.variable} ${publicSans.variable} ${cutive.variable}`}>
       <body>
         <Providers>
           <IntroCurtain />
