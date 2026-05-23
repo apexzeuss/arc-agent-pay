@@ -107,8 +107,10 @@ export function polymarketSource(opts?: {
         const prices = parseArr(m.outcomePrices).map(Number);
         if (outcomes.length !== 2 || prices.length !== 2) continue; // binary only
 
-        const yesIdx = outcomes.findIndex((o) => /^yes$/i.test(o.trim()));
-        if (yesIdx === -1) continue;
+        // Map outcomes to YES/NO. If literal "Yes"/"No" exist, use them.
+        // Otherwise treat outcomes[0] as the "YES" side (Up, Team A, etc.).
+        let yesIdx = outcomes.findIndex((o) => /^yes$/i.test(o.trim()));
+        if (yesIdx === -1) yesIdx = 0;
         const yesPrice = prices[yesIdx];
         const noPrice = prices[1 - yesIdx];
         if (yesPrice === undefined || noPrice === undefined) continue;

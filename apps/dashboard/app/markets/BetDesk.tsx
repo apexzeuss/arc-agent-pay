@@ -122,39 +122,14 @@ export function BetDesk() {
 
       {analysis && (
         <div className="desk-grid">
-          {analysis.rows.map((r) => {
-            const betting = r.side !== "SKIP" && r.weight > 0;
-            return (
-              <div key={r.id} className={`desk-trader ${betting ? "is-active" : "is-degraded"}`}>
-                <div className="desk-trader-head">
-                  <div className="bet-question">{r.question}</div>
-                  <span className={`bet-side bet-${r.side.toLowerCase()}`}>{r.side}</span>
-                </div>
-
-                <p className="bet-plain">
-                  The crowd says <strong>{pct(r.marketProb)}</strong>. Your AI thinks{" "}
-                  <strong>{pct(r.modelProb)}</strong>
-                  {betting
-                    ? `, so it's betting ${r.side}.`
-                    : ", about the same, so it skips this one."}
-                </p>
-
-                {betting && (
-                  <div className="bet-stake-row">
-                    <div className="desk-weight-track">
-                      <div className="desk-weight-fill" style={{ width: pct(r.weight) }} />
-                    </div>
-                    <div className="bet-stake-label">{pct(r.weight)} of the money</div>
-                  </div>
-                )}
-
-                <div className="desk-rationale">{r.rationale}</div>
-                <a className="bet-act" href={r.url} target="_blank" rel="noreferrer">
-                  {betting ? `Bet ${r.side} on Polymarket ↗` : "View on Polymarket ↗"}
-                </a>
+          {analysis.rows.map((r) => (
+            <div key={r.id} className="desk-trader">
+              <div className="desk-trader-head">
+                <div className="bet-question">{r.question}</div>
               </div>
-            );
-          })}
+              <DeepPickPanel pick={r} />
+            </div>
+          ))}
         </div>
       )}
 

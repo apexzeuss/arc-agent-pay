@@ -10,7 +10,7 @@ import {
   type Policy,
   type AccountState,
 } from "@arc-agent-pay/shared";
-import { analyzeMarkets, analyzeMarketDeep, settleMarketBets, type SettleReport } from "@arc-agent-pay/agent-runtime";
+import { analyzeMarketDeep, settleMarketBets, type SettleReport } from "@arc-agent-pay/agent-runtime";
 import { readFrozen } from "./agentState";
 
 loadEnv({ path: resolve(process.cwd(), "../../.env") });
@@ -27,6 +27,11 @@ export type BetRow = {
   weight: number;
   volumeUsd: number;
   url: string;
+  background: string[];
+  recentEvents: string[];
+  scenarios: { path: string; resolvesTo: "YES" | "NO"; likelihood: number }[];
+  recommendation: string;
+  changeMyMind: string;
 };
 
 export type BetAnalysis = {
@@ -166,24 +171,28 @@ export async function analyzeByUrlAction(input: string): Promise<
     return [];
   };
 
-  // Prefer the first binary YES/NO market in the result set.
+  // Prefer the first 2-outcome market in the result set. If outcomes are
+  // literally "Yes"/"No", use that mapping. Otherwise treat outcomes[0] as
+  // the "YES" side (e.g. "Up", "Team A") and outcomes[1] as "NO".
   let chosen: Record<string, unknown> | null = null;
   let yesPrice = 0.5;
   let noPrice = 0.5;
+  let outcomeLabels: [string, string] = ["Yes", "No"];
   for (const m of rows) {
     const outcomes = parseArr(m.outcomes);
     const prices = parseArr(m.outcomePrices).map(Number);
     if (outcomes.length !== 2 || prices.length !== 2) continue;
-    const yesIdx = outcomes.findIndex((o) => /^yes$/i.test(o.trim()));
-    if (yesIdx === -1) continue;
+    let yesIdx = outcomes.findIndex((o) => /^yes$/i.test(o.trim()));
+    if (yesIdx === -1) yesIdx = 0; // fall back to first outcome as "YES"
     chosen = m;
     yesPrice = prices[yesIdx]!;
     noPrice = prices[1 - yesIdx]!;
+    outcomeLabels = [outcomes[yesIdx]!, outcomes[1 - yesIdx]!];
     break;
   }
 
   if (!chosen) {
-    return { ok: false, error: "That market isn't a binary YES/NO — we can only analyze binary markets right now." };
+    return { ok: false, error: "That market has more than 2 outcomes — we can only analyze 2-outcome markets right now." };
   }
 
   const market = {
@@ -222,9 +231,9 @@ export async function analyzeByUrlAction(input: string): Promise<
   };
 }
 
-// Pull live Polymarket markets and run the brain over them.
-// Tighter price band: skip near-certain markets where no real edge can exist.
-// If `category` is given, only analyze markets in that category.
+// Pull live Polymarket markets and run the DEEP brain over each in parallel.
+// Each call returns rich analysis (background, events, scenarios, recommendation,
+// change-my-mind). Slower than the brief bulk call but the output is the product.
 export async function analyzeMarketsAction(count = 20, category?: string): Promise<BetAnalysis> {
   // Pull more than `count` so the category filter has room to find enough hits.
   const pool = await polymarketSource({ limit: 300, minYes: 0.1, maxYes: 0.9 }).getMarkets();
@@ -232,11 +241,11 @@ export async function analyzeMarketsAction(count = 20, category?: string): Promi
     ? pool.filter((m) => m.category === category)
     : pool;
   const markets = filtered.slice(0, count);
-  const result = await analyzeMarkets(markets);
+  // Parallel deep analysis — each market gets its own Claude call.
+  const deepPicks = await Promise.all(markets.map((m) => analyzeMarketDeep(m)));
   const volById = new Map(markets.map((m) => [m.id, m.volumeUsd]));
   const urlById = new Map(markets.map((m) => [m.id, m.url]));
-
-  const rows: BetRow[] = result.picks.map((p) => ({
+  const rows: BetRow[] = deepPicks.map((p) => ({
     id: p.id,
     question: p.question,
     marketProb: p.marketProb,
@@ -248,12 +257,16 @@ export async function analyzeMarketsAction(count = 20, category?: string): Promi
     weight: p.weight,
     volumeUsd: volById.get(p.id) ?? 0,
     url: urlById.get(p.id) ?? "https://polymarket.com",
+    background: p.background,
+    recentEvents: p.recentEvents,
+    scenarios: p.scenarios,
+    recommendation: p.recommendation,
+    changeMyMind: p.changeMyMind,
   }));
-  // Bets first (by weight), then skips.
   rows.sort((a, b) => b.weight - a.weight || b.conviction - a.conviction);
-
-  return { engine: result.engine, cashWeight: result.cashWeight, rows };
+  return { engine: "claude" as const, cashWeight: 0, rows };
 }
+
 
 // Settle a fresh bet plan on Arc. Honors the kill switch.
 export async function settleBetsAction(potUsdc: number, autoApprove = false, category?: string): Promise<SettleReport> {
