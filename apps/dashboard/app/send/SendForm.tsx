@@ -179,8 +179,8 @@ const SELECTABLE_NETWORKS = TESTNET_ONLY ? NETWORKS.filter((n) => n.testnet) : N
 
 export function SendForm() {
   const { address, isConnected, chain } = useAccount();
-  const { connect, connectors } = useConnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
+  const { connectAsync, connectors, isPending: connecting } = useConnect();
+  const { switchChainAsync, isPending: switching } = useSwitchChain();
   const status = useAgentStatus();
 
   const [netId, setNetId] = useState<number>(SELECTABLE_NETWORKS[0]!.id);
@@ -275,8 +275,16 @@ export function SendForm() {
       <div className="send-card">
         <p className="send-empty">Connect a wallet to send funds.</p>
         {injected && (
-          <button className="send-btn" onClick={() => connect({ connector: injected })}>
-            Connect wallet
+          <button
+            className="send-btn"
+            onClick={() =>
+              connectAsync({ connector: injected, chainId: netId as ChainId }).catch((e) => {
+                setErr(e instanceof Error ? (e.message.split("\n")[0] ?? e.message) : String(e));
+              })
+            }
+            disabled={connecting}
+          >
+            {connecting ? "Connecting..." : "Connect wallet"}
           </button>
         )}
       </div>
@@ -388,7 +396,11 @@ export function SendForm() {
           Your wallet is on {chain?.name ?? "another network"}. Switch to {net.name} to send.
           <button
             className="send-btn send-btn-ghost"
-            onClick={() => switchChain({ chainId: netId as ChainId })}
+            onClick={() =>
+              switchChainAsync({ chainId: netId as ChainId }).catch((e) => {
+                setErr(e instanceof Error ? (e.message.split("\n")[0] ?? e.message) : String(e));
+              })
+            }
             disabled={switching}
           >
             {switching ? "Switching…" : `Switch to ${net.name}`}

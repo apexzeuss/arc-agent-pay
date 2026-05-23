@@ -43,9 +43,9 @@ async function ensureArcAdded() {
 
 export function UserPanel() {
   const { address, isConnected, chain } = useAccount();
-  const { connect, connectors, isPending: connecting } = useConnect();
+  const { connectAsync, connectors, isPending: connecting, error: connectError, reset: resetConnect } = useConnect();
   const { disconnect } = useDisconnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
+  const { switchChainAsync, isPending: switching } = useSwitchChain();
   const [switchErr, setSwitchErr] = useState<string | null>(null);
 
   const onWrongChain = isConnected && chain?.id !== arcTestnet.id;
@@ -68,14 +68,14 @@ export function UserPanel() {
   async function handleSwitch() {
     setSwitchErr(null);
     try {
-      switchChain({ chainId: arcTestnet.id });
+      await switchChainAsync({ chainId: arcTestnet.id });
     } catch (e: unknown) {
       const err = e as { code?: number; message?: string };
       // If MetaMask doesn't yet know Arc Testnet, add it then switch.
       if (err?.code === CHAIN_NOT_ADDED) {
         try {
           await ensureArcAdded();
-          switchChain({ chainId: arcTestnet.id });
+          await switchChainAsync({ chainId: arcTestnet.id });
         } catch (e2) {
           setSwitchErr(e2 instanceof Error ? e2.message : String(e2));
         }
@@ -94,6 +94,14 @@ export function UserPanel() {
     }
   }
 
+  async function handleConnect(connector: (typeof connectors)[number]) {
+    resetConnect();
+    setSwitchErr(null);
+    await connectAsync({ connector, chainId: arcTestnet.id }).catch((e) => {
+      setSwitchErr(e instanceof Error ? e.message : String(e));
+    });
+  }
+
   if (!isConnected) {
     const wallet = connectors.find((c) => c.id === "injected" || c.name.toLowerCase().includes("metamask")) ?? connectors[0];
     return (
@@ -110,11 +118,16 @@ export function UserPanel() {
         ) : hasWallet === null ? (
           <button className="ghost" disabled>&nbsp;</button>
         ) : wallet ? (
-          <button className="ghost" onClick={() => connect({ connector: wallet })} disabled={connecting}>
+          <button className="ghost" onClick={() => handleConnect(wallet)} disabled={connecting}>
             {connecting ? "Connecting…" : "Connect wallet"}
           </button>
         ) : (
           <div className="notice">No wallet extension detected. Install MetaMask to continue.</div>
+        )}
+        {(connectError || switchErr) && (
+          <div className="notice" style={{ color: "var(--error)" }}>
+            {(connectError?.message ?? switchErr)?.split("\n")[0]}
+          </div>
         )}
       </div>
     );

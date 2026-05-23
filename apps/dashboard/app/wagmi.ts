@@ -43,7 +43,7 @@ export const wagmiConfig = createConfig({
     zksync,
     celo,
   ],
-  connectors: [injected()],
+  connectors: [injected({ unstable_shimAsyncInject: 1_000 })],
   transports: {
     [arcTestnet.id]: http(),
     [sepolia.id]: http(),

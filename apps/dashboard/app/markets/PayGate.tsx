@@ -41,12 +41,13 @@ type Props = {
 export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Props) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const { connect, connectors, isPending: connecting } = useConnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
+  const { connectAsync, connectors, isPending: connecting, error: connectError, reset: resetConnect } = useConnect();
+  const { switchChainAsync, isPending: switching } = useSwitchChain();
   const { writeContract, data: txHash, isPending: paying, error: payError, reset } = useWriteContract();
   const { isLoading: confirming, isSuccess: confirmed } = useWaitForTransactionReceipt({ hash: txHash });
   const [hasWallet, setHasWallet] = useState<boolean | null>(null);
   const [addingChain, setAddingChain] = useState(false);
+  const [walletError, setWalletError] = useState<string | null>(null);
 
   useEffect(() => {
     setHasWallet(
@@ -80,21 +81,33 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
 
   async function handleSwitch() {
     setAddingChain(true);
+    setWalletError(null);
     try {
-      switchChain({ chainId: arcTestnet.id });
+      await switchChainAsync({ chainId: arcTestnet.id });
     } catch (e: unknown) {
-      const err = e as { code?: number };
+      const err = e as { code?: number; message?: string };
       if (err?.code === CHAIN_NOT_ADDED) {
         try {
           await ensureArcAdded();
-          switchChain({ chainId: arcTestnet.id });
-        } catch {
-          /* ignore */
+          await switchChainAsync({ chainId: arcTestnet.id });
+        } catch (e2) {
+          setWalletError(e2 instanceof Error ? e2.message : String(e2));
         }
+      } else {
+        setWalletError(err?.message ?? String(e));
       }
     } finally {
       setAddingChain(false);
     }
+  }
+
+  async function handleConnect() {
+    if (!wallet) return;
+    resetConnect();
+    setWalletError(null);
+    await connectAsync({ connector: wallet, chainId: arcTestnet.id }).catch((e) => {
+      setWalletError(e instanceof Error ? e.message : String(e));
+    });
   }
 
   return (
@@ -117,7 +130,7 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
         ) : !isConnected ? (
           <button
             className="pay-gate-btn"
-            onClick={() => wallet && connect({ connector: wallet })}
+            onClick={handleConnect}
             disabled={connecting || !wallet}
           >
             {connecting ? "Connecting…" : "Connect wallet"}
@@ -152,9 +165,9 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
         </a>
       </div>
 
-      {payError && (
+      {(connectError || walletError || payError) && (
         <div className="pay-gate-error">
-          {payError.message.slice(0, 200)}
+          {(connectError?.message ?? walletError ?? payError?.message ?? "").slice(0, 200)}
         </div>
       )}
     </div>

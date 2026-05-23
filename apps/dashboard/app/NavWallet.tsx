@@ -42,9 +42,9 @@ function short(addr: string) {
 
 export function NavWallet() {
   const { address, isConnected, chain } = useAccount();
-  const { connect, connectors, isPending: connecting } = useConnect();
+  const { connectAsync, connectors, isPending: connecting, error: connectError, reset: resetConnect } = useConnect();
   const { disconnect } = useDisconnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
+  const { switchChainAsync, isPending: switching } = useSwitchChain();
   const [busy, setBusy] = useState(false);
   const [hasWallet, setHasWallet] = useState<boolean | null>(null);
 
@@ -61,13 +61,13 @@ export function NavWallet() {
   async function handleSwitchToArc() {
     setBusy(true);
     try {
-      switchChain({ chainId: arcTestnet.id });
+      await switchChainAsync({ chainId: arcTestnet.id });
     } catch (e: unknown) {
       const err = e as { code?: number };
       if (err?.code === CHAIN_NOT_ADDED) {
         try {
           await ensureArcAdded();
-          switchChain({ chainId: arcTestnet.id });
+          await switchChainAsync({ chainId: arcTestnet.id });
         } catch {
           /* user dismissed the prompt — leave button in place */
         }
@@ -75,6 +75,13 @@ export function NavWallet() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function handleConnect(connector: (typeof connectors)[number]) {
+    resetConnect();
+    await connectAsync({ connector, chainId: arcTestnet.id }).catch(() => {
+      /* useConnect exposes the error; keep the CTA available for retry */
+    });
   }
 
   if (!isConnected) {
@@ -106,8 +113,9 @@ export function NavWallet() {
     return (
       <button
         className="nav-wallet nav-wallet-cta"
-        onClick={() => connect({ connector: wallet })}
+        onClick={() => handleConnect(wallet)}
         disabled={connecting}
+        title={connectError?.message}
       >
         <span className="nav-wallet-dot" aria-hidden />
         {connecting ? "connecting…" : "connect wallet"}
