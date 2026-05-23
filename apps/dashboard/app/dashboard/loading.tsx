@@ -6,7 +6,7 @@ export default function Loading() {
         <span className="stamp">Loading…</span>
       </div>
       <h1 style={{ opacity: 0.55 }}>
-        Agent <span className="amp">&amp;</span> Counterparty
+        Agent <span className="amp">and</span> Counterparty
       </h1>
       <div className="skel-strip" />
       <div className="ledger-grid">

@@ -1,29 +1,58 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { SettleReport } from "@arc-agent-pay/agent-runtime";
-import { analyzeMarketsAction, settleBetsAction, type BetAnalysis } from "../betActions";
+import {
+  analyzeByUrlAction,
+  analyzeMarketsAction,
+  listMarketsAction,
+  settleBetsAction,
+  type BetAnalysis,
+  type SingleMarketPick,
+} from "../betActions";
 
 function pct(x: number) {
   return `${Math.round(x * 100)}%`;
 }
 
+const ANALYZE_COUNT = 16;
+
 export function BetDesk() {
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const [analysis, setAnalysis] = useState<BetAnalysis | null>(null);
   const [analyzing, startAnalyze] = useTransition();
   const [report, setReport] = useState<SettleReport | null>(null);
   const [settling, startSettle] = useTransition();
   const [pot, setPot] = useState("6");
   const [approve, setApprove] = useState(true);
+  const [urlInput, setUrlInput] = useState("");
+  const [urlPick, setUrlPick] = useState<SingleMarketPick | null>(null);
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [urlAnalyzing, startUrlAnalyze] = useTransition();
   const router = useRouter();
 
   const potNum = Number(pot);
   const potValid = potNum > 0;
 
+  useEffect(() => {
+    let cancelled = false;
+    listMarketsAction(500)
+      .then((m) => {
+        if (!cancelled) setTotalCount(m.length);
+      })
+      .catch(() => {
+        if (!cancelled) setTotalCount(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   function analyze() {
     setReport(null);
-    startAnalyze(async () => setAnalysis(await analyzeMarketsAction()));
+    startAnalyze(async () => setAnalysis(await analyzeMarketsAction(ANALYZE_COUNT)));
   }
 
   function settle() {
@@ -35,23 +64,93 @@ export function BetDesk() {
     });
   }
 
+  function analyzeUrl() {
+    if (!urlInput.trim() || urlAnalyzing) return;
+    setUrlError(null);
+    setUrlPick(null);
+    startUrlAnalyze(async () => {
+      const result = await analyzeByUrlAction(urlInput);
+      if (result.ok) setUrlPick(result.pick);
+      else setUrlError(result.error);
+    });
+  }
+
   const settled = report?.legs.filter((l) => l.executed) ?? [];
 
   return (
     <div className="desk">
       <div className="desk-explain">
         <p>
-          <strong>Polymarket</strong> is a site where people bet on whether real-world things will happen, and the
-          price shows the crowd&apos;s odds. Press <strong>Run analysis</strong>: your AI reads real, live markets and,
-          for each one, decides whether the crowd is wrong. When it disagrees enough it bets <strong>YES</strong> or{" "}
-          <strong>NO</strong>; when it agrees, it skips. The bets settle in USDC on Arc.
+          <strong>Polymarket</strong> is where people bet on whether real-world things will happen, and the price shows
+          the crowd&apos;s odds. Press <strong>Analyze {ANALYZE_COUNT} best</strong>: your AI reads the markets we&apos;ve
+          picked as most worth analyzing and, for each one, decides whether the crowd is wrong. When it disagrees enough
+          it bets <strong>YES</strong> or <strong>NO</strong>; when it agrees, it skips. The bets settle in USDC on Arc.
         </p>
+      </div>
+
+      <div className="desk-stats">
+        <div className="desk-stat">
+          <div className="desk-stat-n">{ANALYZE_COUNT}</div>
+          <div className="desk-stat-k">best for analysis</div>
+        </div>
+        <div className="desk-stat">
+          <div className="desk-stat-n">{totalCount === null ? "…" : totalCount}</div>
+          <div className="desk-stat-k">total live markets</div>
+        </div>
+        <Link href="/markets" className="desk-browse-link">
+          Browse all {totalCount ?? "300"} by category →
+        </Link>
       </div>
 
       <div className="desk-controls">
         <button className="desk-run" onClick={analyze} disabled={analyzing}>
-          {analyzing ? "Reading live markets…" : analysis ? "Re-run analysis" : "Run analysis"}
+          {analyzing
+            ? "Reading live markets…"
+            : analysis
+            ? `Re-analyze ${ANALYZE_COUNT} best`
+            : `Analyze ${ANALYZE_COUNT} best`}
         </button>
+      </div>
+
+      <div className="desk-url">
+        <div className="desk-url-label">Or paste a Polymarket URL to analyze it</div>
+        <div className="desk-url-row">
+          <input
+            type="url"
+            inputMode="url"
+            placeholder="https://polymarket.com/event/…"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && analyzeUrl()}
+            disabled={urlAnalyzing}
+            className="desk-url-input"
+          />
+          <button
+            className="desk-run desk-run-sm"
+            onClick={analyzeUrl}
+            disabled={urlAnalyzing || !urlInput.trim()}
+          >
+            {urlAnalyzing ? "Analyzing…" : "Analyze →"}
+          </button>
+        </div>
+        {urlError && <div className="desk-url-error">{urlError}</div>}
+        {urlPick && (
+          <div className="desk-url-pick">
+            <div className="desk-row-pick-head">
+              <span className={`bet-side bet-${urlPick.side.toLowerCase()}`}>{urlPick.side}</span>
+              <span className="desk-row-pick-meta">
+                Crowd: <strong>{pct(urlPick.marketProb)}</strong> · AI:{" "}
+                <strong>{pct(urlPick.modelProb)}</strong>
+                {urlPick.side !== "SKIP" && ` · ${urlPick.conviction}% conviction`}
+              </span>
+            </div>
+            <div className="bet-question">{urlPick.question}</div>
+            <p className="bet-plain">{urlPick.rationale}</p>
+            <a className="bet-act" href={urlPick.url} target="_blank" rel="noreferrer">
+              {urlPick.side !== "SKIP" ? `Bet ${urlPick.side} on Polymarket ↗` : "View on Polymarket ↗"}
+            </a>
+          </div>
+        )}
       </div>
 
       {analysis && (

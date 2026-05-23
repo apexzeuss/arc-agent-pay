@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { getAgentBalance, getAgentActivity } from "./actions";
-import { DEFAULT_POLICY, ARC_TESTNET_EXPLORER, seededTraderSource } from "@arc-agent-pay/shared";
-import { CopyDesk } from "./copy/CopyDesk";
+import { ARC_TESTNET_EXPLORER } from "@arc-agent-pay/shared";
 import { BetDesk } from "./markets/BetDesk";
-import { SendForm } from "./send/SendForm";
 import { SpendButton } from "./SpendButton";
 import { BatchPay } from "./BatchPay";
 import { KillSwitch } from "./KillSwitch";
@@ -13,7 +11,6 @@ import { Footer } from "./components/Footer";
 import { Reveal } from "./components/Reveal";
 import { Spotlight } from "./components/Spotlight";
 import { CopyButton } from "./CopyButton";
-import { ScenarioRunner } from "./try/ScenarioRunner";
 
 export const dynamic = "force-dynamic";
 
@@ -21,26 +18,10 @@ function short(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
-const SCENARIOS = [
-  { id: "tip",  title: "Tip the writer",       amount: "0.25", blurb: "Well under the per-tx ceiling, so the agent fires immediately." },
-  { id: "inv",  title: "Pay a vendor invoice", amount: "3.00", blurb: "Still under the 5 USDC ceiling, so the agent fires." },
-  { id: "sub",  title: "Buy a year of SaaS",   amount: "7.50", blurb: "Above the 5 USDC per-tx limit, so it's rejected automatically.", overCap: true },
-];
-
-const MCP_URL = "https://arc-agent-pay.vercel.app/mcp";
-const CLAUDE_CFG = `{
-  "mcpServers": {
-    "arc-agent": {
-      "url": "${MCP_URL}",
-      "transport": "sse"
-    }
-  }
-}`;
-
 const TICKER: { label: string; key?: boolean }[] = [
   { label: "agentic payments", key: true },
   { label: "usdc native" },
-  { label: "copy-trading intelligence", key: true },
+  { label: "live prediction markets", key: true },
   { label: "sub-second clearance" },
   { label: "no volatile gas", key: true },
   { label: "policy-gated" },
@@ -49,20 +30,10 @@ const TICKER: { label: string; key?: boolean }[] = [
 ];
 
 export default async function Landing() {
-  const [agent, activity, traders] = await Promise.all([
+  const [agent, activity] = await Promise.all([
     getAgentBalance().catch(() => ({ usdc: "—", address: "" })),
     getAgentActivity(8).catch(() => ({ entries: [], agentAddress: "" })),
-    seededTraderSource().getTraders(),
   ]);
-
-  const initialTraders = traders.map((t) => ({
-    id: t.id,
-    label: t.label,
-    address: t.address,
-    bio: t.bio,
-    asset: t.recentTrades[0]?.asset ?? "—",
-    returns: t.recentTrades.map((x) => x.returnPct),
-  }));
 
   return (
     <main className="scroller">
@@ -102,15 +73,15 @@ export default async function Landing() {
             </div>
             <h1 className="hero-lede">
               <span className="hero-lede-line" style={{ animationDelay: "240ms" }}>
-                An AI agent that trades
+                An AI agent that holds money on <span className="lede-accent">Arc.</span>
               </span>
               <span className="hero-lede-line" style={{ animationDelay: "400ms" }}>
-                <span className="lede-accent">prediction markets.</span>
+                Trades, pays, settles in USDC under rules you set.
               </span>
             </h1>
             <p className="hero-sub">
-              An autonomous AI reads live prediction markets, finds the ones the crowd has mispriced, and places its
-              bets, settled in USDC on Arc.
+              It reads live prediction markets, settles payments on Arc, and only acts within the
+              per-transaction and daily limits you define.
             </p>
             <div className="hero-meta">
               <div className="hero-meta-item">
@@ -165,7 +136,7 @@ export default async function Landing() {
           <Reveal className="section-head">
             <div className="section-num">№ 01</div>
             <h2 className="section-h">
-              The agent <span className="amp">&amp;</span> the counterparty
+              The agent <span className="amp">and</span> the counterparty
             </h2>
             <p className="section-sub">Live balances on Arc · principal and human side-by-side</p>
           </Reveal>
@@ -227,180 +198,45 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          03 · TRY IT
+          03 · PLUG IN — compact MCP teaser, full details on /plug-in
           ============================================================ */}
-      <section id="try" className="snap-section">
+      <section id="plug-in" className="snap-section">
         <span className="chapter-watermark" aria-hidden>03</span>
         <div className="section-inner">
           <Reveal className="section-head">
             <div className="section-num">№ 03</div>
             <h2 className="section-h">
-              Three things the agent <span className="amp">might</span> be asked to pay
+              Wire your <span className="amp">LLM</span> to it
             </h2>
-            <p className="section-sub">Real on-chain payments · the third is rejected for exceeding the per-tx limit</p>
-          </Reveal>
-
-          <ol className="scenarios">
-            {SCENARIOS.map((s, i) => (
-              <Reveal key={s.id} delay={200 + i * 120} as="li" className="scenario">
-                <div className="scenario-num">{String(i + 1).padStart(2, "0")}</div>
-                <div className="scenario-body">
-                  <div className="scenario-title">{s.title}</div>
-                  <div className="scenario-amount">
-                    {s.amount}<span className="unit">&nbsp;USDC</span>
-                    {s.overCap && <span className="over-cap">over cap</span>}
-                  </div>
-                  <div className="scenario-note">{s.blurb}</div>
-                  <ScenarioRunner amount={s.amount} id={s.id} />
-                </div>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ============================================================
-          04 · POLICY  (dark)
-          ============================================================ */}
-      <section id="policy" className="snap-section dark">
-        <span className="chapter-watermark" aria-hidden>04</span>
-        <div className="section-inner">
-          <Reveal className="section-head">
-            <div className="section-num">№ 04</div>
-            <h2 className="section-h">
-              The rules <span className="amp">binding</span> the agent
-            </h2>
-            <p className="section-sub">Enforced in code · planned to move on-chain</p>
-          </Reveal>
-
-          <ol className="rules one-page">
-            <Reveal as="li" className="rule" delay={200}>
-              <div className="rule-num">01</div>
-              <div className="rule-body">
-                <div className="rule-title">Per-transaction ceiling</div>
-                <div className="rule-value">{DEFAULT_POLICY.perTxCapUsdc} <span className="unit">USDC</span></div>
-                <div className="rule-note">No single payment from the agent may exceed this amount.</div>
-              </div>
-            </Reveal>
-            <Reveal as="li" className="rule" delay={300}>
-              <div className="rule-num">02</div>
-              <div className="rule-body">
-                <div className="rule-title">Daily disbursement cap</div>
-                <div className="rule-value">{DEFAULT_POLICY.dailyCapUsdc} <span className="unit">USDC&nbsp;/&nbsp;24h</span></div>
-                <div className="rule-note">Rolling 24-hour outflow is bound.</div>
-              </div>
-            </Reveal>
-            <Reveal as="li" className="rule" delay={400}>
-              <div className="rule-num">03</div>
-              <div className="rule-body">
-                <div className="rule-title">Cooldown between payments</div>
-                <div className="rule-value">{DEFAULT_POLICY.cooldownSeconds}<span className="unit">&nbsp;sec</span></div>
-                <div className="rule-note">Minimum interval between successive outbound transactions.</div>
-              </div>
-            </Reveal>
-            <Reveal as="li" className="rule" delay={500}>
-              <div className="rule-num">04</div>
-              <div className="rule-body">
-                <div className="rule-title">Recipient allowlist</div>
-                <div className="rule-value">
-                  {DEFAULT_POLICY.allowlist.length === 0 ? (
-                    <em style={{ fontFamily: "var(--display)", fontWeight: 400 }}>any address</em>
-                  ) : (
-                    `${DEFAULT_POLICY.allowlist.length} addresses`
-                  )}
-                </div>
-                <div className="rule-note">When populated, agent may only transact with addresses on the list.</div>
-              </div>
-            </Reveal>
-          </ol>
-        </div>
-      </section>
-
-      {/* ============================================================
-          05 · PLUG IN
-          ============================================================ */}
-      <section id="plug-in" className="snap-section">
-        <span className="chapter-watermark" aria-hidden>05</span>
-        <div className="section-inner">
-          <Reveal className="section-head">
-            <div className="section-num">№ 05</div>
-            <h2 className="section-h">
-              Wire your <span className="amp">LLM</span> in one paste
-            </h2>
-            <p className="section-sub">MCP endpoint · drop-in config for Claude Desktop, Cursor, OpenAI tool calls</p>
+            <p className="section-sub">
+              The agent exposes an MCP endpoint · plug Claude Desktop, Cursor, or any OpenAI tool-calling client in
+            </p>
           </Reveal>
 
           <Reveal delay={200} className="endpoint">
             <div className="ss-label">MCP endpoint</div>
             <div className="endpoint-url">
-              <code>{MCP_URL}</code>
-              <CopyButton text={MCP_URL} label="Copy URL" />
+              <code>https://arc-agent-pay.vercel.app/mcp</code>
+              <CopyButton text="https://arc-agent-pay.vercel.app/mcp" label="Copy URL" />
             </div>
             <div className="endpoint-status">
-              <span className="dot-pending" /> Server launching with Vercel deploy · stub for now
+              <span className="dot-pending" /> Server launching with deploy · stub for now
             </div>
-          </Reveal>
-
-          <Reveal delay={320} className="snippet">
-            <pre>{CLAUDE_CFG}</pre>
-            <CopyButton text={CLAUDE_CFG} label="Copy" />
-          </Reveal>
-
-          <Reveal delay={420}>
-            <p className="plug-in-foot">
-              See the full <Link href="/plug-in">Plug In page</Link> for Cursor + OpenAI tool snippets and notes on
-              how the agent rejects out-of-policy requests.
+            <p className="plug-in-foot" style={{ marginTop: 16 }}>
+              See the full <Link href="/plug-in">Plug In page</Link> for Claude Desktop, Cursor, and OpenAI tool snippets.
             </p>
           </Reveal>
         </div>
       </section>
 
       {/* ============================================================
-          06 · COPY DESK  (the product)
-          ============================================================ */}
-      <section id="copy" className="snap-section">
-        <span className="chapter-watermark" aria-hidden>06</span>
-        <div className="section-inner">
-          <Reveal className="section-head">
-            <div className="section-num">№ 06</div>
-            <h2 className="section-h">
-              Copy <span className="amp">&amp;</span> protect
-            </h2>
-            <p className="section-sub">AI scores traders, weights the book, and pulls the ones whose edge breaks</p>
-          </Reveal>
-          <Reveal delay={160}>
-            <CopyDesk initialTraders={initialTraders} embedded />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============================================================
-          07 · SEND
-          ============================================================ */}
-      <section id="send" className="snap-section">
-        <span className="chapter-watermark" aria-hidden>07</span>
-        <div className="section-inner">
-          <Reveal className="section-head">
-            <div className="section-num">№ 07</div>
-            <h2 className="section-h">
-              Send from <span className="amp">your</span> wallet
-            </h2>
-            <p className="section-sub">Your wallet · your funds · pick a network, a token, and a destination</p>
-          </Reveal>
-          <Reveal delay={160}>
-            <SendForm />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============================================================
-          08 · ABOUT  (dark)
+          04 · ABOUT  (dark)
           ============================================================ */}
       <section id="about" className="snap-section section-about dark">
-        <span className="chapter-watermark" aria-hidden>08</span>
+        <span className="chapter-watermark" aria-hidden>04</span>
         <div className="section-inner">
           <Reveal className="section-head">
-            <div className="section-num">№ 08</div>
+            <div className="section-num">№ 04</div>
             <h2 className="section-h">
               Why this, <span className="amp">why now</span>
             </h2>

@@ -40,7 +40,7 @@ export default async function DashboardPage() {
       </div>
 
       <h1>
-        Agent <span className="amp">&amp;</span> Counterparty
+        Agent <span className="amp">and</span> Counterparty
       </h1>
       <p className="subtitle">
         <span className="pip">●</span>&nbsp;&nbsp;AI principal · USDC settlement · sub-second clearance

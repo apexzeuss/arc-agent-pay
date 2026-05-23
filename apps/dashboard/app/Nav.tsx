@@ -11,17 +11,11 @@ const PRIMARY = [
   { id: "markets", label: "Bet Desk", accent: true },
   { id: "ledger", label: "Ledger" },
   { id: "activity", label: "Activity" },
-  { id: "copy", label: "Copy Desk" },
-];
-
-// Secondary bar — supporting context, kept visible but de-emphasized.
-const SECONDARY = [
-  { id: "try", label: "Try It" },
-  { id: "policy", label: "Policy" },
   { id: "plug-in", label: "Plug In" },
-  { id: "send", label: "Send" },
   { id: "about", label: "About" },
 ];
+
+const SECONDARY: { id: string; label: string }[] = [];
 
 const SECTION_IDS = ["hero", ...PRIMARY.map((t) => t.id), ...SECONDARY.map((t) => t.id)];
 
