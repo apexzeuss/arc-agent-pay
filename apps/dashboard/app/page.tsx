@@ -5,7 +5,6 @@ import { BetDesk } from "./markets/BetDesk";
 import { SpendButton } from "./SpendButton";
 import { BatchPay } from "./BatchPay";
 import { KillSwitch } from "./KillSwitch";
-import { UserPanel } from "./UserPanel";
 import { ActivityFeed } from "./components/ActivityFeed";
 import { Footer } from "./components/Footer";
 import { Reveal } from "./components/Reveal";
@@ -136,9 +135,9 @@ export default async function Landing() {
           <Reveal className="section-head">
             <div className="section-num">№ 01</div>
             <h2 className="section-h">
-              The agent <span className="amp">and</span> the counterparty
+              The agent&apos;s <span className="amp">wallet</span>
             </h2>
-            <p className="section-sub">Live balances on Arc · principal and human side-by-side</p>
+            <p className="section-sub">Live USDC balance on Arc · the principal that signs every settlement</p>
           </Reveal>
 
           <div className="ledger-grid one-page">
@@ -155,9 +154,6 @@ export default async function Landing() {
                   <span>principal</span>
                 </div>
               )}
-            </Reveal>
-            <Reveal delay={220}>
-              <UserPanel />
             </Reveal>
           </div>
 
