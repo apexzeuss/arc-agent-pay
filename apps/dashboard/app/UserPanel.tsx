@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect, useSwitchChain, useReadContract } from "wagmi";
 import { erc20Abi, formatUnits } from "viem";
 import {
@@ -49,6 +49,12 @@ export function UserPanel() {
   const [switchErr, setSwitchErr] = useState<string | null>(null);
 
   const onWrongChain = isConnected && chain?.id !== arcTestnet.id;
+  const [hasWallet, setHasWallet] = useState<boolean | null>(null);
+  useEffect(() => {
+    setHasWallet(
+      typeof window !== "undefined" && !!(window as { ethereum?: unknown }).ethereum,
+    );
+  }, []);
 
   const { data: balance, isLoading: loadingBalance } = useReadContract({
     address: USDC_ADDRESS_ARC_TESTNET,
@@ -97,7 +103,13 @@ export function UserPanel() {
           awaiting signature
         </div>
         <div className="notice">No wallet connected. Sign in to enter the ledger as a counterparty.</div>
-        {wallet ? (
+        {hasWallet === false ? (
+          <a className="ghost" href="https://metamask.io/download/" target="_blank" rel="noreferrer">
+            Install MetaMask ↗
+          </a>
+        ) : hasWallet === null ? (
+          <button className="ghost" disabled>&nbsp;</button>
+        ) : wallet ? (
           <button className="ghost" onClick={() => connect({ connector: wallet })} disabled={connecting}>
             {connecting ? "Connecting…" : "Connect wallet"}
           </button>

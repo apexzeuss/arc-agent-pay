@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import {
   arcTestnet,
@@ -46,6 +46,15 @@ export function NavWallet() {
   const { disconnect } = useDisconnect();
   const { switchChain, isPending: switching } = useSwitchChain();
   const [busy, setBusy] = useState(false);
+  const [hasWallet, setHasWallet] = useState<boolean | null>(null);
+
+  // Detect a browser wallet (window.ethereum) once after mount.
+  useEffect(() => {
+    const present =
+      typeof window !== "undefined" &&
+      !!(window as { ethereum?: unknown }).ethereum;
+    setHasWallet(present);
+  }, []);
 
   const onWrongChain = isConnected && chain?.id !== arcTestnet.id;
 
@@ -69,6 +78,25 @@ export function NavWallet() {
   }
 
   if (!isConnected) {
+    // No browser wallet detected → don't show a connect button that will
+    // hang forever on "connecting…". Link to install instead.
+    if (hasWallet === false) {
+      return (
+        <a
+          className="nav-wallet nav-wallet-muted"
+          href="https://metamask.io/download/"
+          target="_blank"
+          rel="noreferrer"
+          title="No browser wallet detected. Install MetaMask to connect."
+        >
+          install wallet ↗
+        </a>
+      );
+    }
+    // Still detecting on first render → render nothing rather than flicker
+    if (hasWallet === null) {
+      return <span className="nav-wallet nav-wallet-muted">&nbsp;</span>;
+    }
     const wallet =
       connectors.find((c) => c.id === "injected" || c.name.toLowerCase().includes("metamask")) ??
       connectors[0];
