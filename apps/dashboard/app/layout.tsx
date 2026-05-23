@@ -21,7 +21,7 @@ const cutive = Cutive_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arc-agent-pay.vercel.app"),
+  metadataBase: new URL("https://pay-on-arc.vercel.app"),
   title: {
     default: "arc-agent-pay · a ledger for AI agents on Arc",
     template: "%s · arc-agent-pay",

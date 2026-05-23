@@ -1,7 +1,7 @@
 import { CopyButton } from "../CopyButton";
 import { Footer } from "../components/Footer";
 
-const MCP_URL = "https://arc-agent-pay.vercel.app/mcp";
+const MCP_URL = "https://pay-on-arc.vercel.app/mcp";
 
 const CLAUDE_DESKTOP_CONFIG = `{
   "mcpServers": {

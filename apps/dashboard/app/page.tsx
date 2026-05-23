@@ -216,8 +216,8 @@ export default async function Landing() {
           <Reveal delay={200} className="endpoint">
             <div className="ss-label">MCP endpoint</div>
             <div className="endpoint-url">
-              <code>https://arc-agent-pay.vercel.app/mcp</code>
-              <CopyButton text="https://arc-agent-pay.vercel.app/mcp" label="Copy URL" />
+              <code>https://pay-on-arc.vercel.app/mcp</code>
+              <CopyButton text="https://pay-on-arc.vercel.app/mcp" label="Copy URL" />
             </div>
             <div className="endpoint-status">
               <span className="dot-pending" /> Server launching with deploy · stub for now
