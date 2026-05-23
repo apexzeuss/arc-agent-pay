@@ -1,8 +1,8 @@
 # arc-agent-pay
 
-**An AI agent that holds money on Arc. Trades, pays, settles in USDC — under rules you set.**
+**An AI agent that holds money on Arc. Trades, pays, settles in USDC under rules you set.**
 
-The product is a **prediction-markets Bet Desk**: the agent reads live Polymarket, Claude reasons about which markets the crowd has mispriced, and the agent settles its bets in USDC on Circle's **Arc** L1 — every settlement gated by a policy layer (per-tx cap, daily cap, cooldown, kill switch).
+The product is a **prediction-markets Bet Desk**: the agent reads live Polymarket, Claude reasons about which markets the crowd has mispriced, and the agent settles its bets in USDC on Circle's **Arc** L1 every settlement gated by a policy layer (per-tx cap, daily cap, cooldown, kill switch).
 
 Built for the Agora Agents Hackathon.
 
@@ -16,12 +16,12 @@ live polymarket  →  Claude judges each market  →  policy gates each bet  →
                      + conviction + rationale)     cooldown, kill switch)
 ```
 
-1. **Markets** — pulled from Polymarket Gamma API, filtered to binary YES/NO, sorted by 24h volume. `packages/shared/src/polymarket.ts`
+1. **Markets** pulled from Polymarket Gamma API, filtered to binary YES/NO, sorted by 24h volume. `packages/shared/src/polymarket.ts`
 2. **Market analyst (the brain)** — Claude estimates the *true* probability of YES for each market, picks YES / NO / SKIP, gives a one-line rationale + conviction. Falls back to a transparent heuristic if no API key. `packages/agent-runtime/src/market-analyst.ts`
 3. **Policy engine** — pure functions over `(policy, intent, state)` returning `allow | deny | require_approval`: per-tx cap, daily cap, cooldown, recipient allowlist, human-approval threshold, kill switch. `packages/shared/src/policy.ts`
 4. **Market executor** — turns weighted picks into USDC transfers, settles the allowed ones on Arc. `packages/agent-runtime/src/market-executor.ts`
 
-The agent can also be plugged into **any LLM** (Claude Desktop, Cursor, OpenAI tool calls) via an **MCP endpoint** — the LLM acts as the user, the agent holds the money and enforces policy.
+The agent can also be plugged into **any LLM** (Claude Desktop, Cursor, OpenAI tool calls) via an **MCP endpoint** the LLM acts as the user, the agent holds the money and enforces policy.
 
 ## Why it's agentic
 
@@ -72,7 +72,7 @@ packages/
   agent-runtime/  Market analyst (Claude) + executor (USDC settlement on Arc)
 ```
 
-> The repo also includes a second AI module — **CopyProtect**, a copy-trading scorer that pulls degrading traders — under `packages/agent-runtime/src/scorer.ts`. It uses the same policy engine and executor. Not the headline product; see the source if you're curious.
+> The repo also includes a second AI module **CopyProtect**, a copy-trading scorer that pulls degrading traders under `packages/agent-runtime/src/scorer.ts`. It uses the same policy engine and executor. Not the headline product; see the source if you're curious.
 
 ## Arc testnet reference
 
