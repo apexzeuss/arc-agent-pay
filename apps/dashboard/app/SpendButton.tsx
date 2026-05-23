@@ -139,7 +139,7 @@ export function SpendButton({ amount: defaultAmount = "0.50" }: { amount?: strin
                 : !customRecipientValid
                   ? "Invalid address"
                   : noRecipient
-                    ? "Connect a wallet or type an address"
+                    ? "Paste a recipient address"
                     : `Debit Agent · ${amount} USDC`}
         </button>
       </div>
@@ -163,13 +163,11 @@ export function SpendButton({ amount: defaultAmount = "0.50" }: { amount?: strin
         {effectiveRecipient ? (
           <>
             Sending to <strong>{short(effectiveRecipient)}</strong>
-            {customRecipient ? " (typed)" : " (your connected wallet)"} · cap {PER_TX_CAP} USDC · cooldown{" "}
+            {customRecipient ? " (typed)" : " (recipient)"} · cap {PER_TX_CAP} USDC · cooldown{" "}
             {DEFAULT_POLICY.cooldownSeconds}s · daily {DEFAULT_POLICY.dailyCapUsdc} USDC
           </>
-        ) : onWrongChain ? (
-          <span style={{ color: "var(--agent)" }}>Switch your wallet to Arc Testnet to receive payments.</span>
         ) : (
-          <>Connect a wallet or paste a recipient address · cap {PER_TX_CAP} USDC</>
+          <>Paste a recipient address · cap {PER_TX_CAP} USDC</>
         )}
       </div>
 
