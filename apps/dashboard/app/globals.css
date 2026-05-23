@@ -3710,3 +3710,71 @@ h1, h2, h3, h4, h5, h6,
     gap: 4px;
   }
 }
+
+/* ─── Make the analysis cards actually readable ──────────────────── */
+.desk-trader {
+  background: var(--paper-tint, #fff) !important;
+  border: 1px solid var(--rule) !important;
+  opacity: 1 !important;
+}
+.desk-trader.is-degraded {
+  opacity: 1 !important;
+  background: var(--paper-tint, #fff) !important;
+}
+.desk-trader .bet-question {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+}
+.desk-trader .bet-plain {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  color: var(--ink) !important;
+  margin: 12px 0 !important;
+}
+.desk-trader .bet-plain strong {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+.desk-trader .desk-rationale {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: var(--ink-2) !important;
+  margin: 10px 0 12px !important;
+  padding: 10px 12px !important;
+  background: color-mix(in srgb, var(--paper) 50%, transparent) !important;
+  border-radius: 6px !important;
+  font-style: normal !important;
+}
+.desk-trader .bet-act {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--agent) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+.desk-trader .bet-act:hover {
+  text-decoration: underline !important;
+}
+/* The YES/NO/SKIP badges need real contrast */
+.bet-side {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.08em !important;
+}
+.bet-side.bet-yes {
+  background: var(--success, #1a9d6e) !important;
+  color: #ffffff !important;
+}
+.bet-side.bet-no {
+  background: var(--error, #d64545) !important;
+  color: #ffffff !important;
+}
+.bet-side.bet-skip {
+  background: var(--ink-mute, #777) !important;
+  color: #ffffff !important;
+}
