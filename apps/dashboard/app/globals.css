@@ -3553,3 +3553,38 @@ h1, h2, h3, h4, h5, h6,
    giant chapter watermarks. Keep only h2 + sub. ─────────────────────── */
 .section-num { display: none !important; }
 .chapter-watermark { display: none !important; }
+
+/* ─── Readability pass: bump small dim labels so they're legible ─── */
+.section-sub {
+  font-size: 14.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--ink-2) !important;
+  line-height: 1.5 !important;
+}
+.desk-stat-k,
+.desk-summary-label,
+.desk-cat-n,
+.desk-row-link,
+.desk-browse-sub,
+.desk-url-label,
+.desk-row-pick-meta,
+.ss-label,
+.hero-eyebrow,
+.endpoint-status,
+.desk-row-vol {
+  color: var(--ink-2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+}
+.scenario-note,
+.rule-note {
+  color: var(--ink-2) !important;
+  font-size: 13px !important;
+}
+.unit {
+  color: var(--ink-2) !important;
+  font-weight: 500 !important;
+}
