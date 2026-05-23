@@ -256,7 +256,7 @@ Market YES price: ${(market.yesPrice * 100).toFixed(0)}% (implied probability th
   const scenarios = Array.isArray(parsed.scenarios)
     ? parsed.scenarios.slice(0, 3).map((s) => ({
         path: String(s?.path ?? ""),
-        resolvesTo: (s?.resolvesTo === "YES" || s?.resolvesTo === "NO") ? s.resolvesTo : "YES",
+        resolvesTo: (s?.resolvesTo === "YES" || s?.resolvesTo === "NO") ? s.resolvesTo as "YES" | "NO" : "YES" as const,
         likelihood: Math.max(0, Math.min(1, Number(s?.likelihood ?? 0))),
       })).filter((s) => s.path.length > 0)
     : [];
