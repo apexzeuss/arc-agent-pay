@@ -3588,3 +3588,125 @@ h1, h2, h3, h4, h5, h6,
   color: var(--ink-2) !important;
   font-weight: 500 !important;
 }
+
+/* ─── Deep analysis panel — the paid product output ──────────────── */
+.deep-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--paper-tint, #fff);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+.deep-pick-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.deep-pick-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+.deep-pick-meta strong { color: var(--ink); }
+.deep-pick-rec {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--agent) 8%, transparent);
+  border-left: 3px solid var(--agent);
+  border-radius: 4px;
+}
+.deep-pick-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.deep-pick-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.deep-pick-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.deep-pick-list li {
+  margin-bottom: 4px;
+}
+.deep-pick-list li:last-child { margin-bottom: 0; }
+.deep-pick-scenarios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.deep-pick-scenarios li {
+  display: grid;
+  grid-template-columns: 70px 48px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  background: var(--paper, #f4f3f1);
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.deep-pick-scenario-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+.deep-pick-scenario-tag.bet-yes {
+  background: color-mix(in srgb, var(--success, #1a9d6e) 18%, transparent);
+  color: var(--success, #1a9d6e);
+}
+.deep-pick-scenario-tag.bet-no {
+  background: color-mix(in srgb, var(--error, #d64545) 18%, transparent);
+  color: var(--error, #d64545);
+}
+.deep-pick-scenario-likelihood {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+}
+.deep-pick-scenario-path {
+  color: var(--ink-2);
+}
+.deep-pick-cmm {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+  font-style: normal;
+}
+
+@media (max-width: 640px) {
+  .deep-pick-scenarios li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

@@ -7,6 +7,7 @@ import {
   type MarketRow,
   type SingleMarketPick,
 } from "../betActions";
+import { DeepPickPanel } from "./DeepPickPanel";
 
 function pct(x: number) {
   return `${Math.round(x * 100)}%`;
@@ -117,7 +118,6 @@ export function MarketsBrowser() {
           {filtered.map((m) => {
             const pick = picks[m.id];
             const isAnalyzing = analyzingId === m.id;
-            const betting = pick && pick.side !== "SKIP";
             return (
               <li key={m.id} className={`desk-row ${pick ? "has-pick" : ""}`}>
                 <div className="desk-row-q">{m.question}</div>
@@ -142,19 +142,7 @@ export function MarketsBrowser() {
                   </a>
                 </div>
 
-                {pick && (
-                  <div className="desk-row-pick">
-                    <div className="desk-row-pick-head">
-                      <span className={`bet-side bet-${pick.side.toLowerCase()}`}>{pick.side}</span>
-                      <span className="desk-row-pick-meta">
-                        Crowd: <strong>{pct(pick.marketProb)}</strong> · AI:{" "}
-                        <strong>{pct(pick.modelProb)}</strong>
-                        {betting && ` · ${pick.conviction}% conviction`}
-                      </span>
-                    </div>
-                    <p className="bet-plain">{pick.rationale}</p>
-                  </div>
-                )}
+                {pick && <DeepPickPanel pick={pick} />}
               </li>
             );
           })}

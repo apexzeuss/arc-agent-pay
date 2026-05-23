@@ -10,7 +10,7 @@ import {
   type Policy,
   type AccountState,
 } from "@arc-agent-pay/shared";
-import { analyzeMarkets, settleMarketBets, type SettleReport } from "@arc-agent-pay/agent-runtime";
+import { analyzeMarkets, analyzeMarketDeep, settleMarketBets, type SettleReport } from "@arc-agent-pay/agent-runtime";
 import { readFrozen } from "./agentState";
 
 loadEnv({ path: resolve(process.cwd(), "../../.env") });
@@ -63,7 +63,9 @@ export async function listMarketsAction(limit = 500): Promise<MarketRow[]> {
   }));
 }
 
-// Analyze a single specific market the user picked from the browse list.
+// Deep analysis of a single specific market — the paid product. Returns
+// background, recent events, scenarios, recommendation, and what would
+// change the call.
 export type SingleMarketPick = {
   id: string;
   question: string;
@@ -74,6 +76,11 @@ export type SingleMarketPick = {
   conviction: number;
   rationale: string;
   url: string;
+  background: string[];
+  recentEvents: string[];
+  scenarios: { path: string; resolvesTo: "YES" | "NO"; likelihood: number }[];
+  recommendation: string;
+  changeMyMind: string;
 };
 
 export async function analyzeOneMarketAction(marketId: string): Promise<SingleMarketPick | null> {
@@ -81,9 +88,7 @@ export async function analyzeOneMarketAction(marketId: string): Promise<SingleMa
   const pool = await polymarketSource({ limit: 500, minYes: 0, maxYes: 1 }).getMarkets();
   const market = pool.find((m) => m.id === marketId);
   if (!market) return null;
-  const result = await analyzeMarkets([market]);
-  const pick = result.picks[0];
-  if (!pick) return null;
+  const pick = await analyzeMarketDeep(market);
   return {
     id: pick.id,
     question: pick.question,
@@ -94,6 +99,11 @@ export async function analyzeOneMarketAction(marketId: string): Promise<SingleMa
     conviction: pick.conviction,
     rationale: pick.rationale,
     url: market.url,
+    background: pick.background,
+    recentEvents: pick.recentEvents,
+    scenarios: pick.scenarios,
+    recommendation: pick.recommendation,
+    changeMyMind: pick.changeMyMind,
   };
 }
 
@@ -188,8 +198,7 @@ export async function analyzeByUrlAction(input: string): Promise<
     category: "Other",
   };
 
-  const result = await analyzeMarkets([market]);
-  const pick = result.picks[0];
+  const pick = await analyzeMarketDeep(market);
   if (!pick) return { ok: false, error: "Couldn't analyze that market." };
 
   return {
@@ -204,6 +213,11 @@ export async function analyzeByUrlAction(input: string): Promise<
       conviction: pick.conviction,
       rationale: pick.rationale,
       url: market.url,
+      background: pick.background,
+      recentEvents: pick.recentEvents,
+      scenarios: pick.scenarios,
+      recommendation: pick.recommendation,
+      changeMyMind: pick.changeMyMind,
     },
   };
 }

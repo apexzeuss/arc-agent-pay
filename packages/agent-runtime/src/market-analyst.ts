@@ -31,6 +31,16 @@ export type AnalysisResult = {
   cashWeight: number; // 1 - sum(weights); 1.0 if nothing is worth betting
 };
 
+// Deep analysis: the paid product. Richer per-market output that's actually
+// worth paying for — not just a probability.
+export type DeepMarketPick = MarketPick & {
+  background: string[]; // 2-4 facts the user should know about this market
+  recentEvents: string[]; // 1-3 recent developments that move the probability
+  scenarios: { path: string; resolvesTo: "YES" | "NO"; likelihood: number }[]; // 2-3 plausible paths
+  recommendation: string; // 1-2 sentences: where to bet, why
+  changeMyMind: string; // 1 sentence: what news/event would reverse the take
+};
+
 // Edge for the chosen side. YES profits if true prob > price; NO is the mirror.
 function edgeFor(side: Side, modelProb: number, marketProb: number): number {
   if (side === "YES") return modelProb - marketProb;
@@ -173,4 +183,128 @@ export async function analyzeMarkets(markets: PredictionMarket[]): Promise<Analy
 
   const { picks, cashWeight } = applyWeights(judged);
   return { engine, picks, cashWeight };
+}
+
+// --- Deep analysis (paid product) -------------------------------------------
+
+const DEEP_SYSTEM_PROMPT = `You are a sharp prediction-market analyst writing a paid research note. The reader pays for your insight, so DO NOT just restate the market's price — give them genuine value. Use your own knowledge of recent events, structural facts, and likely paths.
+
+Return ONLY a JSON object, no prose, no markdown:
+{
+  "modelProb": number,           // your honest estimate of true probability of YES (0.0-1.0)
+  "side": "YES" | "NO" | "SKIP", // your recommendation; SKIP only if you genuinely have no edge
+  "conviction": number,          // 0-100, how confident you are
+  "rationale": string,           // one-line summary of the bet thesis (≤140 chars)
+  "background": [string],        // 2-4 facts the reader should know to understand the market
+  "recentEvents": [string],      // 1-3 specific recent developments (last weeks/months) that move the probability
+  "scenarios": [
+    { "path": string, "resolvesTo": "YES"|"NO", "likelihood": number }   // 2-3 plausible paths to resolution; likelihood 0.0-1.0
+  ],
+  "recommendation": string,      // 1-2 sentences: which side to take and why; concrete
+  "changeMyMind": string         // 1 sentence: what specific news/event would flip the call
+}
+
+Be concrete. Name people, dates, dollar amounts, polling numbers, court rulings, prior base rates. If you don't have a real edge, set side=SKIP but still fill in the other fields so the reader gets value.`;
+
+async function claudeDeepJudge(
+  market: PredictionMarket,
+  apiKey: string,
+): Promise<Omit<DeepMarketPick, "weight">> {
+  const userContent = `Market: "${market.question}"
+Market YES price: ${(market.yesPrice * 100).toFixed(0)}% (implied probability the market is giving YES)
+24h volume: $${Math.round(market.volumeUsd).toLocaleString()}${market.endDate ? `\nResolves by: ${market.endDate.slice(0, 10)}` : ""}`;
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1800,
+      system: [{ type: "text", text: DEEP_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: userContent }],
+    }),
+  });
+
+  if (!res.ok) throw new Error(`Anthropic API ${res.status}: ${await res.text()}`);
+
+  const data = (await res.json()) as { content: { type: string; text?: string }[] };
+  const text = data.content.find((b) => b.type === "text")?.text ?? "";
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error(`Claude returned no JSON:\n${text}`);
+
+  const parsed = JSON.parse(text.slice(start, end + 1)) as {
+    modelProb: number;
+    side: string;
+    conviction: number;
+    rationale: string;
+    background?: unknown[];
+    recentEvents?: unknown[];
+    scenarios?: { path?: unknown; resolvesTo?: unknown; likelihood?: unknown }[];
+    recommendation?: string;
+    changeMyMind?: string;
+  };
+
+  const side = (["YES", "NO", "SKIP"].includes(parsed.side) ? parsed.side : "SKIP") as Side;
+  const modelProb = Math.max(0, Math.min(1, Number(parsed.modelProb)));
+  const arrOfStr = (v: unknown): string[] =>
+    Array.isArray(v) ? v.map((x) => String(x)).filter((s) => s.length > 0).slice(0, 4) : [];
+  const scenarios = Array.isArray(parsed.scenarios)
+    ? parsed.scenarios.slice(0, 3).map((s) => ({
+        path: String(s?.path ?? ""),
+        resolvesTo: (s?.resolvesTo === "YES" || s?.resolvesTo === "NO") ? s.resolvesTo : "YES",
+        likelihood: Math.max(0, Math.min(1, Number(s?.likelihood ?? 0))),
+      })).filter((s) => s.path.length > 0)
+    : [];
+
+  return {
+    id: market.id,
+    question: market.question,
+    side,
+    marketProb: market.yesPrice,
+    modelProb,
+    edge: edgeFor(side, modelProb, market.yesPrice),
+    conviction: Math.max(0, Math.min(100, Math.round(Number(parsed.conviction) || 0))),
+    rationale: String(parsed.rationale ?? "").slice(0, 140),
+    background: arrOfStr(parsed.background),
+    recentEvents: arrOfStr(parsed.recentEvents),
+    scenarios,
+    recommendation: String(parsed.recommendation ?? "").slice(0, 300),
+    changeMyMind: String(parsed.changeMyMind ?? "").slice(0, 200),
+  };
+}
+
+function deepFallback(market: PredictionMarket): Omit<DeepMarketPick, "weight"> {
+  const base = fallbackJudge(market);
+  return {
+    ...base,
+    background: [
+      `The market currently prices YES at ${(market.yesPrice * 100).toFixed(0)}%.`,
+      `Volume to date: $${Math.round(market.volumeUsd).toLocaleString()}.`,
+    ],
+    recentEvents: [],
+    scenarios: [],
+    recommendation: "No Claude API key set — running on heuristic fallback. Set ANTHROPIC_API_KEY to enable paid analysis.",
+    changeMyMind: "—",
+  };
+}
+
+export async function analyzeMarketDeep(market: PredictionMarket): Promise<DeepMarketPick> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  let judged: Omit<DeepMarketPick, "weight">;
+  if (apiKey) {
+    try {
+      judged = await claudeDeepJudge(market, apiKey);
+    } catch (err) {
+      console.warn(`[market-analyst] Deep Claude call failed, using fallback: ${(err as Error).message}`);
+      judged = deepFallback(market);
+    }
+  } else {
+    judged = deepFallback(market);
+  }
+  return { ...judged, weight: 1 };
 }
