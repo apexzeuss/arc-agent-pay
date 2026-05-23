@@ -121,7 +121,7 @@ export default async function Landing() {
             </p>
           </Reveal>
           <Reveal delay={160}>
-            <BetDesk />
+            <BetDesk agentAddress={agent.address} />
           </Reveal>
         </div>
       </section>

@@ -8,6 +8,7 @@ import {
   type SingleMarketPick,
 } from "../betActions";
 import { DeepPickPanel } from "./DeepPickPanel";
+import { PayGate } from "./PayGate";
 
 function pct(x: number) {
   return `${Math.round(x * 100)}%`;
@@ -22,13 +23,18 @@ function fmtVol(v: number) {
 const ALL = "All";
 const CATEGORY_ORDER = ["Politics", "Crypto", "Sports", "Tech", "Entertainment", "Economy", "World", "Other"];
 
-export function MarketsBrowser() {
+type Props = {
+  agentAddress: string;
+};
+
+export function MarketsBrowser({ agentAddress }: Props) {
   const [markets, setMarkets] = useState<MarketRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<string>(ALL);
   const [query, setQuery] = useState("");
   const [picks, setPicks] = useState<Record<string, SingleMarketPick>>({});
   const [analyzingId, setAnalyzingId] = useState<string | null>(null);
+  const [payGateForId, setPayGateForId] = useState<string | null>(null);
   const [, startAnalyze] = useTransition();
 
   useEffect(() => {
@@ -63,7 +69,12 @@ export function MarketsBrowser() {
     return base.filter((m) => m.question.toLowerCase().includes(q));
   }, [markets, category, query]);
 
-  function analyzeOne(id: string) {
+  function requestAnalyze(id: string) {
+    setPayGateForId(id);
+  }
+
+  function runAnalyze(id: string) {
+    setPayGateForId(null);
     setAnalyzingId(id);
     startAnalyze(async () => {
       try {
@@ -118,6 +129,7 @@ export function MarketsBrowser() {
           {filtered.map((m) => {
             const pick = picks[m.id];
             const isAnalyzing = analyzingId === m.id;
+            const isPayingFor = payGateForId === m.id;
             return (
               <li key={m.id} className={`desk-row ${pick ? "has-pick" : ""}`}>
                 <div className="desk-row-q">{m.question}</div>
@@ -128,10 +140,10 @@ export function MarketsBrowser() {
                 </div>
                 <div className="desk-row-vol">{fmtVol(m.volumeUsd)}</div>
                 <div className="desk-row-actions">
-                  {!pick && (
+                  {!pick && !isPayingFor && (
                     <button
                       className="desk-row-analyze"
-                      onClick={() => analyzeOne(m.id)}
+                      onClick={() => requestAnalyze(m.id)}
                       disabled={isAnalyzing}
                     >
                       {isAnalyzing ? "Analyzing…" : "Analyze →"}
@@ -141,6 +153,14 @@ export function MarketsBrowser() {
                     View ↗
                   </a>
                 </div>
+
+                {isPayingFor && (
+                  <PayGate
+                    agentAddress={agentAddress}
+                    marketLabel={m.question}
+                    onPaid={() => runAnalyze(m.id)}
+                  />
+                )}
 
                 {pick && <DeepPickPanel pick={pick} />}
               </li>

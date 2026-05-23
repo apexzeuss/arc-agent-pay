@@ -10,6 +10,7 @@ import {
   type SingleMarketPick,
 } from "../betActions";
 import { DeepPickPanel } from "./DeepPickPanel";
+import { PayGate } from "./PayGate";
 
 function pct(x: number) {
   return `${Math.round(x * 100)}%`;
@@ -17,7 +18,11 @@ function pct(x: number) {
 
 const ANALYZE_COUNT = 16;
 
-export function BetDesk() {
+type Props = {
+  agentAddress: string;
+};
+
+export function BetDesk({ agentAddress }: Props) {
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [analysis, setAnalysis] = useState<BetAnalysis | null>(null);
   const [analyzing, startAnalyze] = useTransition();
@@ -25,6 +30,7 @@ export function BetDesk() {
   const [urlPick, setUrlPick] = useState<SingleMarketPick | null>(null);
   const [urlError, setUrlError] = useState<string | null>(null);
   const [urlAnalyzing, startUrlAnalyze] = useTransition();
+  const [urlPayGateShown, setUrlPayGateShown] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,10 +50,15 @@ export function BetDesk() {
     startAnalyze(async () => setAnalysis(await analyzeMarketsAction(ANALYZE_COUNT)));
   }
 
-  function analyzeUrl() {
+  function requestUrlAnalyze() {
     if (!urlInput.trim() || urlAnalyzing) return;
     setUrlError(null);
     setUrlPick(null);
+    setUrlPayGateShown(true);
+  }
+
+  function runUrlAnalyze() {
+    setUrlPayGateShown(false);
     startUrlAnalyze(async () => {
       const result = await analyzeByUrlAction(urlInput);
       if (result.ok) setUrlPick(result.pick);
@@ -99,18 +110,25 @@ export function BetDesk() {
             placeholder="https://polymarket.com/event/…"
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && analyzeUrl()}
+            onKeyDown={(e) => e.key === "Enter" && requestUrlAnalyze()}
             disabled={urlAnalyzing}
             className="desk-url-input"
           />
           <button
             className="desk-run desk-run-sm"
-            onClick={analyzeUrl}
-            disabled={urlAnalyzing || !urlInput.trim()}
+            onClick={requestUrlAnalyze}
+            disabled={urlAnalyzing || !urlInput.trim() || urlPayGateShown}
           >
             {urlAnalyzing ? "Analyzing…" : "Analyze →"}
           </button>
         </div>
+        {urlPayGateShown && (
+          <PayGate
+            agentAddress={agentAddress}
+            marketLabel={urlInput}
+            onPaid={runUrlAnalyze}
+          />
+        )}
         {urlError && <div className="desk-url-error">{urlError}</div>}
         {urlPick && (
           <div className="desk-url-pick">

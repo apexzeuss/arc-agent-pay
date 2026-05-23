@@ -3778,3 +3778,137 @@ h1, h2, h3, h4, h5, h6,
   background: var(--ink-mute, #777) !important;
   color: #ffffff !important;
 }
+
+/* ─── PayGate: pay 1 USDC to unlock analysis ──────────────────────── */
+.pay-gate {
+  margin: 14px 0;
+  padding: 18px;
+  background: color-mix(in srgb, var(--agent) 4%, var(--paper-tint, #fff));
+  border: 1px solid color-mix(in srgb, var(--agent) 30%, var(--rule));
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pay-gate-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.pay-gate-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.pay-gate-num {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--agent);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.pay-gate-unit {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+.pay-gate-blurb {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.pay-gate-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pay-gate-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper-tint, #fff);
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.pay-gate-btn:hover {
+  border-color: var(--ink-mute);
+}
+.pay-gate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pay-gate-btn-primary {
+  background: var(--agent);
+  color: var(--paper);
+  border-color: var(--agent);
+}
+.pay-gate-btn-primary:hover {
+  background: var(--agent-ink);
+  border-color: var(--agent-ink);
+}
+.pay-gate-demo {
+  font-family: var(--font-body, sans-serif);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.pay-gate-demo:hover {
+  color: var(--ink);
+  border-color: var(--ink-mute);
+}
+.pay-gate-foot {
+  font-size: 12.5px;
+  color: var(--ink-2);
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+.pay-gate-foot a {
+  color: var(--agent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.pay-gate-foot a:hover {
+  text-decoration: underline;
+}
+.pay-gate-error {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--error, #d64545);
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--error, #d64545) 8%, transparent);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .pay-gate-actions {
+    flex-direction: column;
+  }
+  .pay-gate-demo {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .pay-gate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

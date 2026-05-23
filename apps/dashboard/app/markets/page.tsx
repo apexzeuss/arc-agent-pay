@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { MarketsBrowser } from "./MarketsBrowser";
+import { getAgentBalance } from "../actions";
 
 export const metadata = {
   title: "All live markets",
 };
 
-export default function MarketsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function MarketsPage() {
+  const agent = await getAgentBalance().catch(() => ({ usdc: "—", address: "" }));
   return (
     <main className="scroller">
       <section className="snap-section">
@@ -24,7 +28,7 @@ export default function MarketsPage() {
               </Link>
             </p>
           </div>
-          <MarketsBrowser />
+          <MarketsBrowser agentAddress={agent.address} />
         </div>
       </section>
     </main>

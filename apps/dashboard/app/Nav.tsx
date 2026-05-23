@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useActiveSection } from "./components/ScrollSpy";
+import { NavWallet } from "./NavWallet";
 
 // Primary bar — the product + the things people actually come to do.
 const PRIMARY = [
@@ -65,7 +66,9 @@ export function Nav() {
 
         <ul className="tabs">{PRIMARY.map((t) => renderTab(t))}</ul>
 
-        <div className="nav-right" />
+        <div className="nav-right">
+          <NavWallet />
+        </div>
       </div>
 
       <div className={`nav-row nav-row-secondary ${revealed ? "is-revealed" : ""}`}>
