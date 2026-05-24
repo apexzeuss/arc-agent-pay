@@ -44,7 +44,10 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
   const { connectAsync, connectors, isPending: connecting, error: connectError, reset: resetConnect } = useConnect();
   const { switchChainAsync, isPending: switching } = useSwitchChain();
   const { writeContract, data: txHash, isPending: paying, error: payError, reset } = useWriteContract();
-  const { isLoading: confirming, isSuccess: confirmed } = useWaitForTransactionReceipt({ hash: txHash });
+  const { isLoading: confirming, isSuccess: confirmed } = useWaitForTransactionReceipt({
+    hash: txHash,
+    chainId: arcTestnet.id,
+  });
   const [hasWallet, setHasWallet] = useState<boolean | null>(null);
   const [addingChain, setAddingChain] = useState(false);
   const [walletError, setWalletError] = useState<string | null>(null);

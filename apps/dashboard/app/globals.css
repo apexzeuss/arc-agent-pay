@@ -3590,6 +3590,11 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* ─── Deep analysis panel — the paid product output ──────────────── */
+/* Inside a market row (grid) it must span every column, not occupy one cell. */
+.desk-row > .deep-pick {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+}
 .deep-pick {
   display: flex;
   flex-direction: column;
@@ -3598,7 +3603,11 @@ h1, h2, h3, h4, h5, h6,
   background: var(--paper-tint, #fff);
   border: 1px solid var(--rule);
   border-radius: 10px;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
+.deep-pick * { min-width: 0; }
 .deep-pick-head {
   display: flex;
   align-items: center;
