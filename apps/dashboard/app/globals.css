@@ -4029,3 +4029,22 @@ details.deep-pick-block > ul {
 }
 .activity-view-all:hover { color: var(--agent-ink); text-decoration: underline; }
 .activity-totals { display: flex; gap: 24px; flex-wrap: wrap; }
+
+/* Activity/About prose-page heading: smaller, flows in one or two lines */
+main.prose h1 {
+  font-family: var(--font-display, var(--display)) !important;
+  font-size: clamp(28px, 3.6vw, 44px) !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  font-variation-settings: normal !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+  max-width: 26ch !important;
+  margin: 0 0 14px !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+main.prose h1 .amp {
+  color: var(--agent) !important;
+  font-weight: 700 !important;
+}
