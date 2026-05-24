@@ -62,7 +62,7 @@ export default async function ActivityPage() {
         Recent entries
         <LiveBadge intervalMs={15_000} />
       </h2>
-      <ActivityFeed entries={entries} emptyText="The agent has made no transactions in the recent window. Issue a payment from the Ledger to populate this log." />
+      <ActivityFeed entries={entries} emptyText="No USDC transfers in the recent 24h window. Pay for an analysis on the Bet Desk or trigger an outbound settlement from the Ledger to populate this log." />
 
       <Footer left="arc-agent-pay · activity log" right="auto-refresh · 15s" />
     </main>

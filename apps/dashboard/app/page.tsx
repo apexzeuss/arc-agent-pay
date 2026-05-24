@@ -177,17 +177,17 @@ export default async function Landing() {
           <Reveal className="section-head">
             <div className="section-num">№ 02</div>
             <h2 className="section-h">
-              Every payment <span className="amp">made</span>
+              Every USDC transfer the agent has <span className="amp">handled</span>
             </h2>
             <p className="section-sub">
-              Read straight from Arc · numbered as they posted ·{" "}
-              {activity.entries.length > 0 ? `${activity.entries.length} entries in the recent window` : "no activity yet"}
+              Read straight from Arc · both earnings (paid in for analysis) and settlements (sent out) ·{" "}
+              {activity.entries.length > 0 ? `${activity.entries.length} entries in the recent window` : "no transfers yet"}
             </p>
           </Reveal>
           <Reveal delay={200}>
             <ActivityFeed
               entries={activity.entries}
-              emptyText="No payments yet. Use Issue payment on the Ledger above to populate this log."
+              emptyText="No transfers yet. Pay for an analysis above to populate this log, or trigger an outbound settlement from the Ledger."
             />
           </Reveal>
           <Reveal delay={320}>
