@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { SingleMarketPick } from "../betActions";
 
 function pct(x: number) {
@@ -6,6 +9,9 @@ function pct(x: number) {
 
 export function DeepPickPanel({ pick }: { pick: SingleMarketPick }) {
   const betting = pick.side !== "SKIP";
+  const [showBackground, setShowBackground] = useState(false);
+  const [showEvents, setShowEvents] = useState(false);
+
   return (
     <div className="deep-pick">
       <div className="deep-pick-head">
@@ -22,25 +28,39 @@ export function DeepPickPanel({ pick }: { pick: SingleMarketPick }) {
       )}
 
       {pick.background && pick.background.length > 0 && (
-        <div className="deep-pick-block">
-          <div className="deep-pick-label">Background</div>
+        <details
+          className="deep-pick-block"
+          open={showBackground}
+          onToggle={(e) => setShowBackground((e.target as HTMLDetailsElement).open)}
+        >
+          <summary className="deep-pick-summary">
+            <span className="deep-pick-label">Background</span>
+            <span className="deep-pick-count">{pick.background.length} facts</span>
+          </summary>
           <ul className="deep-pick-list">
             {pick.background.map((b, i) => (
               <li key={i}>{b}</li>
             ))}
           </ul>
-        </div>
+        </details>
       )}
 
       {pick.recentEvents && pick.recentEvents.length > 0 && (
-        <div className="deep-pick-block">
-          <div className="deep-pick-label">Recent events</div>
+        <details
+          className="deep-pick-block"
+          open={showEvents}
+          onToggle={(e) => setShowEvents((e.target as HTMLDetailsElement).open)}
+        >
+          <summary className="deep-pick-summary">
+            <span className="deep-pick-label">Recent events</span>
+            <span className="deep-pick-count">{pick.recentEvents.length} update{pick.recentEvents.length === 1 ? "" : "s"}</span>
+          </summary>
           <ul className="deep-pick-list">
             {pick.recentEvents.map((e, i) => (
               <li key={i}>{e}</li>
             ))}
           </ul>
-        </div>
+        </details>
       )}
 
       {pick.scenarios && pick.scenarios.length > 0 && (

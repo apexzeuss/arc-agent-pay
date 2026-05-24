@@ -3638,6 +3638,49 @@ h1, h2, h3, h4, h5, h6,
   flex-direction: column;
   gap: 6px;
 }
+/* Collapsible details — clickable header reveals/hides the list */
+details.deep-pick-block {
+  background: var(--paper, #f4f3f1);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+details.deep-pick-block[open] {
+  background: var(--paper-tint, #fff);
+}
+.deep-pick-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.deep-pick-summary::-webkit-details-marker { display: none; }
+.deep-pick-summary::after {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--ink-mute);
+  line-height: 1;
+  margin-left: 8px;
+  transition: transform 0.15s ease;
+}
+details[open] > .deep-pick-summary::after {
+  content: "–";
+  color: var(--ink);
+}
+.deep-pick-summary:hover .deep-pick-label { color: var(--ink); }
+details.deep-pick-block > ul {
+  margin-top: 10px;
+}
+.deep-pick-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-left: auto;
+  margin-right: 6px;
+}
 .deep-pick-label {
   font-family: var(--mono);
   font-size: 11px;
