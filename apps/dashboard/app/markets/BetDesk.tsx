@@ -31,6 +31,7 @@ export function BetDesk({ agentAddress }: Props) {
   const [urlError, setUrlError] = useState<string | null>(null);
   const [urlAnalyzing, startUrlAnalyze] = useTransition();
   const [urlPayGateShown, setUrlPayGateShown] = useState(false);
+  const [bulkPayGateShown, setBulkPayGateShown] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +47,13 @@ export function BetDesk({ agentAddress }: Props) {
     };
   }, []);
 
-  function analyze() {
+  function requestAnalyze() {
+    if (analyzing) return;
+    setBulkPayGateShown(true);
+  }
+
+  function runAnalyze() {
+    setBulkPayGateShown(false);
     startAnalyze(async () => setAnalysis(await analyzeMarketsAction(ANALYZE_COUNT)));
   }
 
@@ -92,14 +99,27 @@ export function BetDesk({ agentAddress }: Props) {
       </div>
 
       <div className="desk-controls">
-        <button className="desk-run" onClick={analyze} disabled={analyzing}>
+        <button
+          className="desk-run"
+          onClick={requestAnalyze}
+          disabled={analyzing || bulkPayGateShown}
+        >
           {analyzing
             ? "Reading live markets…"
             : analysis
-            ? `Re-analyze ${ANALYZE_COUNT} best`
-            : `Analyze ${ANALYZE_COUNT} best`}
+            ? `Re-analyze ${ANALYZE_COUNT} best · 5 USDC`
+            : `Analyze ${ANALYZE_COUNT} best · 5 USDC`}
         </button>
       </div>
+
+      {bulkPayGateShown && (
+        <PayGate
+          agentAddress={agentAddress}
+          priceUsdc={5}
+          marketLabel={`${ANALYZE_COUNT} top markets`}
+          onPaid={runAnalyze}
+        />
+      )}
 
       <div className="desk-url">
         <div className="desk-url-label">Or paste a Polymarket URL to analyze it</div>
