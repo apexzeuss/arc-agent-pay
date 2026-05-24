@@ -175,12 +175,13 @@ export function BetDesk({ agentAddress }: Props) {
       {analysis && (
         <div className="desk-grid">
           {analysis.rows.map((r) => (
-            <div key={r.id} className="desk-trader">
-              <div className="desk-trader-head">
-                <div className="bet-question">{r.question}</div>
-              </div>
+            <details key={r.id} className="desk-trader desk-trader-collapsible">
+              <summary className="desk-trader-summary">
+                <span className="bet-question">{r.question}</span>
+                <span className={`bet-side bet-${r.side.toLowerCase()}`}>{r.side}</span>
+              </summary>
               <DeepPickPanel pick={r} />
-            </div>
+            </details>
           ))}
         </div>
       )}

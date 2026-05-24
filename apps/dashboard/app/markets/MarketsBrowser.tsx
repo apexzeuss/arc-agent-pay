@@ -178,7 +178,15 @@ export function MarketsBrowser({ agentAddress }: Props) {
                   />
                 )}
 
-                {pick && <DeepPickPanel pick={pick} />}
+                {pick && (
+                  <details className="desk-row-pick-collapsible">
+                    <summary className="desk-row-pick-summary">
+                      <span className={`bet-side bet-${pick.side.toLowerCase()}`}>{pick.side}</span>
+                      <span className="desk-row-pick-summary-label">View AI analysis</span>
+                    </summary>
+                    <DeepPickPanel pick={pick} />
+                  </details>
+                )}
               </li>
             );
           })}

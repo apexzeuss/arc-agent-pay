@@ -4088,3 +4088,140 @@ main.prose h1 .amp {
   font-weight: 700 !important;
   display: inline !important;
 }
+
+/* ─── Collapsible analysis cards (bulk grid + /markets per-row pick) ──── */
+.desk-trader-collapsible {
+  background: var(--paper-tint, #fff);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.desk-trader-collapsible[open] {
+  border-color: color-mix(in srgb, var(--agent) 30%, var(--rule));
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 6px 24px -16px rgba(0, 0, 0, 0.12);
+}
+.desk-trader-collapsible > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 16px;
+  transition: background 0.15s ease;
+}
+.desk-trader-collapsible > summary::-webkit-details-marker { display: none; }
+.desk-trader-collapsible > summary:hover {
+  background: color-mix(in srgb, var(--agent) 4%, transparent);
+}
+.desk-trader-summary > .bet-question {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.desk-trader-summary > .bet-side {
+  flex-shrink: 0;
+  align-self: center;
+}
+.desk-trader-collapsible > summary::after {
+  content: "More \25be"; /* ▾ */
+  font-family: var(--font-body, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--agent);
+  background: color-mix(in srgb, var(--agent) 12%, transparent);
+  padding: 4px 10px;
+  border-radius: 4px;
+  align-self: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.desk-trader-collapsible[open] > summary::after {
+  content: "Less \25b4"; /* ▴ */
+  color: var(--ink);
+  background: var(--rule);
+}
+.desk-trader-collapsible > .deep-pick {
+  margin: 0 16px 16px;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Same pattern for the per-row pick on /markets */
+.desk-row-pick-collapsible {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  background: color-mix(in srgb, var(--agent) 4%, var(--paper-tint, #fff));
+  border: 1px solid color-mix(in srgb, var(--agent) 24%, var(--rule));
+  border-radius: 8px;
+  overflow: hidden;
+}
+.desk-row-pick-collapsible[open] {
+  background: var(--paper-tint, #fff);
+}
+.desk-row-pick-summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+.desk-row-pick-summary::-webkit-details-marker { display: none; }
+.desk-row-pick-summary-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+  flex: 1;
+}
+.desk-row-pick-collapsible > summary::after {
+  content: "More \25be";
+  font-family: var(--font-body, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--agent);
+  background: color-mix(in srgb, var(--agent) 14%, transparent);
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.desk-row-pick-collapsible[open] > summary::after {
+  content: "Less \25b4";
+  color: var(--ink);
+  background: var(--rule);
+}
+.desk-row-pick-collapsible > .deep-pick {
+  margin: 0 14px 14px;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Mobile pass: tight padding, single column, scaled type */
+@media (max-width: 640px) {
+  .desk-trader-collapsible > summary {
+    padding: 12px;
+    gap: 10px;
+  }
+  .desk-trader-summary > .bet-question { font-size: 14px; }
+  .desk-trader-collapsible > summary::after { font-size: 11px; padding: 3px 8px; }
+  .desk-row-pick-summary { padding: 9px 12px; }
+  .desk-grid { grid-template-columns: 1fr !important; }
+  .pay-gate { padding: 14px; }
+  .pay-gate-num { font-size: 26px; }
+  .deep-pick { padding: 12px; }
+  .deep-pick-rec { font-size: 14px; padding: 8px 12px; }
+  .deep-pick-list { font-size: 13.5px; }
+  .deep-pick-scenarios li { padding: 10px 12px; font-size: 13.5px; }
+  details.deep-pick-block { padding: 8px 10px; }
+  .desk-row { padding: 12px 0; font-size: 13.5px; }
+  .desk-row-q { font-size: 14px; }
+  .entry-line { flex-wrap: wrap; gap: 6px; }
+  .entry-amount { font-size: 18px; }
+}
