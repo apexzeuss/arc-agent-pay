@@ -86,6 +86,14 @@ export function MarketsBrowser({ agentAddress }: Props) {
     });
   }
 
+  function clearPick(id: string) {
+    setPicks((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
   return (
     <div className="desk">
       <div className="desk-summary">
@@ -140,7 +148,15 @@ export function MarketsBrowser({ agentAddress }: Props) {
                 </div>
                 <div className="desk-row-vol">{fmtVol(m.volumeUsd)}</div>
                 <div className="desk-row-actions">
-                  {!pick && !isPayingFor && (
+                  {pick ? (
+                    <button
+                      className="desk-row-clear"
+                      onClick={() => clearPick(m.id)}
+                      title="Clear this analysis"
+                    >
+                      × Clear
+                    </button>
+                  ) : !isPayingFor ? (
                     <button
                       className="desk-row-analyze"
                       onClick={() => requestAnalyze(m.id)}
@@ -148,7 +164,7 @@ export function MarketsBrowser({ agentAddress }: Props) {
                     >
                       {isAnalyzing ? "Analyzing…" : "Analyze →"}
                     </button>
-                  )}
+                  ) : null}
                   <a className="desk-row-link" href={m.url} target="_blank" rel="noreferrer">
                     View ↗
                   </a>

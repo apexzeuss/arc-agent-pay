@@ -3379,6 +3379,23 @@ h1, h2, h3, h4, h5, h6,
 .desk-row-analyze:hover { opacity: 0.85; }
 .desk-row-analyze:disabled { opacity: 0.45; cursor: not-allowed; }
 
+.desk-row-clear {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  font-family: var(--font-body, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.desk-row-clear:hover {
+  color: var(--ink);
+  border-color: var(--ink-mute);
+}
+
 /* Inline AI pick result inside a market row */
 .desk-row-pick {
   grid-column: 1 / -1;
@@ -3658,17 +3675,25 @@ details.deep-pick-block[open] {
 }
 .deep-pick-summary::-webkit-details-marker { display: none; }
 .deep-pick-summary::after {
-  content: "+";
-  font-family: var(--mono);
-  font-size: 16px;
-  color: var(--ink-mute);
+  content: "More \25be"; /* ▾ */
+  font-family: var(--font-body, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--agent);
   line-height: 1;
-  margin-left: 8px;
-  transition: transform 0.15s ease;
+  margin-left: 12px;
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--agent) 10%, transparent);
+  border-radius: 4px;
+  transition: background 0.15s ease;
 }
 details[open] > .deep-pick-summary::after {
-  content: " ";
+  content: "Less \25b4"; /* ▴ */
   color: var(--ink);
+  background: var(--rule);
+}
+.deep-pick-summary:hover::after {
+  background: color-mix(in srgb, var(--agent) 20%, transparent);
 }
 .deep-pick-summary:hover .deep-pick-label { color: var(--ink); }
 details.deep-pick-block > ul {
