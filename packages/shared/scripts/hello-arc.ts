@@ -47,7 +47,7 @@ const [block, nativeBalance, usdcBalance] = await Promise.all([
   }),
 ]);
 
-console.log("Arc Testnet — connected");
+console.log("Arc Testnet. connected");
 console.log(`  chain id     : ${arcTestnet.id}`);
 console.log(`  latest block : ${block}`);
 console.log(`  address      : ${address}`);

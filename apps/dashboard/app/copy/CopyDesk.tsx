@@ -100,7 +100,7 @@ export function CopyDesk({
         </p>
         <ul className="desk-legend">
           <li><span className="desk-legend-key">Chart</span> the trader&apos;s last 10 trades, green up and red down</li>
-          <li><span className="desk-legend-key">Score</span> how much the AI trusts this trader now (0–100)</li>
+          <li><span className="desk-legend-key">Score</span> how much the AI trusts this trader now (0 100)</li>
           <li><span className="desk-legend-key">Weight</span> share of your money mirrored to them</li>
           <li><span className="desk-legend-key desk-legend-pull">Pulled</span> edge degraded, allocation cut to zero</li>
         </ul>

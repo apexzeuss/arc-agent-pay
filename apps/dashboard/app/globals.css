@@ -1,15 +1,15 @@
 :root {
-  /* Cotton · Electric Blue · Moonless Night — clean light palette */
-  --paper:       #f4f3f1;   /* Cotton — page background */
+  /* Cotton · Electric Blue · Moonless Night. clean light palette */
+  --paper:       #f4f3f1;   /* Cotton. page background */
   --paper-tint:  #ffffff;   /* white cards / panels */
   --paper-edge:  #e7e5e1;
 
-  --ink:         #2d2d2d;   /* Moonless Night — primary text */
+  --ink:         #2d2d2d;   /* Moonless Night. primary text */
   --ink-2:       #4d4d4d;
   --ink-mute:    #777777;   /* muted but readable */
   --rule:        #e0ded9;   /* hairline borders */
 
-  --agent:       #3171c6;   /* Electric Blue — brand / primary accent */
+  --agent:       #3171c6;   /* Electric Blue. brand / primary accent */
   --agent-ink:   #255aa3;   /* darker blue for hovers / borders */
   --user:        #3171c6;   /* secondary = same blue family */
   --user-ink:    #255aa3;
@@ -351,7 +351,7 @@ footer {
 }
 
 /* ============================================================
-   Cinematic intro curtain — plays once per session
+   Cinematic intro curtain. plays once per session
    ============================================================ */
 .intro-curtain {
   position: fixed;
@@ -422,7 +422,7 @@ footer {
 }
 
 /* ============================================================
-   Scroll progress — thin vermillion line at the very top
+   Scroll progress. thin vermillion line at the very top
    ============================================================ */
 .scroll-progress {
   position: fixed;
@@ -452,7 +452,7 @@ footer {
 }
 
 /* ============================================================
-   Top navigation — persistent across pages
+   Top navigation. persistent across pages
    ============================================================ */
 .nav {
   position: sticky;
@@ -537,7 +537,7 @@ footer {
   justify-self: end;
 }
 
-/* Wallet button in the nav — small editorial pill */
+/* Wallet button in the nav. small editorial pill */
 .nav-wallet {
   display: inline-flex;
   align-items: center;
@@ -591,7 +591,7 @@ footer {
 
 .nav-wallet-addr { font-feature-settings: "tnum" 1; }
 
-/* Kill switch — freeze the agent */
+/* Kill switch. freeze the agent */
 .kill-switch {
   display: inline-flex;
   align-items: center;
@@ -707,7 +707,7 @@ footer {
    Landing page
    ============================================================ */
 /* ============================================================
-   One-page landing — anchor-driven smooth scroll, content-sized
+   One-page landing. anchor-driven smooth scroll, content-sized
    sections, alternating light/dark for visual rhythm.
    ============================================================ */
 html:has(main.scroller) {
@@ -744,7 +744,7 @@ main.scroller {
 }
 
 /* ============================================================
-   Dark section theme — overrides palette tokens within scope
+   Dark section theme. overrides palette tokens within scope
    ============================================================ */
 .snap-section.dark {
   /* Moonless Night sections for rhythm against the Cotton background. */
@@ -788,7 +788,7 @@ main.scroller {
 }
 
 /* ============================================================
-   Chapter watermark — huge faded ordinal in section corner
+   Chapter watermark. huge faded ordinal in section corner
    ============================================================ */
 .chapter-watermark {
   position: absolute;
@@ -876,7 +876,7 @@ main.scroller {
 }
 
 /* ============================================================
-   Reveal — scroll-triggered fade + rise
+   Reveal. scroll-triggered fade + rise
    ============================================================ */
 .reveal {
   opacity: 0;
@@ -900,7 +900,7 @@ main.scroller {
   align-items: center;
   justify-content: center;
 }
-/* Mouse-tracked vermillion glow — subtle, follows cursor in hero */
+/* Mouse-tracked vermillion glow. subtle, follows cursor in hero */
 .section-hero::before {
   content: "";
   position: absolute;
@@ -999,7 +999,7 @@ main.scroller {
    Mask fades the lower half so it dissolves into the next section
    like an ink-bleed instead of overlapping the section header. */
 /* Persistent seal watermark: fixed in the upper-right of the viewport.
-   Doubles as a live status HUD — its caption tracks the current section,
+   Doubles as a live status HUD. its caption tracks the current section,
    and it spins up + shows a check while the agent works. */
 .seal-watermark {
   position: fixed;
@@ -1032,12 +1032,12 @@ main.scroller {
   transition: color 300ms ease;
 }
 
-/* WORKING — seal spins up fast, caption goes vermillion */
+/* WORKING. seal spins up fast, caption goes vermillion */
 .seal-watermark.phase-working .seal-rotate { animation-duration: 2.4s; }
 .seal-watermark.phase-working .seal-watermark-ring { transform: scale(1.06); }
 .seal-watermark.phase-working .seal-caption { color: var(--agent); }
 
-/* DONE — brief confirmation, check mark fades in */
+/* DONE. brief confirmation, check mark fades in */
 .seal-watermark.phase-done .seal-caption { color: var(--agent); }
 .seal-check {
   position: absolute;
@@ -1066,7 +1066,7 @@ main.scroller {
 .hero-seal svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .seal-rotate {
   transform-origin: 120px 120px;
-  animation: seal-spin 140s linear infinite; /* slower — reads as ambient, not competing */
+  animation: seal-spin 140s linear infinite; /* slower. reads as ambient, not competing */
 }
 @keyframes seal-spin { to { transform: rotate(360deg); } }
 .seal-breath {
@@ -1111,7 +1111,7 @@ main.scroller {
 .scroll-hint:hover .scroll-hint-mark { color: var(--ink); }
 
 /* ============================================================
-   One-page Ledger section overrides — big editorial cards
+   One-page Ledger section overrides. big editorial cards
    ============================================================ */
 .ledger-grid.one-page {
   display: grid;
@@ -1183,7 +1183,7 @@ main.scroller {
   flex-wrap: wrap;
 }
 
-/* Spend form — input + button row */
+/* Spend form. input + button row */
 .spend-form {
   display: flex;
   gap: 10px;
@@ -1359,7 +1359,7 @@ main.scroller {
 .batch-result-list li a { color: var(--agent); }
 .batch-result-err { color: #c2392b; font-size: 10px; }
 
-/* Recipient input — sits next to the amount input */
+/* Recipient input. sits next to the amount input */
 .spend-recipient-wrap {
   display: inline-flex;
   align-items: center;
@@ -1430,7 +1430,7 @@ main.scroller {
 }
 
 /* ============================================================
-   One-page Policy rules — tile-style 2-col grid
+   One-page Policy rules. tile-style 2-col grid
    ============================================================ */
 .rules.one-page {
   display: grid;
@@ -1493,7 +1493,7 @@ main.scroller {
 .plug-in-foot a:hover { color: var(--agent); }
 
 /* ============================================================
-   Older landing-next/bento — kept for back-compat, unused now
+   Older landing-next/bento. kept for back-compat, unused now
    ============================================================ */
 main.landing-next {
   max-width: 1240px;
@@ -1584,7 +1584,7 @@ main.landing-next {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Hero ticker — continuous horizontal marquee of editorial keywords.
+/* Hero ticker. continuous horizontal marquee of editorial keywords.
    Sits under the lede sentence as the "next-gen" rhythm element. */
 .hero-ticker {
   width: 100%;
@@ -1789,7 +1789,7 @@ main.landing-next {
 }
 
 /* ============================================================
-   LiveBadge — pulses once per refresh interval, lives inside h2
+   LiveBadge. pulses once per refresh interval, lives inside h2
    ============================================================ */
 .live-badge {
   display: inline-flex;
@@ -1873,7 +1873,7 @@ main.landing-next {
 }
 
 /* ============================================================
-   Watermark — hide on prose pages when they get tight; on dashboard
+   Watermark. hide on prose pages when they get tight; on dashboard
    keep it but shrink/offset so it doesn't crash into content
    ============================================================ */
 .watermark {
@@ -2545,7 +2545,7 @@ main.prose { padding-left: max(32px, calc((100vw - 820px) / 2)); padding-right: 
 }
 
 /* ============================================================
-   Send page — personal-wallet transfer form
+   Send page. personal-wallet transfer form
    ============================================================ */
 .send-page { min-height: 100vh; }
 .send-card {
@@ -2836,7 +2836,7 @@ main.prose { padding-left: max(32px, calc((100vw - 820px) / 2)); padding-right: 
   .nav-cta { padding: 7px 10px; font-size: 10px; }
 }
 
-/* Copy Desk tab — accented as the product, still a scroll tab */
+/* Copy Desk tab. accented as the product, still a scroll tab */
 .tab.tab-accent { color: var(--agent); font-weight: 600; }
 .tab.tab-accent::before { content: "● "; font-size: 0.7em; vertical-align: middle; }
 .tab.tab-accent.active { color: var(--agent-ink); }
@@ -2857,7 +2857,7 @@ main.prose { padding-left: max(32px, calc((100vw - 820px) / 2)); padding-right: 
 
 /* ─── Market ticker at the END of the page (after section 08) ───── */
 .page-ticker {
-  /* Fixed to the viewport bottom — shows at the bottom of every section/page as you scroll. */
+  /* Fixed to the viewport bottom. shows at the bottom of every section/page as you scroll. */
   position: fixed;
   bottom: 0;
   left: 0;
@@ -2977,7 +2977,7 @@ body { padding-bottom: 34px; }
 .section-num { color: var(--agent); letter-spacing: 0.22em; }
 .section-h { font-weight: 800; letter-spacing: -0.03em; }
 
-/* Cards — soft depth, rounded, hover lift */
+/* Cards. soft depth, rounded, hover lift */
 .desk-trader {
   border-radius: 14px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--paper-tint) 94%, transparent), var(--paper));
@@ -2991,7 +2991,7 @@ body { padding-bottom: 34px; }
 .desk-trader.is-active { border-color: color-mix(in srgb, var(--success) 42%, var(--rule)); }
 .desk-trader.is-degraded { opacity: 0.62; }
 
-/* Primary buttons — gradient + glow */
+/* Primary buttons. gradient + glow */
 .desk-run {
   border-radius: 10px; border: 0;
   background: linear-gradient(180deg, var(--agent), color-mix(in srgb, var(--agent) 78%, #000));
@@ -3000,12 +3000,12 @@ body { padding-bottom: 34px; }
 }
 .desk-run:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
 
-/* YES/NO badges — glow */
+/* YES/NO badges. glow */
 .bet-side { border-radius: 6px; font-weight: 600; }
 .bet-side.bet-yes { box-shadow: 0 0 18px color-mix(in srgb, var(--success) 38%, transparent); }
 .bet-side.bet-no  { box-shadow: 0 0 18px color-mix(in srgb, var(--agent) 38%, transparent); }
 
-/* Weight bars — gradient on rounded track */
+/* Weight bars. gradient on rounded track */
 .desk-weight-track { background: var(--paper-edge); border-radius: 999px; height: 8px; }
 .desk-weight-fill  { background: linear-gradient(90deg, var(--success), var(--user)); border-radius: 999px; }
 
@@ -3021,7 +3021,7 @@ body { padding-bottom: 34px; }
 .desk-leg.err { border-left-color: var(--error); }
 .desk-loss { color: var(--error); }
 
-/* Emphasis word (e.g. "real") — no italic "bend", just a clean blue accent. */
+/* Emphasis word (e.g. "real"). no italic "bend", just a clean blue accent. */
 .amp {
   font-family: var(--body) !important;
   font-style: normal !important;
@@ -3041,7 +3041,7 @@ body { padding-bottom: 34px; }
   font-style: normal !important;
 }
 
-/* ─── Subheading reset — no italic, no shouty caps, smaller, weight 600 ─── */
+/* ─── Subheading reset. no italic, no shouty caps, smaller, weight 600 ─── */
 h1, h2, h3, h4, h5, h6,
 .section-h, .hero-lede, .hero-lede-line, .ledger-action-h,
 .section-h .amp, .hero-lede .lede-accent, h1 .amp,
@@ -3083,7 +3083,7 @@ h1, h2, h3, h4, h5, h6,
   color: var(--agent) !important;
 }
 
-/* ─── Stop "separated" wrapping — let headings flow as one phrase ─── */
+/* ─── Stop "separated" wrapping. let headings flow as one phrase ─── */
 .hero-lede-line {
   display: block !important;
   white-space: normal !important;
@@ -3589,7 +3589,7 @@ h1, h2, h3, h4, h5, h6,
   font-weight: 500 !important;
 }
 
-/* ─── Deep analysis panel — the paid product output ──────────────── */
+/* ─── Deep analysis panel. the paid product output ──────────────── */
 /* Inside a market row (grid) it must span every column, not occupy one cell. */
 .desk-row > .deep-pick {
   grid-column: 1 / -1;
@@ -3638,7 +3638,7 @@ h1, h2, h3, h4, h5, h6,
   flex-direction: column;
   gap: 6px;
 }
-/* Collapsible details — clickable header reveals/hides the list */
+/* Collapsible details. clickable header reveals/hides the list */
 details.deep-pick-block {
   background: var(--paper, #f4f3f1);
   border: 1px solid var(--rule);
@@ -3667,7 +3667,7 @@ details.deep-pick-block[open] {
   transition: transform 0.15s ease;
 }
 details[open] > .deep-pick-summary::after {
-  content: "–";
+  content: " ";
   color: var(--ink);
 }
 .deep-pick-summary:hover .deep-pick-label { color: var(--ink); }

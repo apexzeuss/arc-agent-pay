@@ -69,7 +69,7 @@ export function NavWallet() {
           await ensureArcAdded();
           await switchChainAsync({ chainId: arcTestnet.id });
         } catch {
-          /* user dismissed the prompt — leave button in place */
+          /* user dismissed the prompt. leave button in place */
         }
       }
     } finally {

@@ -12,13 +12,13 @@ const markets = await polymarketSource().getMarkets();
 const result = await analyzeMarkets(markets);
 
 console.log(`\n=== Prediction-Market Bet Plan ===`);
-console.log(`brain: ${result.engine}${result.engine === "fallback" ? "  (no ANTHROPIC_API_KEY — heuristic)" : ""}\n`);
+console.log(`brain: ${result.engine}${result.engine === "fallback" ? "  (no ANTHROPIC_API_KEY. heuristic)" : ""}\n`);
 
 const ranked = [...result.picks].sort((a, b) => b.weight - a.weight);
 for (const p of ranked) {
   const tag =
     p.side === "SKIP"
-      ? "— skip"
+      ? "  skip"
       : `${p.side}  weight ${(p.weight * 100).toFixed(0)}%  edge ${(p.edge * 100).toFixed(0)}pts  conv ${p.conviction}`;
   console.log(`• ${p.question}`);
   console.log(`    market YES ${(p.marketProb * 100).toFixed(0)}%  |  AI thinks ${(p.modelProb * 100).toFixed(0)}%  →  ${tag}`);

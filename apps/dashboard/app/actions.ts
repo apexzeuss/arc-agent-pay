@@ -39,7 +39,7 @@ export async function setAgentFrozen(frozen: boolean): Promise<{ frozen: boolean
 function requireConfig() {
   const agentPk = process.env.AGENT_EOA_PK as Hex | undefined;
   const user = process.env.ARC_TEST_ADDRESS;
-  if (!agentPk) throw new Error("AGENT_EOA_PK missing — run `npm run simple-agent` once to provision.");
+  if (!agentPk) throw new Error("AGENT_EOA_PK missing. run `npm run simple-agent` once to provision.");
   if (!user || !isAddress(user)) throw new Error("ARC_TEST_ADDRESS missing or invalid in .env.");
   return { agentPk, userAddress: user as `0x${string}` };
 }
@@ -185,7 +185,7 @@ export async function spendFromAgent(
       return {
         ok: false,
         rejectedByPolicy: true,
-        error: "Agent is frozen — the kill switch is engaged. No payments will execute until it's released.",
+        error: "Agent is frozen. the kill switch is engaged. No payments will execute until it's released.",
       };
     }
 
@@ -196,7 +196,7 @@ export async function spendFromAgent(
         ok: false,
         rejectedByPolicy: true,
         rule: "Over per-tx limit",
-        error: `Over the per-transaction limit — max ${DEFAULT_POLICY.perTxCapUsdc} USDC, you requested ${amountUsdc} USDC.`,
+        error: `Over the per-transaction limit. max ${DEFAULT_POLICY.perTxCapUsdc} USDC, you requested ${amountUsdc} USDC.`,
       };
     }
 
@@ -227,7 +227,7 @@ export async function spendFromAgent(
           ok: false,
           rejectedByPolicy: true,
           rule: "Cooldown active",
-          error: `Cooldown active — wait ${waitFor}s before the next payment.`,
+          error: `Cooldown active. wait ${waitFor}s before the next payment.`,
         };
       }
     }
@@ -240,7 +240,7 @@ export async function spendFromAgent(
         ok: false,
         rejectedByPolicy: true,
         rule: "Over daily limit",
-        error: `Over the daily limit — ${DEFAULT_POLICY.dailyCapUsdc} USDC max, already spent ${usedStr} in the last 24h.`,
+        error: `Over the daily limit. ${DEFAULT_POLICY.dailyCapUsdc} USDC max, already spent ${usedStr} in the last 24h.`,
       };
     }
 
@@ -270,7 +270,7 @@ export type BatchRowResult =
 export type BatchResult = { ok: boolean; rows: BatchRowResult[]; error?: string };
 
 // Pays a list of recipients in one authorized operation. The cooldown rule is
-// intentionally skipped between rows — the human approved the whole batch at
+// intentionally skipped between rows. the human approved the whole batch at
 // once. Per-tx cap, allowlist, daily cap (against the batch total), and the
 // kill switch are all still enforced.
 export async function batchSpendFromAgent(rows: BatchRow[]): Promise<BatchResult> {
@@ -278,7 +278,7 @@ export async function batchSpendFromAgent(rows: BatchRow[]): Promise<BatchResult
     const { agentPk } = requireConfig();
 
     if (await readFrozen()) {
-      return { ok: false, rows: [], error: "Agent is frozen — release the kill switch to run a batch." };
+      return { ok: false, rows: [], error: "Agent is frozen. release the kill switch to run a batch." };
     }
     if (rows.length === 0) return { ok: false, rows: [], error: "No payments in the batch." };
 

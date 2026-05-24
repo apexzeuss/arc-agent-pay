@@ -68,7 +68,7 @@ if (execute) {
 
 const report = await rebalance({ traders, policy, potUsdc, agentPk, state, dryRun: !execute, autoApprove });
 
-console.log(`\n=== Rebalance ${report.dryRun ? "(DRY RUN)" : "(LIVE on Arc testnet)"} — pot ${report.potUsdc} USDC ===`);
+console.log(`\n=== Rebalance ${report.dryRun ? "(DRY RUN)" : "(LIVE on Arc testnet)"}. pot ${report.potUsdc} USDC ===`);
 console.log(`brain: ${report.engine}\n`);
 
 for (const leg of report.legs) {
@@ -86,6 +86,6 @@ for (const leg of report.legs) {
 }
 
 const sent = report.legs.filter((l) => l.executed);
-console.log(`\n${sent.length} transfer(s) settled${report.dryRun ? " — none (dry run)" : ""}.`);
+console.log(`\n${sent.length} transfer(s) settled${report.dryRun ? ". none (dry run)" : ""}.`);
 if (report.dryRun) console.log("Re-run with --execute to send real testnet USDC.\n");
 else console.log("");

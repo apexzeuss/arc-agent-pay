@@ -156,7 +156,7 @@ export function UserPanel() {
     <div className="card user">
       <div className="label">The Counterparty</div>
       <div className="balance">
-        {loadingBalance ? "—" : formatUnits(balance ?? 0n, USDC_DECIMALS)}
+        {loadingBalance ? " " : formatUnits(balance ?? 0n, USDC_DECIMALS)}
         <span className="unit">USDC</span>
       </div>
       <div className="addr">

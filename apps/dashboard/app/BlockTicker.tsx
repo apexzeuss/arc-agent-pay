@@ -9,7 +9,7 @@ export function BlockTicker() {
     <span className="ticker" title="Latest Arc Testnet block">
       <span className="ticker-dot" aria-hidden />
       <span className="ticker-label">BLOCK</span>
-      <span className="ticker-num">{block?.toString() ?? "—"}</span>
+      <span className="ticker-num">{block?.toString() ?? " "}</span>
     </span>
   );
 }

@@ -24,7 +24,7 @@ import {
   ARC_TESTNET_EXPLORER,
 } from "@arc-agent-pay/shared";
 
-// PIVOT from Phase 3: this is a "simple" agent — a plain EOA wallet, not a
+// PIVOT from Phase 3: this is a "simple" agent. a plain EOA wallet, not a
 // smart account. We keep the smart-account work for when Circle's testnet
 // bundler is reliable; for the demo loop, an EOA is enough to prove the
 // agent can hold USDC and spend it under code control.
@@ -37,11 +37,11 @@ loadEnv({ path: envPath });
 
 let agentPk = process.env.AGENT_EOA_PK as Hex | undefined;
 if (!agentPk) {
-  console.log("No AGENT_EOA_PK found — generating a fresh agent wallet (testnet only).");
+  console.log("No AGENT_EOA_PK found. generating a fresh agent wallet (testnet only).");
   agentPk = generatePrivateKey();
   appendFileSync(
     envPath,
-    `\n# Simple EOA agent wallet (testnet only — never reuse on mainnet).\nAGENT_EOA_PK=${agentPk}\n`,
+    `\n# Simple EOA agent wallet (testnet only. never reuse on mainnet).\nAGENT_EOA_PK=${agentPk}\n`,
     "utf-8",
   );
   console.log(`Saved AGENT_EOA_PK to ${envPath}`);
@@ -134,4 +134,4 @@ const [newAgent, newUser] = await Promise.all([
 console.log(`\nNew balances:`);
 console.log(`  Agent    : ${formatUnits(newAgent, USDC_DECIMALS)} USDC`);
 console.log(`  You      : ${formatUnits(newUser, USDC_DECIMALS)} USDC`);
-console.log(`\nCheck your MetaMask — the 0.5 USDC just arrived.`);
+console.log(`\nCheck your MetaMask. the 0.5 USDC just arrived.`);

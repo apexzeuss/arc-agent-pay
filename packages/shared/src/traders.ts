@@ -3,13 +3,13 @@
 // so the agent's brain never knows whether it's scoring seeded demo traders or
 // a real leaderboard feed. Today we ship `seededTraderSource` (always works,
 // demo never breaks). Later we can add a `leaderboardTraderSource` that hits a
-// real read-only API — and nothing else in the codebase has to change.
+// real read-only API. and nothing else in the codebase has to change.
 
 export type TraderId = string;
 
 // One observed move by a trader. `returnPct` is the realized return on that
 // move (0.04 = +4%, -0.06 = -6%). The agent scores a trader from the shape of
-// their recent returns — consistency, drawdowns, and whether they're degrading.
+// their recent returns. consistency, drawdowns, and whether they're degrading.
 export type Trade = {
   timestamp: number; // unix seconds; most recent last in `recentTrades`
   asset: string;
@@ -80,7 +80,7 @@ function buildSeedTraders(now: number): Trader[] {
       label: "Rex",
       address: "0x1ca12500000000000000000000000000001ca125",
       bio: "Was the top of the leaderboard last month. Lately... not.",
-      // Front half excellent, back half falls apart — this is the degradation
+      // Front half excellent, back half falls apart. this is the degradation
       // signal CopyProtect is built to catch.
       recentTrades: trades(
         now,

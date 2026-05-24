@@ -7,7 +7,7 @@ export const ARC_TESTNET_RPC_WS = "wss://rpc.testnet.arc.network";
 
 export const ARC_TESTNET_EXPLORER = "https://testnet.arcscan.app";
 
-// On Arc, USDC is BOTH the ERC-20 token AND the native gas currency — but the
+// On Arc, USDC is BOTH the ERC-20 token AND the native gas currency. but the
 // two balances use DIFFERENT decimal scales, which is the trap:
 //   - getBalance() (native gas)     → 18 decimals (standard EVM wei, for tool compat)
 //   - USDC ERC-20 balanceOf()       → 6 decimals  (standard USDC)

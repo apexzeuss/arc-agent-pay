@@ -8,9 +8,9 @@ export function StatusStrip({ lastActivityTs }: { lastActivityTs?: number | null
   const { data: block } = useBlockNumber({ chainId: arcTestnet.id, watch: true });
   const { data: gas } = useGasPrice({ chainId: arcTestnet.id });
 
-  const gasGwei = gas ? (Number(formatUnits(gas, 9)).toFixed(2)) : "—";
+  const gasGwei = gas ? (Number(formatUnits(gas, 9)).toFixed(2)) : " ";
 
-  let lastSeen = "—";
+  let lastSeen = " ";
   if (lastActivityTs) {
     const diff = Math.floor(Date.now() / 1000 - lastActivityTs);
     if (diff < 60) lastSeen = `${diff}s ago`;
@@ -23,7 +23,7 @@ export function StatusStrip({ lastActivityTs }: { lastActivityTs?: number | null
     <div className="status-strip">
       <div className="ss-cell">
         <div className="ss-label">Block</div>
-        <div className="ss-val">{block?.toString() ?? "—"}</div>
+        <div className="ss-val">{block?.toString() ?? " "}</div>
       </div>
       <div className="ss-cell">
         <div className="ss-label">Gas</div>

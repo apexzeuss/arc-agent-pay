@@ -38,10 +38,10 @@ const signerPk = process.env.AGENT_SIGNER_PK as Hex | undefined;
 const clientKey = process.env.CIRCLE_CLIENT_KEY;
 const recipient = process.env.ARC_TEST_ADDRESS;
 
-if (!signerPk) throw new Error("AGENT_SIGNER_PK missing — run `npm run provision` first.");
-if (!clientKey) throw new Error("CIRCLE_CLIENT_KEY missing — add it to .env (from console.circle.com → API & Client Keys).");
+if (!signerPk) throw new Error("AGENT_SIGNER_PK missing. run `npm run provision` first.");
+if (!clientKey) throw new Error("CIRCLE_CLIENT_KEY missing. add it to .env (from console.circle.com → API & Client Keys).");
 if (!recipient || !isAddress(recipient))
-  throw new Error("ARC_TEST_ADDRESS missing or invalid — set it to your MetaMask address.");
+  throw new Error("ARC_TEST_ADDRESS missing or invalid. set it to your MetaMask address.");
 
 const CIRCLE_MODULAR_URL = "https://modular-sdk.circle.com/v1/rpc/w3s/buidl";
 
@@ -85,7 +85,7 @@ console.log(`  amount          : 0.5 USDC`);
 console.log(`  deployed?       : ${await smartAccount.isDeployed()}`);
 console.log("\nSubmitting to Circle bundler...\n");
 
-// Agent pays its own gas in USDC (no paymaster needed — Arc's native gas IS USDC).
+// Agent pays its own gas in USDC (no paymaster needed. Arc's native gas IS USDC).
 // Arc bundler requires maxPriorityFeePerGas >= 1 gwei; setting 2 gwei for safety.
 const gasPrice = await publicClient.getGasPrice();
 const priorityFee = parseGwei("2");

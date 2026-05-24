@@ -53,7 +53,7 @@ export type MarketRow = {
 };
 
 export async function listMarketsAction(limit = 500): Promise<MarketRow[]> {
-  // Broadest filter — show all binary YES/NO markets, including near-certain
+  // Broadest filter. show all binary YES/NO markets, including near-certain
   // ones, so users see the full breadth of what's live on Polymarket.
   const markets = await polymarketSource({ limit, minYes: 0, maxYes: 1 }).getMarkets();
   return markets.map((m) => ({
@@ -68,7 +68,7 @@ export async function listMarketsAction(limit = 500): Promise<MarketRow[]> {
   }));
 }
 
-// Deep analysis of a single specific market — the paid product. Returns
+// Deep analysis of a single specific market. the paid product. Returns
 // background, recent events, scenarios, recommendation, and what would
 // change the call.
 export type SingleMarketPick = {
@@ -192,7 +192,7 @@ export async function analyzeByUrlAction(input: string): Promise<
   }
 
   if (!chosen) {
-    return { ok: false, error: "That market has more than 2 outcomes — we can only analyze 2-outcome markets right now." };
+    return { ok: false, error: "That market has more than 2 outcomes. we can only analyze 2-outcome markets right now." };
   }
 
   const market = {
@@ -241,7 +241,7 @@ export async function analyzeMarketsAction(count = 20, category?: string): Promi
     ? pool.filter((m) => m.category === category)
     : pool;
   const markets = filtered.slice(0, count);
-  // Parallel deep analysis — each market gets its own Claude call.
+  // Parallel deep analysis. each market gets its own Claude call.
   const deepPicks = await Promise.all(markets.map((m) => analyzeMarketDeep(m)));
   const volById = new Map(markets.map((m) => [m.id, m.volumeUsd]));
   const urlById = new Map(markets.map((m) => [m.id, m.url]));
@@ -271,7 +271,7 @@ export async function analyzeMarketsAction(count = 20, category?: string): Promi
 // Settle a fresh bet plan on Arc. Honors the kill switch.
 export async function settleBetsAction(potUsdc: number, autoApprove = false, category?: string): Promise<SettleReport> {
   const agentPk = process.env.AGENT_EOA_PK as Hex | undefined;
-  if (!agentPk) throw new Error("AGENT_EOA_PK missing — provision the agent wallet first.");
+  if (!agentPk) throw new Error("AGENT_EOA_PK missing. provision the agent wallet first.");
 
   const pool = await polymarketSource({ limit: 300, minYes: 0.1, maxYes: 0.9 }).getMarkets();
   const filtered = category && category !== "All"

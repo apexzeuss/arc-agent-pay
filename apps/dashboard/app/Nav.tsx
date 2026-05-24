@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useActiveSection } from "./components/ScrollSpy";
 import { NavWallet } from "./NavWallet";
 
-// Primary bar — the product + the things people actually come to do.
+// Primary bar. the product + the things people actually come to do.
 const PRIMARY = [
   { id: "markets", label: "Bet Desk", accent: true },
   { id: "ledger", label: "Ledger" },

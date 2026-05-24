@@ -14,7 +14,7 @@ const traders = await seededTraderSource().getTraders();
 const result = await scoreTraders(traders);
 
 console.log(`\n=== Copy-Allocation Plan ===`);
-console.log(`brain: ${result.engine}${result.engine === "fallback" ? "  (no ANTHROPIC_API_KEY — using heuristic)" : ""}\n`);
+console.log(`brain: ${result.engine}${result.engine === "fallback" ? "  (no ANTHROPIC_API_KEY. using heuristic)" : ""}\n`);
 
 const sorted = [...result.scores].sort((a, b) => b.weight - a.weight);
 for (const s of sorted) {
@@ -25,7 +25,7 @@ for (const s of sorted) {
 }
 
 if (result.cashWeight > 0.001) {
-  console.log(`  ${"Cash".padEnd(9)} weight ${(result.cashWeight * 100).toFixed(0).padStart(3)}%   (unallocated — held back from degraded traders)\n`);
+  console.log(`  ${"Cash".padEnd(9)} weight ${(result.cashWeight * 100).toFixed(0).padStart(3)}%   (unallocated. held back from degraded traders)\n`);
 }
 
 const sum = result.scores.reduce((a, b) => a + b.weight, 0) + result.cashWeight;

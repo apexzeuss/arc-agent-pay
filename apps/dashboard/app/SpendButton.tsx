@@ -64,7 +64,7 @@ export function SpendButton({ amount: defaultAmount = "0.50" }: { amount?: strin
     fire();
   }
 
-  // Subscription mode — auto-fire every cooldown+1 seconds until toggled off
+  // Subscription mode. auto-fire every cooldown+1 seconds until toggled off
   // or until the agent rejects (e.g. daily cap hit, balance empty).
   useEffect(() => {
     if (!subActive) {
@@ -85,7 +85,7 @@ export function SpendButton({ amount: defaultAmount = "0.50" }: { amount?: strin
       while (!stopped && subActive) {
         const r = await fire();
         if (!r.ok && r.rejectedByPolicy && (r.rule === "Over daily limit" || r.rule === "Not on allowlist")) {
-          // Hard policy stop — daily cap or allowlist — don't keep retrying
+          // Hard policy stop. daily cap or allowlist. don't keep retrying
           setSubActive(false);
           break;
         }

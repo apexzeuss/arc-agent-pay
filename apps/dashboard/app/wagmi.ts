@@ -24,7 +24,7 @@ import { arcTestnet } from "@arc-agent-pay/shared";
 // (currently testnet-only) Send page variety; the EVM mainnets are listed so
 // real-money sending works once the safety flag is flipped. wagmi requires
 // every chain we read/write on to be listed up-front. (Non-EVM chains like
-// Solana are NOT supported here — they need a separate wallet adapter + SDK.)
+// Solana are NOT supported here. they need a separate wallet adapter + SDK.)
 export const wagmiConfig = createConfig({
   chains: [
     arcTestnet,

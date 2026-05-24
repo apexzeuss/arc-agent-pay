@@ -29,7 +29,7 @@ const envPath = resolve(
 loadEnv({ path: envPath });
 
 // 1) Get or auto-generate the agent's signer key.
-//    The signer is a plain Ethereum private key — separate from the user's
+//    The signer is a plain Ethereum private key. separate from the user's
 //    MetaMask wallet. It "owns" the smart account and is what signs operations
 //    on the agent's behalf. TESTNET ONLY: storing a private key in .env is
 //    fine for local development; production would use a KMS / HSM / passkey.
@@ -37,12 +37,12 @@ let signerPk = process.env.AGENT_SIGNER_PK as Hex | undefined;
 
 if (!signerPk) {
   console.log(
-    "No AGENT_SIGNER_PK found — generating a fresh signer key (testnet only).",
+    "No AGENT_SIGNER_PK found. generating a fresh signer key (testnet only).",
   );
   signerPk = generatePrivateKey();
   appendFileSync(
     envPath,
-    `\n# Auto-generated agent signer key (testnet only — never reuse on mainnet).\nAGENT_SIGNER_PK=${signerPk}\n`,
+    `\n# Auto-generated agent signer key (testnet only. never reuse on mainnet).\nAGENT_SIGNER_PK=${signerPk}\n`,
     "utf-8",
   );
   console.log(`Saved AGENT_SIGNER_PK to ${envPath}`);
@@ -94,5 +94,5 @@ console.log(
 );
 console.log(`  Explorer              : ${ARC_TESTNET_EXPLORER}/address/${accountAddress}`);
 console.log(
-  "\nThis is the address your AI agent will spend FROM. To make it usable, send USDC to it from your MetaMask wallet — that's the next step.",
+  "\nThis is the address your AI agent will spend FROM. To make it usable, send USDC to it from your MetaMask wallet. that's the next step.",
 );

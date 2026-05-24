@@ -7,11 +7,11 @@ export type PredictionMarket = {
   id: string;
   slug: string;
   question: string;
-  yesPrice: number; // 0..1 — the market's implied probability of YES
+  yesPrice: number; // 0..1. the market's implied probability of YES
   noPrice: number; // 0..1
   volumeUsd: number;
   endDate?: string;
-  url: string; // public Polymarket page — where a user (or builder-fee attribution) acts
+  url: string; // public Polymarket page. where a user (or builder-fee attribution) acts
   category: string; // top-level group: Politics / Crypto / Sports / Tech / Other
 };
 

@@ -9,7 +9,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function MarketsPage() {
-  const agent = await getAgentBalance().catch(() => ({ usdc: "—", address: "" }));
+  const agent = await getAgentBalance().catch(() => ({ usdc: " ", address: "" }));
   return (
     <main className="scroller">
       <section className="snap-section">

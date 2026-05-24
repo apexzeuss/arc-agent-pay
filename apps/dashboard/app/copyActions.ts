@@ -48,7 +48,7 @@ export async function analyzeTraders(): Promise<DeskAnalysis> {
       label: s.label,
       address: t.address,
       bio: t.bio,
-      asset: t.recentTrades[0]?.asset ?? "—",
+      asset: t.recentTrades[0]?.asset ?? " ",
       score: s.score,
       degraded: s.degraded,
       rationale: s.rationale,
@@ -71,7 +71,7 @@ export async function runRebalance(
   autoApprove = false,
 ): Promise<RebalanceReport> {
   const agentPk = process.env.AGENT_EOA_PK as Hex | undefined;
-  if (!agentPk) throw new Error("AGENT_EOA_PK missing — provision the agent wallet first.");
+  if (!agentPk) throw new Error("AGENT_EOA_PK missing. provision the agent wallet first.");
 
   const traders = await seededTraderSource().getTraders();
   const frozen = await readFrozen();

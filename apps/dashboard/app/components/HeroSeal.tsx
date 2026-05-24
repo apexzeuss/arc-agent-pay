@@ -1,4 +1,4 @@
-// A vermillion ink-stamp seal — concentric rings + crosshairs + arcing
+// A vermillion ink-stamp seal. concentric rings + crosshairs + arcing
 // text that slowly rotates, a pulsing center monogram. Replaces the
 // plain decorative circle on the hero's right side with something
 // cohesive with the ledger/notary aesthetic the rest of the site uses.

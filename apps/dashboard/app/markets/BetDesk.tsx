@@ -79,7 +79,7 @@ export function BetDesk({ agentAddress }: Props) {
         <p>
           <strong>Polymarket</strong> is where people bet on whether real-world things will happen, and the price shows
           the crowd&apos;s odds. The AI here is a <strong>paid analyst</strong>: it reads any market you point at and
-          writes a research note — background, recent events, plausible scenarios, and where it would bet, with reasons.
+          writes a research note covering background, recent events, plausible scenarios, and where it would bet, with reasons.
           You read the take and act on Polymarket yourself.
         </p>
       </div>
@@ -187,7 +187,7 @@ export function BetDesk({ agentAddress }: Props) {
 
       {analysis && analysis.cashWeight > 0.001 && (
         <div className="desk-cash">
-          Holding <strong>{pct(analysis.cashWeight)}</strong> in cash — no edge in the rest.
+          Holding <strong>{pct(analysis.cashWeight)}</strong> in cash; no edge in the rest.
         </div>
       )}
 

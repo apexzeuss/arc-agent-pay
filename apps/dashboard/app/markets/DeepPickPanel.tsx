@@ -82,7 +82,7 @@ export function DeepPickPanel({ pick }: { pick: SingleMarketPick }) {
         </div>
       )}
 
-      {pick.changeMyMind && pick.changeMyMind !== "—" && (
+      {pick.changeMyMind && pick.changeMyMind !== " " && (
         <div className="deep-pick-block">
           <div className="deep-pick-label">What would change the call</div>
           <p className="deep-pick-cmm">{pick.changeMyMind}</p>

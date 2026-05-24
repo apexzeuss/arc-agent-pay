@@ -1,6 +1,6 @@
 # @arc-agent-pay/policy
 
-**Phase 3.** TypeScript policy engine — the differentiated logic the platform owns.
+**Phase 3.** TypeScript policy engine. the differentiated logic the platform owns.
 
 Designed to be **hoistable to Solidity**: every rule is a pure function over `(intent, accountState)` returning `Allow | Deny | RequireApproval`. When we promote the engine into an on-chain policy module, the spec ports directly.
 

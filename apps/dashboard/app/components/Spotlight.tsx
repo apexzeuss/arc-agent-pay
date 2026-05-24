@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-// Mouse-tracked vermillion glow on the hero. Subtle — felt rather than
+// Mouse-tracked vermillion glow on the hero. Subtle. felt rather than
 // seen. Updates two CSS variables on the documentElement; the hero
 // section's ::before reads them in a radial-gradient.
 export function Spotlight() {

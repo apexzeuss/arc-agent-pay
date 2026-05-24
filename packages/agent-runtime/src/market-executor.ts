@@ -1,7 +1,7 @@
 // Settles the AI's prediction-market bet plan on Arc. Same EOA + USDC.transfer
 // mechanics as the copy-trade executor, driven by market picks instead of
 // trader copies. Each bet's stake is sent to a deterministic per-market vault
-// address (a stand-in for "funds committed to this market" — real settlement
+// address (a stand-in for "funds committed to this market". real settlement
 // would route to Polymarket on Polygon). Honors the policy engine + kill switch.
 
 import {

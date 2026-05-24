@@ -2,14 +2,14 @@
 // each one. Two responsibilities, deliberately split:
 //
 //   1. JUDGMENT (per trader): a score 0-100 + a `degraded` flag + a rationale.
-//      This is the part that wants real reasoning — so it calls Claude when an
+//      This is the part that wants real reasoning. so it calls Claude when an
 //      ANTHROPIC_API_KEY is present, and falls back to a transparent heuristic
 //      when it isn't (so the whole pipeline runs today, and so a key hiccup
 //      mid-demo degrades gracefully instead of crashing).
 //
 //   2. WEIGHTS (across traders): pure deterministic TS. Degraded traders get
 //      zero; the rest split the pot in proportion to score. Keeping this out of
-//      the LLM means allocations are reproducible and auditable — and it's what
+//      the LLM means allocations are reproducible and auditable. and it's what
 //      makes CopyProtect visible: when a trader degrades, its weight goes to 0
 //      and redistributes to the healthy ones.
 
@@ -117,7 +117,7 @@ function fallbackJudge(t: Trader): Omit<TraderScore, "weight"> {
 
 const SYSTEM_PROMPT = `You are a copy-trading risk analyst. You are given several traders, each with a short history of recent trade returns. For EACH trader, decide:
 - score: integer 0-100, how much you'd trust copying them right now (risk-adjusted, recency-weighted; reward consistency, punish blowups and decaying edge).
-- degraded: true if their edge has recently broken down (recent returns turned negative or collapsed vs their earlier performance) and you would PULL allocation. This is a protective signal — be willing to flag it.
+- degraded: true if their edge has recently broken down (recent returns turned negative or collapsed vs their earlier performance) and you would PULL allocation. This is a protective signal. be willing to flag it.
 - rationale: one sentence, max 140 characters, plain and specific.
 
 Return ONLY a JSON array, one object per trader, in the same order, shaped:
@@ -185,7 +185,7 @@ async function claudeJudge(
   return traders.map((t) => {
     const j = parsed.find((p) => p.id === t.id);
     if (!j) {
-      // Model dropped one — fail safe to the heuristic for that trader only.
+      // Model dropped one. fail safe to the heuristic for that trader only.
       return fallbackJudge(t);
     }
     return {
@@ -211,7 +211,7 @@ export async function scoreTraders(traders: Trader[]): Promise<ScoringResult> {
       judged = await claudeJudge(traders, apiKey);
       engine = "claude";
     } catch (err) {
-      // Don't crash a live demo over an API blip — degrade to the heuristic.
+      // Don't crash a live demo over an API blip. degrade to the heuristic.
       console.warn(`[scorer] Claude call failed, using fallback: ${(err as Error).message}`);
       judged = traders.map(fallbackJudge);
       engine = "fallback";

@@ -20,7 +20,7 @@ import { arcTestnet, ARC_TESTNET_CHAIN_ID } from "@arc-agent-pay/shared";
 import { wagmiConfig } from "../wagmi";
 import { useAgentStatus } from "../components/AgentStatus";
 
-// The union of chain ids configured in wagmi — what its hooks expect.
+// The union of chain ids configured in wagmi. what its hooks expect.
 type ChainId = (typeof wagmiConfig)["chains"][number]["id"];
 
 type Net = {
@@ -134,7 +134,7 @@ const NETWORKS: Net[] = [
     id: bsc.id,
     name: "BNB Chain",
     nativeSymbol: "BNB",
-    // Binance-Peg USD Coin — note this is an 18-decimal token, unlike
+    // Binance-Peg USD Coin. note this is an 18-decimal token, unlike
     // Circle-native USDC which is 6 decimals everywhere else.
     usdc: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
     usdcDecimals: 18,

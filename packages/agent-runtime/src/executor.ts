@@ -3,7 +3,7 @@
 //
 // Only `allow` legs execute. `require_approval` legs are held back unless
 // `autoApprove` is set (i.e. a human has signed off). `deny` legs never run.
-// `dryRun` plans and gates everything but writes nothing on-chain — so the
+// `dryRun` plans and gates everything but writes nothing on-chain. so the
 // whole pipeline is testable with zero funds.
 
 import {

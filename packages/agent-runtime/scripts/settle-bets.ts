@@ -59,7 +59,7 @@ if (execute) {
 
 const report = await settleMarketBets({ markets, policy: DEFAULT_POLICY, potUsdc, agentPk, state, dryRun: !execute, autoApprove });
 
-console.log(`\n=== Bet Settlement ${report.dryRun ? "(DRY RUN)" : "(LIVE on Arc)"} — pot ${report.potUsdc} USDC ===`);
+console.log(`\n=== Bet Settlement ${report.dryRun ? "(DRY RUN)" : "(LIVE on Arc)"}. pot ${report.potUsdc} USDC ===`);
 console.log(`brain: ${report.engine}\n`);
 
 for (const leg of report.legs) {
@@ -76,5 +76,5 @@ for (const leg of report.legs) {
 }
 
 const sent = report.legs.filter((l) => l.executed);
-console.log(`\n${sent.length} bet(s) settled${report.dryRun ? " — none (dry run)" : ""}.`);
+console.log(`\n${sent.length} bet(s) settled${report.dryRun ? ". none (dry run)" : ""}.`);
 if (report.dryRun) console.log("Re-run with --execute to settle real testnet USDC.\n");

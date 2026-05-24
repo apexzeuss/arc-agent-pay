@@ -2,7 +2,7 @@
 // bets have an edge. Split, like the trader scorer:
 //   1. JUDGMENT (per market): Claude estimates the TRUE probability of YES, picks
 //      a side vs the market price, gives conviction + a one-line rationale.
-//   2. SIZING (across markets): pure deterministic TS — bankroll weight is
+//   2. SIZING (across markets): pure deterministic TS. bankroll weight is
 //      proportional to edge × conviction; markets with no edge get 0.
 // Claude when ANTHROPIC_API_KEY is set; transparent fallback otherwise.
 
@@ -32,7 +32,7 @@ export type AnalysisResult = {
 };
 
 // Deep analysis: the paid product. Richer per-market output that's actually
-// worth paying for — not just a probability.
+// worth paying for. not just a probability.
 export type DeepMarketPick = MarketPick & {
   background: string[]; // 2-4 facts the user should know about this market
   recentEvents: string[]; // 1-3 recent developments that move the probability
@@ -69,7 +69,7 @@ function applyWeights(
 
 function fallbackJudge(m: PredictionMarket): Omit<MarketPick, "weight"> {
   // Without world knowledge we can't beat the market, so we don't claim an
-  // edge — we just lean toward the favorite with low conviction. (Real value
+  // edge. we just lean toward the favorite with low conviction. (Real value
   // comes from Claude; this only keeps the pipeline running.)
   const side: Side = m.yesPrice >= 0.5 ? "YES" : "NO";
   const modelProb = m.yesPrice; // no disagreement with the market
@@ -91,10 +91,10 @@ function fallbackJudge(m: PredictionMarket): Omit<MarketPick, "weight"> {
 const SYSTEM_PROMPT = `You are a sharp prediction-market analyst. For each market you are given the question, the market's current YES price (its implied probability), and volume. For EACH market:
 - modelProb: YOUR honest estimate of the true probability of YES (0.0-1.0), using your own knowledge and reasoning. Be calibrated, not contrarian for its own sake.
 - side: "YES" if you think the true probability is meaningfully ABOVE the market price, "NO" if meaningfully BELOW, "SKIP" if you have no real edge or it's too uncertain.
-- conviction: integer 0-100 — how confident you are in your estimate.
+- conviction: integer 0-100. how confident you are in your estimate.
 - rationale: one sentence, max 140 chars, concrete.
 
-Only pick YES/NO when you genuinely think the market is mispriced. It is fine — expected — to SKIP most markets.
+Only pick YES/NO when you genuinely think the market is mispriced. It is fine. expected. to SKIP most markets.
 
 Return ONLY a JSON array, one object per market, same order:
 [{"id": string, "side": "YES"|"NO"|"SKIP", "modelProb": number, "conviction": number, "rationale": string}]
@@ -187,7 +187,9 @@ export async function analyzeMarkets(markets: PredictionMarket[]): Promise<Analy
 
 // --- Deep analysis (paid product) -------------------------------------------
 
-const DEEP_SYSTEM_PROMPT = `You are a sharp prediction-market analyst writing a paid research note. The reader pays for your insight, so DO NOT just restate the market's price — give them genuine value. Use your own knowledge of recent events, structural facts, and likely paths.
+const DEEP_SYSTEM_PROMPT = `You are a sharp prediction-market analyst writing a paid research note. The reader pays for your insight, so do not just restate the market's price; give them genuine value. Use your own knowledge of recent events, structural facts, and likely paths.
+
+STYLE: Write naturally, like a human analyst. Do NOT use em-dashes ("—") or en-dashes ("–") anywhere in your output. Use commas, periods, semicolons, or parentheses instead. Avoid AI-stock phrases.
 
 Return ONLY a JSON object, no prose, no markdown:
 {
@@ -288,8 +290,8 @@ function deepFallback(market: PredictionMarket): Omit<DeepMarketPick, "weight"> 
     ],
     recentEvents: [],
     scenarios: [],
-    recommendation: "No Claude API key set — running on heuristic fallback. Set ANTHROPIC_API_KEY to enable paid analysis.",
-    changeMyMind: "—",
+    recommendation: "No Claude API key set. running on heuristic fallback. Set ANTHROPIC_API_KEY to enable paid analysis.",
+    changeMyMind: " ",
   };
 }
 

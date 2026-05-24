@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // Visible signal that the page is auto-refreshing. The dot pulses once
 // per refresh interval (synced manually with the AutoRefresh component
 // that drives the actual data fetch). Hover for the interval, click is
-// inert — it's an indicator, not a button.
+// inert. it's an indicator, not a button.
 export function LiveBadge({
   intervalMs = 12_000,
   label = "Live",

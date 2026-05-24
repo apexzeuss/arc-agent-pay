@@ -12,7 +12,7 @@ export type Policy = {
   // Transfers strictly above this need a human sign-off (verdict
   // "require_approval"). Must be <= perTxCapUsdc to be reachable.
   approvalThresholdUsdc: string;
-  // The kill switch. When true, every transfer is denied — full stop.
+  // The kill switch. When true, every transfer is denied. full stop.
   killed: boolean;
 };
 
@@ -26,7 +26,7 @@ export const DEFAULT_POLICY: Policy = {
 };
 
 // --- The policy engine -------------------------------------------------------
-// Pure functions over (policy, intent, state). No I/O, no chain calls — so it's
+// Pure functions over (policy, intent, state). No I/O, no chain calls. so it's
 // trivially testable and ports cleanly to a Solidity policy module later. All
 // money math is done in USDC base units (6-dec bigint) to avoid float drift.
 
@@ -58,7 +58,7 @@ export function evaluate(
   state: AccountState,
 ): Decision {
   if (policy.killed) {
-    return { verdict: "deny", reason: "Kill switch engaged — all transfers blocked." };
+    return { verdict: "deny", reason: "Kill switch engaged. all transfers blocked." };
   }
 
   const amount = usdc(intent.amountUsdc);
@@ -75,7 +75,7 @@ export function evaluate(
     state.now - state.lastTransferAt < policy.cooldownSeconds
   ) {
     const wait = policy.cooldownSeconds - (state.now - state.lastTransferAt);
-    return { verdict: "deny", reason: `Cooldown active — ${wait}s until next transfer allowed.` };
+    return { verdict: "deny", reason: `Cooldown active. ${wait}s until next transfer allowed.` };
   }
 
   if (amount > usdc(policy.perTxCapUsdc)) {
@@ -95,7 +95,7 @@ export function evaluate(
   if (amount > usdc(policy.approvalThresholdUsdc)) {
     return {
       verdict: "require_approval",
-      reason: `Above approval threshold (${intent.amountUsdc} > ${policy.approvalThresholdUsdc} USDC) — needs human sign-off.`,
+      reason: `Above approval threshold (${intent.amountUsdc} > ${policy.approvalThresholdUsdc} USDC). needs human sign-off.`,
     };
   }
 
@@ -104,7 +104,7 @@ export function evaluate(
 
 // A copy-trade rebalance fires several transfers as ONE event. Cooldown is
 // checked once for the whole batch (legs of one rebalance don't block each
-// other), but the daily-cap accumulates leg by leg — so an oversized rebalance
+// other), but the daily-cap accumulates leg by leg. so an oversized rebalance
 // gets truncated rather than blowing the budget.
 export type BatchedDecision = Decision & { intent: SpendIntent };
 
@@ -121,7 +121,7 @@ export function evaluateBatch(
     lastTransferAt:
       state.lastTransferAt !== null &&
       state.now - state.lastTransferAt < policy.cooldownSeconds
-        ? state.lastTransferAt // still in cooldown — let evaluate() deny all legs
+        ? state.lastTransferAt // still in cooldown. let evaluate() deny all legs
         : null,
   };
 

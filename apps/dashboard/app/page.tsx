@@ -30,7 +30,7 @@ const TICKER: { label: string; key?: boolean }[] = [
 
 export default async function Landing() {
   const [agent, activity] = await Promise.all([
-    getAgentBalance().catch(() => ({ usdc: "—", address: "" })),
+    getAgentBalance().catch(() => ({ usdc: " ", address: "" })),
     getAgentActivity(8).catch(() => ({ entries: [], agentAddress: "" })),
   ]);
 
@@ -106,7 +106,7 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          ★ BET DESK — the headline: AI bets real Polymarket markets
+          ★ BET DESK. the headline: AI bets real Polymarket markets
           ============================================================ */}
       <section id="markets" className="snap-section">
         <span className="chapter-watermark" aria-hidden>★</span>
@@ -194,7 +194,7 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          03 · PLUG IN — compact MCP teaser, full details on /plug-in
+          03 · PLUG IN. compact MCP teaser, full details on /plug-in
           ============================================================ */}
       <section id="plug-in" className="snap-section">
         <span className="chapter-watermark" aria-hidden>03</span>
