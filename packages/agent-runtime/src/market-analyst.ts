@@ -211,6 +211,7 @@ Be concrete. Name people, dates, dollar amounts, polling numbers, court rulings,
 async function claudeDeepJudge(
   market: PredictionMarket,
   apiKey: string,
+  model: string = MODEL,
 ): Promise<Omit<DeepMarketPick, "weight">> {
   const userContent = `Market: "${market.question}"
 Market YES price: ${(market.yesPrice * 100).toFixed(0)}% (implied probability the market is giving YES)
@@ -224,7 +225,7 @@ Market YES price: ${(market.yesPrice * 100).toFixed(0)}% (implied probability th
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       max_tokens: 1800,
       system: [{ type: "text", text: DEEP_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: userContent }],
@@ -302,25 +303,30 @@ function deepFallback(market: PredictionMarket, reason: "no-key" | "error" = "no
 async function claudeDeepJudgeWithRetry(
   market: PredictionMarket,
   apiKey: string,
+  model: string = MODEL,
 ): Promise<Omit<DeepMarketPick, "weight">> {
   try {
-    return await claudeDeepJudge(market, apiKey);
+    return await claudeDeepJudge(market, apiKey, model);
   } catch (err) {
     const msg = (err as Error).message ?? "";
     if (/429|rate|timeout|ETIMEDOUT|ECONNRESET/i.test(msg)) {
       await new Promise((r) => setTimeout(r, 600 + Math.random() * 800));
-      return claudeDeepJudge(market, apiKey);
+      return claudeDeepJudge(market, apiKey, model);
     }
     throw err;
   }
 }
 
-export async function analyzeMarketDeep(market: PredictionMarket): Promise<DeepMarketPick> {
+// Fast model for the bulk 16-market overview. Roughly 2-3× faster than Sonnet.
+const BULK_MODEL = process.env.ANTHROPIC_BULK_MODEL ?? "claude-haiku-4-5-20251001";
+
+export async function analyzeMarketDeep(market: PredictionMarket, opts?: { fast?: boolean }): Promise<DeepMarketPick> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
+  const model = opts?.fast ? BULK_MODEL : MODEL;
   let judged: Omit<DeepMarketPick, "weight">;
   if (apiKey) {
     try {
-      judged = await claudeDeepJudgeWithRetry(market, apiKey);
+      judged = await claudeDeepJudgeWithRetry(market, apiKey, model);
     } catch (err) {
       console.warn(`[market-analyst] Deep Claude call failed: ${(err as Error).message}`);
       judged = deepFallback(market, "error");

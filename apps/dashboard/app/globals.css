@@ -4055,21 +4055,36 @@ details.deep-pick-block > ul {
 .activity-view-all:hover { color: var(--agent-ink); text-decoration: underline; }
 .activity-totals { display: flex; gap: 24px; flex-wrap: wrap; }
 
-/* Activity/About prose-page heading: smaller, flows in one or two lines */
-main.prose h1 {
+/* Activity/About prose-page heading: smaller, flows naturally across the page width */
+main.prose,
+main.prose > * {
+  max-width: none !important;
+}
+main.prose {
+  padding-left: max(24px, calc((100vw - 1080px) / 2)) !important;
+  padding-right: max(24px, calc((100vw - 1080px) / 2)) !important;
+}
+main.prose h1,
+.activity-h1 {
+  display: block !important;
   font-family: var(--font-display, var(--display)) !important;
-  font-size: clamp(28px, 3.6vw, 44px) !important;
+  font-size: clamp(28px, 3.4vw, 42px) !important;
   font-weight: 700 !important;
   font-style: normal !important;
   font-variation-settings: normal !important;
   letter-spacing: -0.025em !important;
   line-height: 1.15 !important;
-  max-width: 26ch !important;
+  max-width: none !important;
+  width: auto !important;
   margin: 0 0 14px !important;
   animation: none !important;
   opacity: 1 !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-spacing: normal !important;
 }
 main.prose h1 .amp {
   color: var(--agent) !important;
   font-weight: 700 !important;
+  display: inline !important;
 }

@@ -242,14 +242,15 @@ export async function analyzeMarketsAction(count = 20, category?: string): Promi
     : pool;
   const markets = filtered.slice(0, count);
   // Parallel deep analysis. each market gets its own Claude call.
-  // Throttle to 6 concurrent Claude calls to avoid rate limits + serverless
-  // function timeout. We process in waves rather than firing all 16 at once.
-  const WAVE_SIZE = 6;
+  // Bulk uses the FAST model (Haiku) so 16 markets come back in seconds, not
+  // half a minute. Single-market analysis (paid 1 USDC) still uses the deeper
+  // Sonnet model. Throttle to 8 concurrent to play nice with rate limits.
+  const WAVE_SIZE = 8;
   type Pick = Awaited<ReturnType<typeof analyzeMarketDeep>>;
   const deepPicks: Pick[] = [];
   for (let i = 0; i < markets.length; i += WAVE_SIZE) {
     const wave = markets.slice(i, i + WAVE_SIZE);
-    const results = await Promise.all(wave.map((m) => analyzeMarketDeep(m)));
+    const results = await Promise.all(wave.map((m) => analyzeMarketDeep(m, { fast: true })));
     deepPicks.push(...results);
   }
   const volById = new Map(markets.map((m) => [m.id, m.volumeUsd]));
