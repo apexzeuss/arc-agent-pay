@@ -1,6 +1,6 @@
 "use client";
 
-import { http, createConfig } from "wagmi";
+import { http, createConfig, createStorage, cookieStorage } from "wagmi";
 import {
   mainnet,
   base,
@@ -62,6 +62,8 @@ export const wagmiConfig = createConfig({
     [celo.id]: http(),
   },
   ssr: true,
+  // Persist the connector state so a connected wallet survives page reloads.
+  storage: createStorage({ storage: cookieStorage }),
 });
 
 declare module "wagmi" {
