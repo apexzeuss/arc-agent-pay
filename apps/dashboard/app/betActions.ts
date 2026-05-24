@@ -195,6 +195,14 @@ export async function analyzeByUrlAction(input: string): Promise<
     return { ok: false, error: "That market has more than 2 outcomes. we can only analyze 2-outcome markets right now." };
   }
 
+  // Prefer the parent event slug for the URL so sub-markets (e.g. one
+  // option inside a multi-outcome event) link to a page that exists.
+  const events = Array.isArray(chosen.events) ? chosen.events : [];
+  const firstEvent = (events[0] && typeof events[0] === "object")
+    ? (events[0] as Record<string, unknown>)
+    : null;
+  const eventSlug = firstEvent && typeof firstEvent.slug === "string" ? firstEvent.slug : "";
+  const urlSlug = eventSlug || slug;
   const market = {
     id: String(chosen.id ?? chosen.conditionId ?? slug),
     slug,
@@ -203,7 +211,7 @@ export async function analyzeByUrlAction(input: string): Promise<
     noPrice,
     volumeUsd: Number(chosen.volumeNum ?? chosen.volume ?? 0),
     endDate: chosen.endDate ? String(chosen.endDate) : undefined,
-    url: `https://polymarket.com/event/${slug}`,
+    url: `https://polymarket.com/event/${urlSlug}`,
     category: "Other",
   };
 

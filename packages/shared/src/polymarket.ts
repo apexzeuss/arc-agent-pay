@@ -116,6 +116,16 @@ export function polymarketSource(opts?: {
         if (yesPrice === undefined || noPrice === undefined) continue;
         if (!(yesPrice >= minYes && yesPrice <= maxYes)) continue; // uncertain only
 
+        // Polymarket URLs work off the parent EVENT slug. The market slug
+        // alone 404s for sub-markets (e.g. "spain win" inside "world cup
+        // winner"). Use events[0].slug when present, else fall back to the
+        // market's own slug.
+        const events = Array.isArray(m.events) ? m.events : [];
+        const firstEvent = (events[0] && typeof events[0] === "object")
+          ? (events[0] as Record<string, unknown>)
+          : null;
+        const eventSlug = firstEvent && typeof firstEvent.slug === "string" ? firstEvent.slug : "";
+        const urlSlug = eventSlug || String(m.slug ?? "");
         out.push({
           id: String(m.id ?? m.conditionId ?? m.slug ?? out.length),
           slug: String(m.slug ?? ""),
@@ -124,7 +134,7 @@ export function polymarketSource(opts?: {
           noPrice,
           volumeUsd: Number(m.volumeNum ?? m.volume ?? 0),
           endDate: m.endDate ? String(m.endDate) : undefined,
-          url: m.slug ? `https://polymarket.com/event/${m.slug}` : "https://polymarket.com",
+          url: urlSlug ? `https://polymarket.com/event/${urlSlug}` : "https://polymarket.com",
           category: normalizeCategory(m),
         });
       }
