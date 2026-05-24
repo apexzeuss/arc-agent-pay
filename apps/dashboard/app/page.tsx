@@ -72,15 +72,15 @@ export default async function Landing() {
             </div>
             <h1 className="hero-lede">
               <span className="hero-lede-line" style={{ animationDelay: "240ms" }}>
-                An AI agent that holds money on <span className="lede-accent">Arc.</span>
+                An AI agent on <span className="lede-accent">Arc.</span>
               </span>
               <span className="hero-lede-line" style={{ animationDelay: "400ms" }}>
-                Trades, pays, settles in USDC under rules you set.
+                Analyses prediction markets, earns USDC, pays out, settles on-chain.
               </span>
             </h1>
             <p className="hero-sub">
-              It reads live prediction markets, settles payments on Arc, and only acts within the
-              per-transaction and daily limits you define.
+              It reads live Polymarket, sells deep research notes for USDC, and every payment
+              in and out lands on Circle&apos;s Arc in under a second.
             </p>
             <div className="hero-meta">
               <div className="hero-meta-item">
