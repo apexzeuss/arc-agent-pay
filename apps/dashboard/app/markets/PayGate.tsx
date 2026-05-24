@@ -156,9 +156,6 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
           </button>
         )}
 
-        <button className="pay-gate-demo" onClick={() => onPaid()}>
-          Skip payment · demo mode
-        </button>
       </div>
 
       <div className="pay-gate-foot">
