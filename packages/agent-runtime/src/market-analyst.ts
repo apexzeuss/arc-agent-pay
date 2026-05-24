@@ -280,8 +280,11 @@ Market YES price: ${(market.yesPrice * 100).toFixed(0)}% (implied probability th
   };
 }
 
-function deepFallback(market: PredictionMarket): Omit<DeepMarketPick, "weight"> {
+function deepFallback(market: PredictionMarket, reason: "no-key" | "error" = "no-key"): Omit<DeepMarketPick, "weight"> {
   const base = fallbackJudge(market);
+  const note = reason === "no-key"
+    ? "No Claude API key set; running heuristic fallback. Set ANTHROPIC_API_KEY to enable real analysis."
+    : "Analysis temporarily unavailable for this market (rate limit or transient error). Click Re-analyze to retry.";
   return {
     ...base,
     background: [
@@ -290,9 +293,26 @@ function deepFallback(market: PredictionMarket): Omit<DeepMarketPick, "weight"> 
     ],
     recentEvents: [],
     scenarios: [],
-    recommendation: "No Claude API key set. running on heuristic fallback. Set ANTHROPIC_API_KEY to enable paid analysis.",
+    recommendation: note,
     changeMyMind: " ",
   };
+}
+
+// Retry once on transient failures (rate limit, network blip).
+async function claudeDeepJudgeWithRetry(
+  market: PredictionMarket,
+  apiKey: string,
+): Promise<Omit<DeepMarketPick, "weight">> {
+  try {
+    return await claudeDeepJudge(market, apiKey);
+  } catch (err) {
+    const msg = (err as Error).message ?? "";
+    if (/429|rate|timeout|ETIMEDOUT|ECONNRESET/i.test(msg)) {
+      await new Promise((r) => setTimeout(r, 600 + Math.random() * 800));
+      return claudeDeepJudge(market, apiKey);
+    }
+    throw err;
+  }
 }
 
 export async function analyzeMarketDeep(market: PredictionMarket): Promise<DeepMarketPick> {
@@ -300,13 +320,13 @@ export async function analyzeMarketDeep(market: PredictionMarket): Promise<DeepM
   let judged: Omit<DeepMarketPick, "weight">;
   if (apiKey) {
     try {
-      judged = await claudeDeepJudge(market, apiKey);
+      judged = await claudeDeepJudgeWithRetry(market, apiKey);
     } catch (err) {
-      console.warn(`[market-analyst] Deep Claude call failed, using fallback: ${(err as Error).message}`);
-      judged = deepFallback(market);
+      console.warn(`[market-analyst] Deep Claude call failed: ${(err as Error).message}`);
+      judged = deepFallback(market, "error");
     }
   } else {
-    judged = deepFallback(market);
+    judged = deepFallback(market, "no-key");
   }
   return { ...judged, weight: 1 };
 }
