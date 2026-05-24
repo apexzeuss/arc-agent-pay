@@ -12,9 +12,15 @@ function short(addr: string) {
 }
 
 export default async function ActivityPage() {
-  const { agentAddress, entries } = await getAgentActivity(25);
+  // Wider window: 9 chunks = ~90k blocks ≈ 24h on Arc (1s blocks).
+  const { agentAddress, entries } = await getAgentActivity(100, 9);
 
-  const totalUsdc = entries.reduce((acc, e) => acc + Number(e.amountFormatted), 0);
+  const totalIn = entries
+    .filter((e) => e.direction === "in")
+    .reduce((acc, e) => acc + Number(e.amountFormatted), 0);
+  const totalOut = entries
+    .filter((e) => e.direction === "out")
+    .reduce((acc, e) => acc + Number(e.amountFormatted), 0);
 
   return (
     <main className="prose">
@@ -27,11 +33,11 @@ export default async function ActivityPage() {
       </div>
 
       <h1>
-        Every <span className="amp">payment</span> the agent has made
+        Every <span className="amp">payment</span> the agent has handled
       </h1>
       <p className="subtitle">
         <span className="pip">●</span>&nbsp;&nbsp;
-        Read directly from Arc · last ~4 hours · agent&nbsp;
+        Read directly from Arc · last ~24 hours · agent&nbsp;
         <a href={`${ARC_TESTNET_EXPLORER}/address/${agentAddress}`} target="_blank" rel="noreferrer" style={{ color: "var(--ink)", borderBottom: "1px dotted var(--ink-mute)" }}>
           {short(agentAddress)} ↗
         </a>
@@ -43,8 +49,12 @@ export default async function ActivityPage() {
           <div className="ss-val big">{entries.length}</div>
         </div>
         <div>
-          <div className="ss-label">Total disbursed</div>
-          <div className="ss-val big">{totalUsdc.toFixed(2)} <span className="ss-unit">USDC</span></div>
+          <div className="ss-label">Paid in (earnings)</div>
+          <div className="ss-val big">{totalIn.toFixed(2)} <span className="ss-unit">USDC</span></div>
+        </div>
+        <div>
+          <div className="ss-label">Sent out (settlements)</div>
+          <div className="ss-val big">{totalOut.toFixed(2)} <span className="ss-unit">USDC</span></div>
         </div>
       </div>
 

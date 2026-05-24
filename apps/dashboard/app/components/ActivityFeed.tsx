@@ -27,19 +27,22 @@ export function ActivityFeed({
   return (
     <ol className="activity">
       {entries.map((e, i) => (
-        <li key={e.hash} className="entry" style={{ animationDelay: `${i * 60}ms` }}>
+        <li key={`${e.hash}-${i}`} className={`entry entry-${e.direction}`} style={{ animationDelay: `${i * 60}ms` }}>
           <div className="entry-num">№ {String(entries.length - i).padStart(4, "0")}</div>
           <div className="entry-main">
             <div className="entry-line">
+              <span className={`entry-tag entry-tag-${e.direction}`}>
+                {e.direction === "in" ? "PAID IN" : "SENT OUT"}
+              </span>
               <span className="entry-amount">{e.amountFormatted}<span className="unit">&nbsp;USDC</span></span>
-              <span className="entry-arrow">→</span>
+              <span className="entry-arrow">{e.direction === "in" ? "from" : "to"}</span>
               <a
                 className="entry-to"
-                href={`${ARC_TESTNET_EXPLORER}/address/${e.to}`}
+                href={`${ARC_TESTNET_EXPLORER}/address/${e.counterparty}`}
                 target="_blank"
                 rel="noreferrer"
               >
-                {short(e.to)}
+                {short(e.counterparty)}
               </a>
             </div>
             <div className="entry-meta">

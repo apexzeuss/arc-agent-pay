@@ -66,17 +66,20 @@ export type ActivityEntry = {
   hash: `0x${string}`;
   blockNumber: string;
   to: `0x${string}`;
+  from: `0x${string}`;
   amountFormatted: string;
   timestamp: number;
+  direction: "in" | "out"; // "in" = USDC received (analysis paid), "out" = USDC sent (settlement)
+  counterparty: `0x${string}`; // the OTHER address (sender if in, recipient if out)
 };
 
 // Reads USDC Transfer events FROM the agent. Arc's RPC caps getLogs at
 // 10k blocks per call. We chunk a wider window (default 4 calls = 40k
 // blocks ≈ 90 min of agent history) sequentially and combine results.
 const LOG_CHUNK = 10_000n;
-const LOG_CHUNKS = 4;
+const LOG_CHUNKS_DEFAULT = 4;
 
-export async function getAgentActivity(limit = 10): Promise<{
+export async function getAgentActivity(limit = 10, chunkCount = LOG_CHUNKS_DEFAULT): Promise<{
   agentAddress: `0x${string}`;
   entries: ActivityEntry[];
 }> {
@@ -86,15 +89,18 @@ export async function getAgentActivity(limit = 10): Promise<{
 
   const ranges: Array<[bigint, bigint]> = [];
   let toBlock = latest;
-  for (let i = 0; i < LOG_CHUNKS; i++) {
+  for (let i = 0; i < chunkCount; i++) {
     const fromBlock = toBlock > LOG_CHUNK ? toBlock - LOG_CHUNK + 1n : 0n;
     ranges.push([fromBlock, toBlock]);
     if (fromBlock === 0n) break;
     toBlock = fromBlock - 1n;
   }
 
-  const chunkResults = await Promise.all(
-    ranges.map(([from, to]) =>
+  // Pull BOTH outbound (from the agent) and inbound (to the agent) Transfer
+  // events across every chunked range. Outbound = settlements the agent sent;
+  // inbound = USDC users paid the agent (e.g. for paid analysis).
+  const chunkPairs = await Promise.all(
+    ranges.flatMap(([from, to]) => [
       publicClient.getLogs({
         address: USDC_ADDRESS_ARC_TESTNET,
         event: TRANSFER_EVENT,
@@ -102,23 +108,50 @@ export async function getAgentActivity(limit = 10): Promise<{
         fromBlock: from,
         toBlock: to,
       }),
-    ),
+      publicClient.getLogs({
+        address: USDC_ADDRESS_ARC_TESTNET,
+        event: TRANSFER_EVENT,
+        args: { to: agent.address },
+        fromBlock: from,
+        toBlock: to,
+      }),
+    ]),
   );
-  const logs = chunkResults.flat();
+  const logs = chunkPairs.flat();
 
-  const sorted = [...logs]
-    .sort((a, b) => Number(b.blockNumber - a.blockNumber))
+  // Deduplicate by tx hash + log index in case a log surfaces in both queries
+  // (e.g. agent paying itself in a self-transfer).
+  const seen = new Set<string>();
+  const unique = logs.filter((l) => {
+    const k = `${l.transactionHash}:${l.logIndex}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+
+  const sorted = [...unique]
+    .sort((a, b) => {
+      const blockDiff = Number(b.blockNumber - a.blockNumber);
+      if (blockDiff !== 0) return blockDiff;
+      return (b.logIndex ?? 0) - (a.logIndex ?? 0);
+    })
     .slice(0, limit);
 
   const entries = await Promise.all(
     sorted.map(async (log) => {
       const block = await publicClient.getBlock({ blockNumber: log.blockNumber });
+      const from = (log.args.from ?? "0x0") as `0x${string}`;
+      const to = (log.args.to ?? "0x0") as `0x${string}`;
+      const isOut = from.toLowerCase() === agent.address.toLowerCase();
       return {
         hash: log.transactionHash,
         blockNumber: log.blockNumber.toString(),
-        to: (log.args.to ?? "0x0") as `0x${string}`,
+        from,
+        to,
         amountFormatted: formatUnits(log.args.value ?? 0n, USDC_DECIMALS),
         timestamp: Number(block.timestamp),
+        direction: (isOut ? "out" : "in") as "out" | "in",
+        counterparty: (isOut ? to : from) as `0x${string}`,
       };
     }),
   );

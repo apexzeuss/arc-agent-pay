@@ -3994,3 +3994,38 @@ details.deep-pick-block > ul {
     justify-content: center;
   }
 }
+
+/* ─── Activity feed: in/out direction tagging + 'view full history' link ─── */
+.entry-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+.entry-tag-in {
+  background: color-mix(in srgb, var(--success, #1a9d6e) 18%, transparent);
+  color: var(--success, #1a9d6e);
+}
+.entry-tag-out {
+  background: color-mix(in srgb, var(--agent) 15%, transparent);
+  color: var(--agent);
+}
+.entry-in .entry-amount { color: var(--success, #1a9d6e); }
+.entry-out .entry-amount { color: var(--ink); }
+.activity-view-all {
+  display: inline-flex;
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--agent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.activity-view-all:hover { color: var(--agent-ink); text-decoration: underline; }
+.activity-totals { display: flex; gap: 24px; flex-wrap: wrap; }

@@ -31,7 +31,7 @@ const TICKER: { label: string; key?: boolean }[] = [
 export default async function Landing() {
   const [agent, activity] = await Promise.all([
     getAgentBalance().catch(() => ({ usdc: " ", address: "" })),
-    getAgentActivity(8).catch(() => ({ entries: [], agentAddress: "" })),
+    getAgentActivity(12).catch(() => ({ entries: [], agentAddress: "" })),
   ]);
 
   return (
@@ -189,6 +189,11 @@ export default async function Landing() {
               entries={activity.entries}
               emptyText="No payments yet. Use Issue payment on the Ledger above to populate this log."
             />
+          </Reveal>
+          <Reveal delay={320}>
+            <Link href="/activity" className="activity-view-all">
+              Check full history →
+            </Link>
           </Reveal>
         </div>
       </section>
