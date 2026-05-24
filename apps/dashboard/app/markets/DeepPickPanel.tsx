@@ -69,10 +69,12 @@ export function DeepPickPanel({ pick }: { pick: SingleMarketPick }) {
           <ul className="deep-pick-scenarios">
             {pick.scenarios.map((s, i) => (
               <li key={i}>
-                <span className={`deep-pick-scenario-tag bet-${s.resolvesTo.toLowerCase()}`}>
-                  → {s.resolvesTo}
-                </span>
-                <span className="deep-pick-scenario-likelihood">{pct(s.likelihood)}</span>
+                <div className="deep-pick-scenario-header">
+                  <span className={`deep-pick-scenario-tag bet-${s.resolvesTo.toLowerCase()}`}>
+                    → {s.resolvesTo}
+                  </span>
+                  <span className="deep-pick-scenario-likelihood">{pct(s.likelihood)}</span>
+                </div>
                 <span className="deep-pick-scenario-path">{s.path}</span>
               </li>
             ))}

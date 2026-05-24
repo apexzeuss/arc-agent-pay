@@ -3709,16 +3709,23 @@ details.deep-pick-block > ul {
   gap: 8px;
 }
 .deep-pick-scenarios li {
-  display: grid;
-  grid-template-columns: 70px 48px 1fr;
-  gap: 12px;
-  align-items: baseline;
-  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
   background: var(--paper, #f4f3f1);
   border-radius: 6px;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--ink-2);
-  line-height: 1.45;
+  line-height: 1.5;
+}
+.deep-pick-scenarios li > .deep-pick-scenario-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.deep-pick-scenarios .deep-pick-scenario-path {
+  color: var(--ink);
 }
 .deep-pick-scenario-tag {
   font-family: var(--mono);
@@ -3829,6 +3836,29 @@ details.deep-pick-block > ul {
 .bet-side.bet-skip {
   background: var(--ink-mute, #777) !important;
   color: #ffffff !important;
+}
+
+/* ─── Clear results button on the Bet Desk ──────────────────────── */
+.desk-clear {
+  font-family: var(--font-body, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  margin-left: 10px;
+}
+.desk-clear:hover {
+  color: var(--ink);
+  border-color: var(--ink-mute);
+}
+.desk-clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ─── PayGate: pay 1 USDC to unlock analysis ──────────────────────── */

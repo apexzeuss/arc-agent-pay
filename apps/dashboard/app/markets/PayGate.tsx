@@ -167,7 +167,20 @@ export function PayGate({ agentAddress, priceUsdc = 1, onPaid, marketLabel }: Pr
 
       {(connectError || walletError || payError) && (
         <div className="pay-gate-error">
-          {(connectError?.message ?? walletError ?? payError?.message ?? "").slice(0, 200)}
+          {(() => {
+            const raw = connectError?.message ?? walletError ?? payError?.message ?? "";
+            const lc = raw.toLowerCase();
+            if (lc.includes("insufficient funds") || lc.includes("transfer amount exceeds balance") || lc.includes("insufficient balance")) {
+              return `Not enough USDC on Arc to pay ${priceUsdc}. Grab some from the Circle faucet link below, then try again.`;
+            }
+            if (lc.includes("user rejected") || lc.includes("user denied")) {
+              return "You cancelled the transaction in your wallet. Click Pay again when ready.";
+            }
+            if (lc.includes("chain mismatch") || lc.includes("wrong chain")) {
+              return "Your wallet is on the wrong chain. Switch to Arc Testnet.";
+            }
+            return raw.slice(0, 200);
+          })()}
         </div>
       )}
     </div>

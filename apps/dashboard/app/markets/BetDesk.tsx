@@ -110,6 +110,20 @@ export function BetDesk({ agentAddress }: Props) {
             ? `Re-analyze ${ANALYZE_COUNT} best · 5 USDC`
             : `Analyze ${ANALYZE_COUNT} best · 5 USDC`}
         </button>
+        {(analysis || urlPick) && (
+          <button
+            className="desk-clear"
+            onClick={() => {
+              setAnalysis(null);
+              setUrlPick(null);
+              setUrlInput("");
+              setUrlError(null);
+            }}
+            disabled={analyzing}
+          >
+            Clear results
+          </button>
+        )}
       </div>
 
       {bulkPayGateShown && (
